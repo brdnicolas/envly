@@ -83,6 +83,7 @@ model Wish {
   imageUrl         String?
   imageOriginalUrl String?
   price        Float?
+  position     Int          @default(0)
   isPriority   Boolean      @default(false)
   collectionId String
   collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)

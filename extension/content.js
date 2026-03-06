@@ -122,9 +122,29 @@
   btn.id = "wishly-fab";
   btn.title = "Add to Wishly";
   btn.setAttribute("aria-label", "Add to Wishly");
-  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+
+  const ICON_PLUS = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+  const ICON_CHECK = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  btn.innerHTML = ICON_PLUS;
+
+  // Check if this URL is already in the wishlist
+  fetch(`${WISHLY_URL}/api/wishes/check?url=${encodeURIComponent(window.location.href)}`, {
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.exists) {
+        btn.classList.add("wishly-fab--done");
+        btn.innerHTML = ICON_CHECK;
+        btn.title = "Already in Wishly";
+      }
+    })
+    .catch(() => {});
 
   btn.addEventListener("click", () => {
+    if (btn.classList.contains("wishly-fab--done")) return;
+
     const pageUrl = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(scrapeTitle());
     const price = encodeURIComponent(scrapePrice());
@@ -135,7 +155,7 @@
       "_blank"
     );
     btn.classList.add("wishly-fab--done");
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    btn.innerHTML = ICON_CHECK;
   });
 
   document.body.appendChild(btn);

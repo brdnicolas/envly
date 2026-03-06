@@ -1,17 +1,27 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { WishCard } from "@/components/wish-card";
-
+import { SortableWishCard } from "@/components/sortable-wish-card";
 import { EditWishDialog } from "@/components/edit-wish-dialog";
 import { CollectionForm } from "@/components/collection-form";
-import { MasonryGrid } from "@/components/masonry-grid";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 import { Plus, ArrowLeft, Copy, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
@@ -43,6 +53,38 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const navigateToAdd = () => router.push(`/add?collectionId=${id}`);
   const [showEditCollection, setShowEditCollection] = useState(false);
   const [editingWish, setEditingWish] = useState<Wish | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id || !collection) return;
+
+      const wishes = [...collection.wishes];
+      const oldIndex = wishes.findIndex((w) => w.id === active.id);
+      const newIndex = wishes.findIndex((w) => w.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
+
+      const [moved] = wishes.splice(oldIndex, 1);
+      wishes.splice(newIndex, 0, moved);
+
+      setCollection({ ...collection, wishes });
+
+      // Persist in background
+      fetch("/api/wishes/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          collectionId: collection.id,
+          orderedIds: wishes.map((w) => w.id),
+        }),
+      });
+    },
+    [collection]
+  );
 
   const fetchCollection = async () => {
     const res = await fetch(`/api/collections/${id}`);
@@ -176,27 +218,30 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           </div>
         </div>
 
-        <MasonryGrid>
-          <button
-            onClick={() => navigateToAdd()}
-            className="w-full flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border bg-card aspect-[3/4] text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:shadow-md transition-all cursor-pointer"
-          >
-            <div className="h-10 w-10 rounded-full border-2 border-current flex items-center justify-center">
-              <Plus className="h-5 w-5" />
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={collection.wishes.map((w) => w.id)} strategy={rectSortingStrategy}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              <button
+                onClick={() => navigateToAdd()}
+                className="w-full flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border bg-card aspect-[3/4] text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:shadow-md transition-all cursor-pointer"
+              >
+                <div className="h-10 w-10 rounded-full border-2 border-current flex items-center justify-center">
+                  <Plus className="h-5 w-5" />
+                </div>
+                <span className="text-sm font-medium">Add a wish</span>
+              </button>
+              {collection.wishes.map((wish) => (
+                <SortableWishCard
+                  key={wish.id}
+                  wish={wish}
+                  onDeleted={handleWishDeleted}
+                  onEdit={(w) => setEditingWish(w)}
+                  onTogglePriority={handleTogglePriority}
+                />
+              ))}
             </div>
-            <span className="text-sm font-medium">Add a wish</span>
-          </button>
-          {collection.wishes.map((wish) => (
-            <WishCard
-              key={wish.id}
-              wish={wish}
-              isOwner={true}
-              onDeleted={handleWishDeleted}
-              onEdit={(w) => setEditingWish(w)}
-              onTogglePriority={handleTogglePriority}
-            />
-          ))}
-        </MasonryGrid>
+          </SortableContext>
+        </DndContext>
 
 
         <CollectionForm

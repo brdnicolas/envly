@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2, ExternalLink, ImageIcon } from "lucide-react";
+import { MoreHorizontal, Trash2, ExternalLink, ImageIcon, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface Collection {
@@ -118,6 +118,17 @@ export function CollectionCard({
               {collection.name}
             </h3>
           </Link>
+          {collection.isPublic && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 shrink-0 -mt-0.5"
+              onClick={copyShareLink}
+              title="Copy share link"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 -mt-0.5">
