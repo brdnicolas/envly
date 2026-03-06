@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -144,7 +145,8 @@ export function Header() {
   return (
     <header className="border-b border-border/60 bg-background/70 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href={session ? "/dashboard" : "/"} className="font-semibold text-lg">
+        <Link href={session ? "/dashboard" : "/"} className="flex items-center gap-2 font-semibold text-lg">
+          <Logo className="h-7 w-7" />
           Envly
         </Link>
 

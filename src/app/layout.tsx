@@ -16,15 +16,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXTAUTH_URL || "https://envly.app"),
-  title: "Envly - Shared Wishlists",
-  description: "Create and share wishlists with anonymous reservations. Friends and family can reserve gifts without spoiling the surprise.",
+  title: "Envly — Your wishlists, beautifully shared",
+  description: "Create stunning wishlists, share them with anyone, and let your loved ones reserve gifts anonymously. No more duplicate gifts, no more ruined surprises.",
   manifest: "/manifest.json",
   icons: {
+    icon: "/favicon.svg",
     apple: "/icon-192.png",
   },
   openGraph: {
-    title: "Envly - Shared Wishlists",
-    description: "Create and share wishlists with anonymous reservations. Friends and family can reserve gifts without spoiling the surprise.",
+    title: "Envly — Your wishlists, beautifully shared",
+    description: "Create stunning wishlists, share them with anyone, and let your loved ones reserve gifts anonymously. No more duplicate gifts, no more ruined surprises.",
     type: "website",
     siteName: "Envly",
   },
