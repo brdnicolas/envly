@@ -26,6 +26,10 @@ import {
   Star,
   Sparkles,
   Check,
+  Chrome,
+  MousePointerClick,
+  ScanSearch,
+  ShieldCheck,
 } from "lucide-react";
 
 /* ─── animation variants ─── */
@@ -453,6 +457,111 @@ export default function LandingPage() {
                   </div>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Extension Chrome CTA ── */}
+        <section className="relative border-t border-border">
+          <div className="max-w-6xl mx-auto px-4 py-24">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left: text */}
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={{
+                  visible: { transition: { staggerChildren: 0.1 } },
+                }}
+              >
+                <motion.div variants={fadeUp} transition={{ duration: 0.5 }}>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/80 px-3 py-1 text-xs text-muted-foreground mb-4">
+                    <Chrome className="h-3 w-3" />
+                    Extension Chrome
+                  </span>
+                </motion.div>
+                <motion.h2
+                  className="text-3xl sm:text-4xl font-bold"
+                  variants={fadeUp}
+                  transition={{ duration: 0.5 }}
+                >
+                  Ajoutez en un clic,
+                  <br />
+                  <span className="text-muted-foreground">depuis n&apos;importe quel site.</span>
+                </motion.h2>
+                <motion.p
+                  className="mt-4 text-muted-foreground max-w-md leading-relaxed"
+                  variants={fadeUp}
+                  transition={{ duration: 0.5 }}
+                >
+                  Parcourez vos boutiques préférées comme d&apos;habitude. Quand un article vous plaît,
+                  un clic suffit — prix, image et titre sont récupérés automatiquement.
+                </motion.p>
+                <motion.div
+                  className="mt-6"
+                  variants={fadeUp}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Button size="lg" className="group" asChild>
+                    <a
+                      href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Chrome className="mr-2 h-4 w-4" />
+                      Installer l&apos;extension
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </a>
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Right: feature points */}
+              <motion.div
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={{
+                  visible: { transition: { staggerChildren: 0.1 } },
+                }}
+              >
+                {[
+                  {
+                    icon: MousePointerClick,
+                    title: "Un clic pour ajouter",
+                    description: "Bouton flottant sur chaque page produit détectée.",
+                  },
+                  {
+                    icon: ScanSearch,
+                    title: "Détection automatique",
+                    description: "Prix, titre et images extraits instantanément.",
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: "Déjà ajouté ?",
+                    description: "L'extension détecte si l'article est déjà dans votre wishlist.",
+                  },
+                  {
+                    icon: Puzzle,
+                    title: "Léger et rapide",
+                    description: "Aucun impact sur votre navigation. Zéro tracking.",
+                  },
+                ].map((item) => (
+                  <motion.div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-5 transition-all duration-300 hover:border-foreground/15 hover:shadow-md"
+                    variants={fadeUp}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <item.icon className="h-5 w-5 text-foreground/70 mb-3" />
+                    <h3 className="font-medium text-sm mb-1">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
           </div>
         </section>

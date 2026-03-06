@@ -346,7 +346,7 @@ function AddPageContent() {
               <Puzzle className="h-4 w-4 text-muted-foreground" />
             </div>
             <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Astuce :</span> Installez notre extension Chrome pour ajouter des souhaits directement depuis n&apos;importe quel site.
+              <span className="font-medium text-foreground">Astuce :</span> <a href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground transition-colors">Installez notre extension Chrome</a> pour ajouter des souhaits directement depuis n&apos;importe quel site.
             </p>
           </div>
         )}

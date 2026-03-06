@@ -361,6 +361,14 @@ export default function DashboardPage() {
                 Parcourez n&apos;importe quelle boutique et enregistrez des articles en un clic.
               </p>
             </div>
+            <a
+              href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-xs font-medium bg-foreground text-background px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Installer
+            </a>
             <button
               onClick={() => {
                 setShowExtensionBanner(false);

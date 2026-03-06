@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, use, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -46,8 +46,8 @@ interface Collection {
   wishes: Wish[];
 }
 
-export default function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function CollectionPage() {
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(null);
   const [loading, setLoading] = useState(true);
