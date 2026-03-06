@@ -16,6 +16,7 @@ interface Collection {
   isPublic: boolean;
   createdAt: string;
   _count: { wishes: number };
+  wishes: { imageUrl: string | null }[];
 }
 
 export default function DashboardPage() {

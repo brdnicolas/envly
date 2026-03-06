@@ -18,7 +18,7 @@ export async function GET(
     where: { id, userId: session.user.id },
     include: {
       wishes: {
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }],
       },
     },
   });

@@ -76,6 +76,7 @@ model Wish {
   description  String?
   imageUrl     String?
   price        Float?
+  isPriority   Boolean      @default(false)
   collectionId String
   collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   reservation  Reservation?
@@ -87,6 +88,7 @@ model Reservation {
   id         String   @id @default(cuid())
   wishId     String   @unique
   reservedBy String
+  token      String
   wish       Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
 }

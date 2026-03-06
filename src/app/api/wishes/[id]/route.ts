@@ -32,6 +32,7 @@ export async function PATCH(
       ...(body.description !== undefined && { description: body.description }),
       ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl }),
       ...(body.price !== undefined && { price: body.price ? parseFloat(body.price) : null }),
+      ...(body.isPriority !== undefined && { isPriority: body.isPriority }),
     },
   });
 

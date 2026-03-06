@@ -16,7 +16,7 @@ export default async function PublicWishlistPage({
     include: {
       wishes: {
         include: { reservation: true },
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }],
       },
       user: { select: { id: true, name: true } },
     },
@@ -37,6 +37,7 @@ export default async function PublicWishlistPage({
     url: wish.url,
     imageUrl: wish.imageUrl,
     price: wish.price,
+    isPriority: wish.isPriority,
     reservation: isOwner ? null : wish.reservation,
   }));
 

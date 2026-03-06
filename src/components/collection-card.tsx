@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2, ExternalLink } from "lucide-react";
+import { MoreHorizontal, Trash2, ExternalLink, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 interface Collection {
@@ -20,6 +19,49 @@ interface Collection {
   slug: string;
   isPublic: boolean;
   _count: { wishes: number };
+  wishes?: { imageUrl: string | null }[];
+}
+
+function ImageMosaic({ images }: { images: string[] }) {
+  if (images.length === 0) {
+    return (
+      <div className="w-full aspect-[2/1] bg-muted/30 flex items-center justify-center rounded-t-lg">
+        <ImageIcon className="h-8 w-8 text-muted-foreground/20" />
+      </div>
+    );
+  }
+
+  if (images.length === 1) {
+    return (
+      <div className="w-full aspect-[2/1] rounded-t-lg overflow-hidden">
+        <img src={images[0]} alt="" className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+
+  if (images.length <= 3) {
+    return (
+      <div className="w-full aspect-[2/1] rounded-t-lg overflow-hidden grid grid-cols-2 gap-px bg-border">
+        {images.slice(0, 2).map((img, i) => (
+          <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+        ))}
+      </div>
+    );
+  }
+
+  // 4+ images: grid 3x2
+  const slots = images.slice(0, 6);
+
+  return (
+    <div className="w-full aspect-[2/1] rounded-t-lg overflow-hidden grid grid-cols-3 grid-rows-2 gap-px bg-border">
+      {slots.map((img, i) => (
+        <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+      ))}
+      {Array.from({ length: Math.max(0, 6 - slots.length) }).map((_, i) => (
+        <div key={`empty-${i}`} className="bg-muted/30" />
+      ))}
+    </div>
+  );
 }
 
 export function CollectionCard({
@@ -49,51 +91,59 @@ export function CollectionCard({
     toast.success("Share link copied!");
   };
 
+  const images = (collection.wishes || [])
+    .map((w) => w.imageUrl)
+    .filter((url): url is string => !!url);
+
   return (
-    <Card className="group">
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-        <Link href={`/collection/${collection.id}`} className="flex-1 min-w-0">
-          <CardTitle className="text-base truncate hover:underline underline-offset-4">
-            {collection.name}
-          </CardTitle>
-        </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {collection.isPublic && (
-              <DropdownMenuItem onClick={copyShareLink}>
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Copy share link
+    <div className="group rounded-lg border border-border bg-card overflow-hidden transition-shadow hover:shadow-md">
+      <Link href={`/collection/${collection.id}`}>
+        <ImageMosaic images={images} />
+      </Link>
+
+      <div className="p-3">
+        <div className="flex items-start justify-between gap-2">
+          <Link href={`/collection/${collection.id}`} className="flex-1 min-w-0">
+            <h3 className="font-medium truncate hover:underline underline-offset-4">
+              {collection.name}
+            </h3>
+          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 -mt-0.5">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {collection.isPublic && (
+                <DropdownMenuItem onClick={copyShareLink}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Copy share link
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={handleDelete} className="text-destructive">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
               </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onClick={handleDelete} className="text-destructive">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </CardHeader>
-      <CardContent>
-        <Link href={`/collection/${collection.id}`}>
-          {collection.description && (
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {collection.description}
-            </p>
-          )}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              {collection._count.wishes} wish{collection._count.wishes !== 1 ? "es" : ""}
-            </span>
-            <Badge variant={collection.isPublic ? "default" : "secondary"} className="text-xs">
-              {collection.isPublic ? "Public" : "Private"}
-            </Badge>
-          </div>
-        </Link>
-      </CardContent>
-    </Card>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {collection.description && (
+          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">
+            {collection.description}
+          </p>
+        )}
+
+        <div className="flex items-center gap-2 mt-2">
+          <span className="text-xs text-muted-foreground">
+            {collection._count.wishes} wish{collection._count.wishes !== 1 ? "es" : ""}
+          </span>
+          <Badge variant={collection.isPublic ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
+            {collection.isPublic ? "Public" : "Private"}
+          </Badge>
+        </div>
+      </div>
+    </div>
   );
 }

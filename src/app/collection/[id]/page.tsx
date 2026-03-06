@@ -22,6 +22,7 @@ interface Wish {
   url: string | null;
   imageUrl: string | null;
   price: number | null;
+  isPriority: boolean;
 }
 
 interface Collection {
@@ -82,6 +83,24 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       ...collection,
       wishes: collection.wishes.filter((w) => w.id !== wishId),
     });
+  };
+
+  const handleTogglePriority = async (wish: Wish) => {
+    if (!collection) return;
+    const res = await fetch(`/api/wishes/${wish.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isPriority: !wish.isPriority }),
+    });
+    if (res.ok) {
+      setCollection({
+        ...collection,
+        wishes: collection.wishes.map((w) =>
+          w.id === wish.id ? { ...w, isPriority: !w.isPriority } : w
+        ),
+      });
+      toast.success(wish.isPriority ? "Priority removed" : "Marked as priority");
+    }
   };
 
   if (loading) {
@@ -173,6 +192,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               isOwner={true}
               onDeleted={handleWishDeleted}
               onEdit={(w) => setEditingWish(w)}
+              onTogglePriority={handleTogglePriority}
             />
           ))}
         </MasonryGrid>

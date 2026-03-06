@@ -12,7 +12,14 @@ export async function GET() {
 
   const collections = await prisma.collection.findMany({
     where: { userId: session.user.id },
-    include: { _count: { select: { wishes: true } } },
+    include: {
+      _count: { select: { wishes: true } },
+      wishes: {
+        where: { imageUrl: { not: null } },
+        select: { imageUrl: true },
+        take: 6,
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 

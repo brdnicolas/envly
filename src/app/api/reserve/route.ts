@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { nanoid } from "@/lib/utils";
 
 export async function POST(req: Request) {
   const { wishId, reservedBy } = await req.json();
@@ -22,18 +23,23 @@ export async function POST(req: Request) {
     );
   }
 
+  const token = nanoid(16);
+
   const reservation = await prisma.reservation.create({
-    data: { wishId, reservedBy },
+    data: { wishId, reservedBy, token },
   });
 
-  return NextResponse.json(reservation);
+  return NextResponse.json({ id: reservation.id, token });
 }
 
 export async function DELETE(req: Request) {
-  const { wishId } = await req.json();
+  const { wishId, token } = await req.json();
 
-  if (!wishId) {
-    return NextResponse.json({ error: "wishId is required" }, { status: 400 });
+  if (!wishId || !token) {
+    return NextResponse.json(
+      { error: "wishId and token are required" },
+      { status: 400 }
+    );
   }
 
   const reservation = await prisma.reservation.findUnique({
@@ -42,6 +48,13 @@ export async function DELETE(req: Request) {
 
   if (!reservation) {
     return NextResponse.json({ error: "No reservation found" }, { status: 404 });
+  }
+
+  if (reservation.token !== token) {
+    return NextResponse.json(
+      { error: "You can only cancel your own reservation" },
+      { status: 403 }
+    );
   }
 
   await prisma.reservation.delete({ where: { id: reservation.id } });

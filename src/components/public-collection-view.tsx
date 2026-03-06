@@ -15,6 +15,7 @@ interface Wish {
   url: string | null;
   imageUrl: string | null;
   price: number | null;
+  isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
 }
 
@@ -42,20 +43,12 @@ export function PublicCollectionView({
     );
   };
 
-  const handleCancelReservation = async (wishId: string) => {
-    const res = await fetch("/api/reserve", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ wishId }),
-    });
-
-    if (res.ok) {
-      setWishes((prev) =>
-        prev.map((w) =>
-          w.id === wishId ? { ...w, reservation: null } : w
-        )
-      );
-    }
+  const handleCancelReservation = (wishId: string) => {
+    setWishes((prev) =>
+      prev.map((w) =>
+        w.id === wishId ? { ...w, reservation: null } : w
+      )
+    );
   };
 
   return (
@@ -93,6 +86,7 @@ export function PublicCollectionView({
                 wish={wish}
                 isOwner={isOwner}
                 onReserve={(w) => setReserveWish(w)}
+                onCancelReservation={handleCancelReservation}
               />
             ))}
           </MasonryGrid>

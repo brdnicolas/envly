@@ -2,7 +2,8 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { CancelReservationButton, getReservationToken } from "@/components/reserve-dialog";
+import { Pencil, Trash2, Star } from "lucide-react";
 import { toast } from "sonner";
 
 interface Wish {
@@ -12,6 +13,7 @@ interface Wish {
   url: string | null;
   imageUrl: string | null;
   price: number | null;
+  isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
 }
 
@@ -30,12 +32,16 @@ export function WishCard({
   onDeleted,
   onReserve,
   onEdit,
+  onTogglePriority,
+  onCancelReservation,
 }: {
   wish: Wish;
   isOwner: boolean;
   onDeleted?: (id: string) => void;
   onReserve?: (wish: Wish) => void;
   onEdit?: (wish: Wish) => void;
+  onTogglePriority?: (wish: Wish) => void;
+  onCancelReservation?: (wishId: string) => void;
 }) {
   const handleDelete = async () => {
     if (!confirm("Delete this wish?")) return;
@@ -81,6 +87,13 @@ export function WishCard({
         <div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm"
+            onClick={() => onTogglePriority?.(wish)}
+            title={wish.isPriority ? "Remove priority" : "Mark as priority"}
+          >
+            <Star className={`h-2.5 w-2.5 ${wish.isPriority ? "fill-amber-400 text-amber-400" : ""}`} />
+          </button>
+          <button
+            className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm"
             onClick={() => onEdit?.(wish)}
           >
             <Pencil className="h-2.5 w-2.5" />
@@ -94,11 +107,20 @@ export function WishCard({
         </div>
       )}
 
+      {/* Priority indicator */}
+      {wish.isPriority && (
+        <div className="absolute top-1.5 left-1.5">
+          <div className="h-6 w-6 rounded-full bg-amber-400/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+            <Star className="h-3 w-3 fill-white text-white" />
+          </div>
+        </div>
+      )}
+
       {/* Reserved badge */}
       {!isOwner && isReserved && (
         <div className="absolute top-1.5 left-1.5">
           <Badge variant="secondary" className="text-[10px] shadow-sm px-1.5 py-0">
-            Reserved
+            Reserved by {wish.reservation?.reservedBy}
           </Badge>
         </div>
       )}
@@ -126,6 +148,12 @@ export function WishCard({
           >
             Reserve
           </Button>
+        )}
+        {!isOwner && isReserved && getReservationToken(wish.id) && onCancelReservation && (
+          <CancelReservationButton
+            wishId={wish.id}
+            onCancelled={onCancelReservation}
+          />
         )}
       </div>
     </div>

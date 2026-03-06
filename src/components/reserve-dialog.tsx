@@ -18,6 +18,24 @@ interface Wish {
   title: string;
 }
 
+function saveReservationToken(wishId: string, token: string) {
+  const tokens = JSON.parse(localStorage.getItem("reservationTokens") || "{}");
+  tokens[wishId] = token;
+  localStorage.setItem("reservationTokens", JSON.stringify(tokens));
+}
+
+export function getReservationToken(wishId: string): string | null {
+  if (typeof window === "undefined") return null;
+  const tokens = JSON.parse(localStorage.getItem("reservationTokens") || "{}");
+  return tokens[wishId] || null;
+}
+
+function removeReservationToken(wishId: string) {
+  const tokens = JSON.parse(localStorage.getItem("reservationTokens") || "{}");
+  delete tokens[wishId];
+  localStorage.setItem("reservationTokens", JSON.stringify(tokens));
+}
+
 export function ReserveDialog({
   wish,
   onOpenChange,
@@ -42,6 +60,8 @@ export function ReserveDialog({
     });
 
     if (res.ok) {
+      const data = await res.json();
+      saveReservationToken(wish.id, data.token);
       onReserved(wish.id, name);
       onOpenChange(false);
       setName("");
@@ -80,5 +100,49 @@ export function ReserveDialog({
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function CancelReservationButton({
+  wishId,
+  onCancelled,
+}: {
+  wishId: string;
+  onCancelled: (wishId: string) => void;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  const handleCancel = async () => {
+    const token = getReservationToken(wishId);
+    if (!token) return;
+
+    setLoading(true);
+    const res = await fetch("/api/reserve", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wishId, token }),
+    });
+
+    if (res.ok) {
+      removeReservationToken(wishId);
+      onCancelled(wishId);
+      toast.success("Reservation cancelled");
+    } else {
+      const data = await res.json();
+      toast.error(data.error || "Failed to cancel");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className="w-full h-7 text-[11px] mt-1.5"
+      onClick={handleCancel}
+      disabled={loading}
+    >
+      {loading ? "Cancelling..." : "Cancel reservation"}
+    </Button>
   );
 }
