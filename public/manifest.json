@@ -1,6 +1,8 @@
 {
   "name": "Envly - Shared Wishlists",
   "short_name": "Envly",
+  "description": "Create and share wishlists with anonymous reservations. Friends and family can reserve gifts without spoiling the surprise.",
+  "categories": ["lifestyle", "shopping", "social"],
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",

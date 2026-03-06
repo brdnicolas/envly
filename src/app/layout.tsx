@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,13 +15,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL || "https://envly.app"),
   title: "Envly - Shared Wishlists",
-  description: "Create and share wishlists with anonymous reservations",
+  description: "Create and share wishlists with anonymous reservations. Friends and family can reserve gifts without spoiling the surprise.",
   manifest: "/manifest.json",
-  themeColor: "#000000",
   icons: {
     apple: "/icon-192.png",
   },
+  openGraph: {
+    title: "Envly - Shared Wishlists",
+    description: "Create and share wishlists with anonymous reservations. Friends and family can reserve gifts without spoiling the surprise.",
+    type: "website",
+    siteName: "Envly",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "mobile-web-app-capable": "yes",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({

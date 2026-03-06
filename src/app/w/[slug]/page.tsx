@@ -1,8 +1,45 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { PublicCollectionView } from "@/components/public-collection-view";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const collection = await prisma.collection.findUnique({
+    where: { slug },
+    select: {
+      name: true,
+      description: true,
+      user: { select: { name: true } },
+      wishes: {
+        where: { imageUrl: { not: null } },
+        select: { imageUrl: true },
+        take: 1,
+      },
+    },
+  });
+
+  if (!collection) return {};
+
+  const ogImage = collection.wishes[0]?.imageUrl;
+  const ownerName = collection.user.name || "Someone";
+
+  return {
+    title: `${collection.name} - Envly`,
+    description: collection.description || `Wishlist by ${ownerName}`,
+    openGraph: {
+      title: collection.name,
+      description: collection.description || `Wishlist by ${ownerName}`,
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+    },
+  };
+}
 
 export default async function PublicWishlistPage({
   params,

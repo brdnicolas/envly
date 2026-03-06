@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -9,6 +10,32 @@ import { FollowedBy } from "@/components/followed-by";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImageIcon } from "lucide-react";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const user = await prisma.user.findUnique({
+    where: { slug },
+    select: { name: true, description: true, image: true },
+  });
+
+  if (!user) return {};
+
+  const name = user.name || "User";
+
+  return {
+    title: `${name} - Envly`,
+    description: user.description || `${name}'s profile on Envly`,
+    openGraph: {
+      title: name,
+      description: user.description || `${name}'s profile on Envly`,
+      ...(user.image ? { images: [{ url: user.image }] } : {}),
+    },
+  };
+}
 
 export default async function PublicProfilePage({
   params,

@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Sun, Moon, Monitor, Check, X, Camera } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 interface Profile {
@@ -39,6 +41,9 @@ export default function SettingsPage() {
   const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
   const [checkingSlug, setCheckingSlug] = useState(false);
@@ -325,6 +330,58 @@ export default function SettingsPage() {
               </button>
             ))}
           </div>
+        </section>
+
+        <Separator className="my-8" />
+
+        {/* Danger zone */}
+        <section>
+          <h2 className="text-lg font-medium mb-4 text-destructive">Danger zone</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Permanently delete your account and all your data. This action cannot be undone.
+          </p>
+          <Dialog open={deleteDialogOpen} onOpenChange={(open) => { setDeleteDialogOpen(open); if (!open) setDeleteConfirm(""); }}>
+            <DialogTrigger asChild>
+              <Button variant="destructive">Delete my account</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Delete account</DialogTitle>
+                <DialogDescription>
+                  This will permanently delete your account, collections, wishes, and all associated data. This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <Label htmlFor="delete-confirm">
+                  Type <strong>DELETE</strong> to confirm
+                </Label>
+                <Input
+                  id="delete-confirm"
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="DELETE"
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="destructive"
+                  disabled={deleteConfirm !== "DELETE" || deleting}
+                  onClick={async () => {
+                    setDeleting(true);
+                    const res = await fetch("/api/account/delete", { method: "DELETE" });
+                    if (res.ok) {
+                      signOut({ callbackUrl: "/" });
+                    } else {
+                      toast.error("Failed to delete account");
+                      setDeleting(false);
+                    }
+                  }}
+                >
+                  {deleting ? "Deleting..." : "Delete my account"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </section>
       </main>
       <Footer />
