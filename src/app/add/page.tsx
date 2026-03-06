@@ -212,27 +212,25 @@ function AddPageContent() {
     if (!file) return;
     setUploading(true);
     try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const dataUri = reader.result as string;
-        const res = await fetch("/api/images/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageUrl: dataUri }),
-        });
-        if (res.ok) {
-          const { cdnUrl } = await res.json();
-          setImageUrl(cdnUrl);
-          setImages((prev) => [cdnUrl, ...prev]);
-          toast.success("Image téléchargée !");
-        } else {
-          toast.error("Échec du téléchargement de l'image");
-        }
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
+      const { compressImage } = await import("@/lib/compress-image");
+      const compressed = await compressImage(file);
+      const formData = new FormData();
+      formData.append("file", compressed, "image.webp");
+      const res = await fetch("/api/images/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok) {
+        const { cdnUrl } = await res.json();
+        setImageUrl(cdnUrl);
+        setImages((prev) => [cdnUrl, ...prev]);
+        toast.success("Image téléchargée !");
+      } else {
+        toast.error("Échec du téléchargement de l'image");
+      }
     } catch {
-      toast.error("Failed to upload image");
+      toast.error("Échec du téléchargement de l'image");
+    } finally {
       setUploading(false);
     }
   };

@@ -27,11 +27,16 @@ export async function uploadToCloudinary(
       { method: "POST", body: formData }
     );
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("[cloudinary] Upload failed:", res.status, err);
+      return null;
+    }
 
     const data = await res.json();
     return data.secure_url as string;
-  } catch {
+  } catch (e) {
+    console.error("[cloudinary] Upload error:", e);
     return null;
   }
 }

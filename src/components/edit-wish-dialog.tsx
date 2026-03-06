@@ -81,26 +81,24 @@ export function EditWishDialog({
     if (!file) return;
     setUploading(true);
     try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const dataUri = reader.result as string;
-        const res = await fetch("/api/images/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageUrl: dataUri }),
-        });
-        if (res.ok) {
-          const { cdnUrl } = await res.json();
-          setImageUrl(cdnUrl);
-          toast.success("Image téléchargée !");
-        } else {
-          toast.error("Échec de l'upload");
-        }
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
+      const { compressImage } = await import("@/lib/compress-image");
+      const compressed = await compressImage(file);
+      const formData = new FormData();
+      formData.append("file", compressed, "image.webp");
+      const res = await fetch("/api/images/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok) {
+        const { cdnUrl } = await res.json();
+        setImageUrl(cdnUrl);
+        toast.success("Image téléchargée !");
+      } else {
+        toast.error("Échec de l'upload");
+      }
     } catch {
       toast.error("Échec de l'upload");
+    } finally {
       setUploading(false);
     }
   };
