@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { WishCard } from "@/components/wish-card";
 import { ReserveDialog } from "@/components/reserve-dialog";
+import { MasonryGrid } from "@/components/masonry-grid";
 import { Badge } from "@/components/ui/badge";
 
 interface Wish {
@@ -85,7 +86,7 @@ export function PublicCollectionView({
             <p className="text-muted-foreground">This wishlist is empty</p>
           </div>
         ) : (
-          <div className="masonry-grid">
+          <MasonryGrid>
             {wishes.map((wish) => (
               <WishCard
                 key={wish.id}
@@ -94,7 +95,7 @@ export function PublicCollectionView({
                 onReserve={(w) => setReserveWish(w)}
               />
             ))}
-          </div>
+          </MasonryGrid>
         )}
 
         <ReserveDialog

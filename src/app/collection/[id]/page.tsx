@@ -11,6 +11,7 @@ import { WishCard } from "@/components/wish-card";
 import { AddWishDialog } from "@/components/add-wish-dialog";
 import { EditWishDialog } from "@/components/edit-wish-dialog";
 import { CollectionForm } from "@/components/collection-form";
+import { MasonryGrid } from "@/components/masonry-grid";
 import { Plus, ArrowLeft, Copy, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
@@ -155,7 +156,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           </div>
         </div>
 
-        <div className="masonry-grid">
+        <MasonryGrid>
           <button
             onClick={() => setShowAddWish(true)}
             className="w-full flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border bg-card aspect-[3/4] text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:shadow-md transition-all cursor-pointer"
@@ -174,7 +175,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               onEdit={(w) => setEditingWish(w)}
             />
           ))}
-        </div>
+        </MasonryGrid>
 
         <AddWishDialog
           open={showAddWish}
