@@ -16,7 +16,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/dashboard");
+      router.replace("/");
     }
   }, [status, router]);
 
@@ -40,7 +40,7 @@ export default function SignInPage() {
       setError("Email ou mot de passe incorrect");
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -52,7 +52,7 @@ export default function SignInPage() {
           <CardDescription>Choisissez votre méthode de connexion</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/" })}>
             Google
           </Button>
 

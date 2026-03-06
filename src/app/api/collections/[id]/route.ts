@@ -23,11 +23,19 @@ export async function GET(
   const collection = await prisma.collection.findUnique({
     where: { id },
     include: {
+      user: { select: { id: true, name: true, image: true } },
       wishes: {
         orderBy: [{ position: "asc" }, { createdAt: "desc" }],
         include: {
           creator: { select: { id: true, name: true } },
         },
+      },
+      collaborators: {
+        where: { status: "ACCEPTED" },
+        include: {
+          user: { select: { id: true, name: true, image: true } },
+        },
+        orderBy: { createdAt: "asc" },
       },
     },
   });

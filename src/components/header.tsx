@@ -146,7 +146,7 @@ export function Header() {
   return (
     <header className="border-b border-border/60 bg-background/70 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href={session ? "/dashboard" : "/"} className="flex items-center gap-2 font-semibold text-lg">
+        <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
           <Logo className="h-7 w-7" />
           Envly
         </Link>
@@ -178,7 +178,7 @@ export function Header() {
                     {session.user?.email}
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2">
                       <LayoutGrid className="h-4 w-4" />
                       Mes collections
                     </Link>

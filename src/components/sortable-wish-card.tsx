@@ -21,11 +21,13 @@ export function SortableWishCard({
   onDeleted,
   onEdit,
   onTogglePriority,
+  creatorName,
 }: {
   wish: Wish;
   onDeleted: (id: string) => void;
   onEdit: (wish: Wish) => void;
   onTogglePriority: (wish: Wish) => void;
+  creatorName?: string;
 }) {
   const {
     attributes,
@@ -58,6 +60,7 @@ export function SortableWishCard({
         onDeleted={onDeleted}
         onEdit={onEdit}
         onTogglePriority={onTogglePriority}
+        creatorName={creatorName}
       />
     </div>
   );

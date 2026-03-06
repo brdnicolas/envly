@@ -6,8 +6,7 @@ import { useSession } from "next-auth/react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SortableWishCard } from "@/components/sortable-wish-card";
 import { WishCard } from "@/components/wish-card";
 import { EditWishDialog } from "@/components/edit-wish-dialog";
@@ -25,7 +24,7 @@ import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Plus, ArrowLeft, Copy, Pencil, Users, LogOut } from "lucide-react";
+import { Plus, ArrowLeft, Copy, Pencil, LogOut, Globe, Lock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
@@ -43,6 +42,19 @@ interface Wish {
   creator?: { id: string; name: string | null } | null;
 }
 
+interface CollaboratorUser {
+  id: string;
+  name: string | null;
+  image: string | null;
+}
+
+interface Collaborator {
+  id: string;
+  userId: string;
+  status: string;
+  user: CollaboratorUser;
+}
+
 interface Collection {
   id: string;
   name: string;
@@ -51,6 +63,57 @@ interface Collection {
   isPublic: boolean;
   wishes: Wish[];
   role: "owner" | "collaborator";
+  user: CollaboratorUser;
+  collaborators: Collaborator[];
+}
+
+function CollaboratorAvatars({
+  owner,
+  collaborators,
+  isOwner,
+  onInviteClick,
+}: {
+  owner: CollaboratorUser;
+  collaborators: Collaborator[];
+  isOwner: boolean;
+  onInviteClick: () => void;
+}) {
+  const people = [
+    owner,
+    ...collaborators.map((c) => c.user),
+  ];
+
+  return (
+    <div className="flex items-center">
+      <div className="flex -space-x-2">
+        {people.map((person, i) => (
+          <Avatar
+            key={person.id}
+            className="h-8 w-8 border-2 border-background ring-0 transition-transform hover:scale-110 hover:z-10"
+            style={{ zIndex: people.length - i }}
+            title={person.name || "Anonyme"}
+          >
+            {person.image ? (
+              <AvatarImage src={person.image} alt={person.name || ""} />
+            ) : null}
+            <AvatarFallback className="text-[10px] font-medium">
+              {person.name?.[0]?.toUpperCase() || "?"}
+            </AvatarFallback>
+          </Avatar>
+        ))}
+        {isOwner && (
+          <button
+            onClick={onInviteClick}
+            className="relative h-8 w-8 rounded-full border-2 border-dashed border-border bg-muted/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted transition-all duration-200 hover:scale-110"
+            style={{ zIndex: 0 }}
+            title="Inviter un collaborateur"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function CollectionPage() {
@@ -103,7 +166,7 @@ export default function CollectionPage() {
   const fetchCollection = async () => {
     const res = await fetch(`/api/collections/${id}`);
     if (!res.ok) {
-      router.push("/dashboard");
+      router.push("/");
       return;
     }
     const data = await res.json();
@@ -170,36 +233,13 @@ export default function CollectionPage() {
   const handleLeaveCollab = async () => {
     if (!collection || !currentUserId) return;
     setLeavingCollab(true);
-
-    // Find my collaborator record
-    const collabRes = await fetch(`/api/collections/${id}/collaborators`);
-    // As a collaborator we can't list collaborators (owner only),
-    // so we need a different approach. We'll look for our own record.
-    // Actually the GET is owner-only, so let's call the API differently.
-    // We need to find our collaborator ID. Let's fetch it via a workaround.
-
-    // Actually let's update the backend to also allow a collaborator to see their own record.
-    // For now, let's just add a query param approach. Instead, let's add a dedicated endpoint.
-    // Simplest: try to find and delete via a special route. But we already have DELETE.
-    // The issue is we need the collaboratorId. Let's update the GET to also work for collaborators
-    // for their own record, or we store collaboratorId in the collection response.
-
-    // For simplicity, let's fetch all collaborators from the collection detail and find ours.
-    // But we don't have collaborators in the collection response. Let me refactor:
-    // Add a simpler approach - search through the collection endpoint.
-    // Actually, the simplest fix: let's make a special "leave" call.
-
     try {
-      // We'll use a trick: try to list collaborators (will fail if not owner),
-      // If that fails, we use the notification data approach.
-      // Better: just add a "leave" endpoint or make collaborator able to see their own.
-      // Simplest approach: POST to a leave endpoint that finds and deletes own record.
       const res = await fetch(`/api/collections/${id}/collaborators/leave`, {
         method: "DELETE",
       });
       if (res.ok) {
         toast.success("Vous avez quitté la collaboration");
-        router.push("/dashboard");
+        router.push("/");
       } else {
         toast.error("Erreur");
       }
@@ -218,14 +258,20 @@ export default function CollectionPage() {
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
             <div className="space-y-2">
               <Skeleton className="h-7 w-48" />
-              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-64" />
             </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-9 w-20 rounded-xl" />
-              <Skeleton className="h-9 w-20 rounded-xl" />
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {[1, 2].map((i) => (
+                  <Skeleton key={i} className="h-8 w-8 rounded-full" />
+                ))}
+              </div>
+              <Skeleton className="h-7 w-20 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-xl" />
+              <Skeleton className="h-9 w-24 rounded-xl" />
             </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 [&>*]:mb-3 [&>*]:break-inside-avoid">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div key={i} className="rounded-2xl border border-border/60 bg-card overflow-hidden">
                 <Skeleton className="w-full aspect-[3/4]" />
@@ -242,6 +288,8 @@ export default function CollectionPage() {
   }
 
   if (!collection) return null;
+
+  const hasCollaborators = collection.collaborators.length > 0;
 
   const canEditWish = (wish: Wish) => {
     if (isOwner) return true;
@@ -268,6 +316,7 @@ export default function CollectionPage() {
             onDeleted={handleWishDeleted}
             onEdit={(w) => setEditingWish(w)}
             onTogglePriority={handleTogglePriority}
+            creatorName={hasCollaborators ? (wish.creator?.name || undefined) : undefined}
           />
         ) : (
           <div key={wish.id}>
@@ -294,16 +343,16 @@ export default function CollectionPage() {
           variant="ghost"
           size="sm"
           className="mb-4 rounded-xl"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/")}
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           Retour
         </Button>
 
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
-          <div className="flex items-start gap-2">
-            <div>
-              <h1 className="text-2xl font-semibold">{collection.name}</h1>
+          <div className="flex items-start gap-2 min-w-0">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-semibold truncate">{collection.name}</h1>
               {collection.description && (
                 <p className="text-muted-foreground text-sm mt-1">{collection.description}</p>
               )}
@@ -312,7 +361,7 @@ export default function CollectionPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 shrink-0 mt-0.5 rounded-xl"
+                className="h-7 w-7 shrink-0 mt-1 rounded-xl"
                 onClick={() => setShowEditCollection(true)}
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -321,38 +370,46 @@ export default function CollectionPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {/* Collaborator avatars */}
+            {(hasCollaborators || isOwner) && (
+              <CollaboratorAvatars
+                owner={collection.user}
+                collaborators={collection.collaborators}
+                isOwner={isOwner}
+                onInviteClick={() => setShowInviteDialog(true)}
+              />
+            )}
+
+            {/* Visibility badge (owner only) */}
             {isOwner && (
-              <>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    id="public"
-                    checked={collection.isPublic}
-                    onCheckedChange={togglePublic}
-                  />
-                  <Label htmlFor="public" className="text-sm">Publique</Label>
-                </div>
+              <button
+                onClick={togglePublic}
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 border ${
+                  collection.isPublic
+                    ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20"
+                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted"
+                }`}
+              >
+                {collection.isPublic ? (
+                  <Globe className="h-3 w-3" />
+                ) : (
+                  <Lock className="h-3 w-3" />
+                )}
+                {collection.isPublic ? "Publique" : "Privée"}
+              </button>
+            )}
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-xl"
-                  onClick={copyShareLink}
-                  disabled={!collection.isPublic}
-                >
-                  <Copy className="h-4 w-4 mr-1" />
-                  Partager
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-xl"
-                  onClick={() => setShowInviteDialog(true)}
-                >
-                  <Users className="h-4 w-4 mr-1" />
-                  Inviter
-                </Button>
-              </>
+            {/* Copy share link (owner + public) */}
+            {isOwner && collection.isPublic && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-xl"
+                onClick={copyShareLink}
+                title="Copier le lien de partage"
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
             )}
 
             {isCollaborator && (

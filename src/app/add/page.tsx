@@ -300,7 +300,7 @@ function AddPageContent() {
       }
       toast.success("Souhait ajouté !");
       const collection = collections.find((c) => c.id === selectedCollectionId);
-      router.push(collection ? `/collection/${collection.slug}` : "/dashboard");
+      router.push(collection ? `/collection/${collection.slug}` : "/");
     } else {
       toast.error("Échec de l'ajout du souhait");
     }
@@ -321,7 +321,7 @@ function AddPageContent() {
         <p className="text-muted-foreground text-center">
           Vous devez avoir au moins une collection pour ajouter un souhait.
         </p>
-        <Button onClick={() => router.push("/dashboard")}>
+        <Button onClick={() => router.push("/")}>
           Aller au tableau de bord
         </Button>
       </div>

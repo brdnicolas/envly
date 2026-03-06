@@ -80,7 +80,7 @@ export default function SignUpPage() {
       setError("Compte créé mais la connexion a échoué. Veuillez vous connecter manuellement.");
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -92,7 +92,7 @@ export default function SignUpPage() {
           <CardDescription>Commencez à créer et partager des wishlists</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/" })}>
             Google
           </Button>
 
