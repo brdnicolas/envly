@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, X, Mail, LayoutGrid, Settings, LogOut, Users } from "lucide-react";
+import { NotificationBell } from "@/components/notification-bell";
 
 interface SearchUser {
   id: string;
@@ -159,6 +160,7 @@ export function Header() {
                 </Link>
               </Button>
               <HeaderSearch />
+              <NotificationBell />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">

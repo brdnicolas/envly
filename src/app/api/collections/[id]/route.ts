@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getCollectionAccess } from "@/lib/collection-access";
 
 export async function GET(
   req: Request,
@@ -13,12 +14,20 @@ export async function GET(
   }
 
   const { id } = await params;
+  const role = await getCollectionAccess(id, session.user.id);
+
+  if (role === "none") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   const collection = await prisma.collection.findUnique({
-    where: { id, userId: session.user.id },
+    where: { id },
     include: {
       wishes: {
         orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+        include: {
+          creator: { select: { id: true, name: true } },
+        },
       },
     },
   });
@@ -27,7 +36,7 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  return NextResponse.json(collection);
+  return NextResponse.json({ ...collection, role });
 }
 
 export async function PATCH(

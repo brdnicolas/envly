@@ -74,6 +74,19 @@ export default async function PublicWishlistPage({
   const session = await getServerSession(authOptions);
   const isOwner = session?.user?.id === collection.userId;
 
+  let isCollaborator = false;
+  if (session?.user?.id && !isOwner) {
+    const collab = await prisma.collectionCollaborator.findUnique({
+      where: {
+        collectionId_userId: {
+          collectionId: collection.id,
+          userId: session.user.id,
+        },
+      },
+    });
+    isCollaborator = collab?.status === "ACCEPTED";
+  }
+
   let initialFollowing = false;
   if (session?.user?.id && !isOwner) {
     const existing = await prisma.collectionFollow.findUnique({
@@ -97,7 +110,7 @@ export default async function PublicWishlistPage({
     imageOriginalUrl: wish.imageOriginalUrl,
     price: wish.price,
     isPriority: wish.isPriority,
-    reservation: isOwner ? null : wish.reservation,
+    reservation: isOwner || isCollaborator ? null : wish.reservation,
   }));
 
   const recentFollowers = collection.followers.map((f) => f.user);
@@ -112,6 +125,7 @@ export default async function PublicWishlistPage({
       }}
       wishes={wishes}
       isOwner={isOwner}
+      isCollaborator={isCollaborator}
       followData={
         session && !isOwner
           ? {

@@ -34,6 +34,7 @@ export function PublicCollectionView({
   collection,
   wishes: initialWishes,
   isOwner,
+  isCollaborator = false,
   followData,
 }: {
   collection: {
@@ -44,6 +45,7 @@ export function PublicCollectionView({
   };
   wishes: Wish[];
   isOwner: boolean;
+  isCollaborator?: boolean;
   followData?: FollowData;
 }) {
   const [wishes, setWishes] = useState(initialWishes);
@@ -126,7 +128,7 @@ export function PublicCollectionView({
               <WishCard
                 key={wish.id}
                 wish={wish}
-                isOwner={isOwner}
+                isOwner={isOwner || isCollaborator}
                 onReserve={(w) => setReserveWish(w)}
                 onCancelReservation={handleCancelReservation}
               />

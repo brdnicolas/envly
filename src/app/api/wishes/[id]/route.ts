@@ -3,6 +3,23 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteFromCloudinary } from "@/lib/cloudinary";
+import { getCollectionAccess } from "@/lib/collection-access";
+
+async function canModifyWish(wishId: string, userId: string) {
+  const wish = await prisma.wish.findUnique({
+    where: { id: wishId },
+    include: { collection: { select: { userId: true } } },
+  });
+
+  if (!wish) return { allowed: false, wish: null } as const;
+
+  const role = await getCollectionAccess(wish.collectionId, userId);
+
+  if (role === "owner") return { allowed: true, wish } as const;
+  if (role === "collaborator" && wish.creatorId === userId) return { allowed: true, wish } as const;
+
+  return { allowed: false, wish: null } as const;
+}
 
 export async function PATCH(
   req: Request,
@@ -16,12 +33,9 @@ export async function PATCH(
   const { id } = await params;
   const body = await req.json();
 
-  const wish = await prisma.wish.findUnique({
-    where: { id },
-    include: { collection: true },
-  });
+  const { allowed, wish } = await canModifyWish(id, session.user.id);
 
-  if (!wish || wish.collection.userId !== session.user.id) {
+  if (!allowed || !wish) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
@@ -52,12 +66,9 @@ export async function DELETE(
 
   const { id } = await params;
 
-  const wish = await prisma.wish.findUnique({
-    where: { id },
-    include: { collection: true },
-  });
+  const { allowed, wish } = await canModifyWish(id, session.user.id);
 
-  if (!wish || wish.collection.userId !== session.user.id) {
+  if (!allowed || !wish) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

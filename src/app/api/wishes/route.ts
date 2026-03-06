@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { getCollectionAccess } from "@/lib/collection-access";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -16,11 +17,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Title and collection are required" }, { status: 400 });
   }
 
-  const collection = await prisma.collection.findUnique({
-    where: { id: collectionId },
-  });
+  const role = await getCollectionAccess(collectionId, session.user.id);
 
-  if (!collection || collection.userId !== session.user.id) {
+  if (role === "none") {
     return NextResponse.json({ error: "Collection not found" }, { status: 404 });
   }
 
@@ -44,6 +43,7 @@ export async function POST(req: Request) {
       imageOriginalUrl,
       price: price ? parseFloat(price) : null,
       collectionId,
+      creatorId: session.user.id,
     },
   });
 

@@ -40,6 +40,8 @@ export function WishCard({
   onEdit,
   onTogglePriority,
   onCancelReservation,
+  creatorName,
+  hideReservation = false,
 }: {
   wish: Wish;
   isOwner: boolean;
@@ -48,6 +50,8 @@ export function WishCard({
   onEdit?: (wish: Wish) => void;
   onTogglePriority?: (wish: Wish) => void;
   onCancelReservation?: (wishId: string) => void;
+  creatorName?: string;
+  hideReservation?: boolean;
 }) {
   const handleDelete = () => {
     if (!confirm("Supprimer ce souhait ?")) return;
@@ -138,6 +142,9 @@ export function WishCard({
       {/* Info */}
       <div className="p-3 flex flex-col gap-0.5 flex-1">
         <h3 className="text-xs font-medium leading-tight line-clamp-2">{wish.title}</h3>
+        {creatorName && (
+          <span className="text-[10px] text-muted-foreground">par {creatorName}</span>
+        )}
         <div className="flex items-center justify-between mt-auto pt-1">
           {domain && (
             <span className="text-[10px] text-muted-foreground truncate">{domain}</span>
@@ -149,7 +156,7 @@ export function WishCard({
           )}
         </div>
 
-        {!isOwner && !isReserved && (
+        {!isOwner && !hideReservation && !isReserved && (
           <Button
             variant="default"
             size="sm"
@@ -159,7 +166,7 @@ export function WishCard({
             Réserver
           </Button>
         )}
-        {!isOwner && isReserved && getReservationToken(wish.id) && onCancelReservation && (
+        {!isOwner && !hideReservation && isReserved && getReservationToken(wish.id) && onCancelReservation && (
           <CancelReservationButton
             wishId={wish.id}
             onCancelled={onCancelReservation}

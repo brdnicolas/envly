@@ -18,6 +18,7 @@ export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
@@ -49,6 +50,12 @@ export default function SignUpPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas");
+      setLoading(false);
+      return;
+    }
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -169,6 +176,23 @@ export default function SignUpPage() {
                 minLength={6}
                 required
               />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                minLength={6}
+                required
+                className={cn(
+                  confirmPassword && password !== confirmPassword && "border-destructive focus-visible:ring-destructive/30"
+                )}
+              />
+              {confirmPassword && password !== confirmPassword && (
+                <p className="text-[11px] text-destructive">Les mots de passe ne correspondent pas</p>
+              )}
             </div>
             <Button type="submit" className="w-full rounded-xl" disabled={loading}>
               {loading ? "Création..." : "Créer un compte"}

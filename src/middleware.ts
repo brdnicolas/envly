@@ -24,6 +24,7 @@ export const config = {
     "/api/users/:path*",
     "/api/scrape",
     "/api/profile",
+    "/api/notifications/:path*",
     "/add",
   ],
 };

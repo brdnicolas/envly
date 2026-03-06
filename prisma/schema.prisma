@@ -52,52 +52,58 @@ model PasswordResetToken {
 }
 
 model User {
-  id               String             @id @default(cuid())
+  id               String                    @id @default(cuid())
   name             String?
-  email            String?            @unique
+  email            String?                   @unique
   emailVerified    DateTime?
   image            String?
   description      String?
   password         String?
-  slug             String?            @unique
+  slug             String?                   @unique
   accounts         Account[]
   sessions         Session[]
   collections      Collection[]
-  followers        UserFollow[]       @relation("following")
-  following        UserFollow[]       @relation("followers")
+  followers        UserFollow[]              @relation("following")
+  following        UserFollow[]              @relation("followers")
   collectionFollows CollectionFollow[]
-  createdAt        DateTime           @default(now())
+  collaborations   CollectionCollaborator[]
+  notifications    Notification[]
+  createdWishes    Wish[]                    @relation("createdWishes")
+  createdAt        DateTime                  @default(now())
 }
 
 model Collection {
-  id          String             @id @default(cuid())
-  name        String
-  description String?
-  slug        String             @unique
-  isPublic    Boolean            @default(false)
-  userId      String
-  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  wishes      Wish[]
-  followers   CollectionFollow[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id            String                    @id @default(cuid())
+  name          String
+  description   String?
+  slug          String                    @unique
+  isPublic      Boolean                   @default(false)
+  userId        String
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wishes        Wish[]
+  followers     CollectionFollow[]
+  collaborators CollectionCollaborator[]
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
 }
 
 model Wish {
-  id           String       @id @default(cuid())
-  url          String?
-  title        String
-  description  String?
+  id               String       @id @default(cuid())
+  url              String?
+  title            String
+  description      String?
   imageUrl         String?
   imageOriginalUrl String?
-  price        Float?
-  position     Int          @default(0)
-  isPriority   Boolean      @default(false)
-  collectionId String
-  collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  reservation  Reservation?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  price            Float?
+  position         Int          @default(0)
+  isPriority       Boolean      @default(false)
+  collectionId     String
+  creatorId        String?
+  collection       Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  creator          User?        @relation("createdWishes", fields: [creatorId], references: [id], onDelete: SetNull)
+  reservation      Reservation?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
 
 model Reservation {
@@ -129,4 +135,37 @@ model CollectionFollow {
   createdAt    DateTime   @default(now())
 
   @@unique([userId, collectionId])
+}
+
+enum CollaboratorStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum NotificationType {
+  COLLABORATION_INVITE
+  NEW_FOLLOWER
+}
+
+model CollectionCollaborator {
+  id           String             @id @default(cuid())
+  collectionId String
+  userId       String
+  status       CollaboratorStatus @default(PENDING)
+  collection   Collection         @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime           @default(now())
+
+  @@unique([collectionId, userId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  data      Json
+  read      Boolean          @default(false)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
 }

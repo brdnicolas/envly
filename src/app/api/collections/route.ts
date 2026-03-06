@@ -10,20 +10,42 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const collections = await prisma.collection.findMany({
-    where: { userId: session.user.id },
-    include: {
-      _count: { select: { wishes: true } },
-      wishes: {
-        where: { imageUrl: { not: null } },
-        select: { imageUrl: true },
-        take: 6,
+  const [ownCollections, collabRecords] = await Promise.all([
+    prisma.collection.findMany({
+      where: { userId: session.user.id },
+      include: {
+        _count: { select: { wishes: true } },
+        wishes: {
+          where: { imageUrl: { not: null } },
+          select: { imageUrl: true },
+          take: 6,
+        },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.collectionCollaborator.findMany({
+      where: { userId: session.user.id, status: "ACCEPTED" },
+      include: {
+        collection: {
+          include: {
+            _count: { select: { wishes: true } },
+            wishes: {
+              where: { imageUrl: { not: null } },
+              select: { imageUrl: true },
+              take: 6,
+            },
+          },
+        },
+      },
+    }),
+  ]);
 
-  return NextResponse.json(collections);
+  const result = [
+    ...ownCollections.map((c) => ({ ...c, role: "owner" as const })),
+    ...collabRecords.map((cr) => ({ ...cr.collection, role: "collaborator" as const })),
+  ];
+
+  return NextResponse.json(result);
 }
 
 export async function POST(req: Request) {

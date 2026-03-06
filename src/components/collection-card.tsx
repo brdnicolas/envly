@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2, ExternalLink, ImageIcon, Share2 } from "lucide-react";
+import { MoreHorizontal, Trash2, ExternalLink, ImageIcon, Share2, Users } from "lucide-react";
 import { toast } from "sonner";
 
 interface Collection {
@@ -20,6 +20,7 @@ interface Collection {
   isPublic: boolean;
   _count: { wishes: number };
   wishes?: { imageUrl: string | null }[];
+  role?: "owner" | "collaborator";
 }
 
 export function ImageMosaic({ images }: { images: string[] }) {
@@ -129,25 +130,27 @@ export function CollectionCard({
               <Share2 className="h-3.5 w-3.5" />
             </Button>
           )}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 -mt-0.5 rounded-xl">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-xl">
-              {collection.isPublic && (
-                <DropdownMenuItem onClick={copyShareLink}>
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Copier le lien
+          {collection.role !== "collaborator" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 -mt-0.5 rounded-xl">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="rounded-xl">
+                {collection.isPublic && (
+                  <DropdownMenuItem onClick={copyShareLink}>
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Copier le lien
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={handleDelete} className="text-destructive">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Supprimer
                 </DropdownMenuItem>
-              )}
-              <DropdownMenuItem onClick={handleDelete} className="text-destructive">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Supprimer
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
 
         {collection.description && (
@@ -166,6 +169,12 @@ export function CollectionCard({
           >
             {collection.isPublic ? "Publique" : "Privée"}
           </Badge>
+          {collection.role === "collaborator" && (
+            <Badge variant="outline" className="text-[10px] px-2 py-0.5 rounded-lg gap-1">
+              <Users className="h-3 w-3" />
+              Collab
+            </Badge>
+          )}
         </div>
       </div>
     </div>

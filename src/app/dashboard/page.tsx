@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CollectionCard, ImageMosaic } from "@/components/collection-card";
 import { CollectionForm } from "@/components/collection-form";
-import { Plus, Puzzle, X, Copy, Check, Settings } from "lucide-react";
+import { Plus, Puzzle, X, Copy, Check, Settings, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,7 @@ interface Collection {
   createdAt: string;
   _count: { wishes: number };
   wishes: { imageUrl: string | null }[];
+  role?: "owner" | "collaborator";
 }
 
 interface FriendOwner {

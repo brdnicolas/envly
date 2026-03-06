@@ -21,6 +21,17 @@ export async function POST(req: Request) {
     },
   });
 
+  await prisma.notification.create({
+    data: {
+      userId,
+      type: "NEW_FOLLOWER",
+      data: {
+        followerId: session.user.id,
+        followerName: session.user.name || "Quelqu'un",
+      },
+    },
+  });
+
   return NextResponse.json(follow);
 }
 
