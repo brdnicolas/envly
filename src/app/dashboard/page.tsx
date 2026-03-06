@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CollectionCard, ImageMosaic } from "@/components/collection-card";
 import { CollectionForm } from "@/components/collection-form";
 import { Plus, Puzzle, X, Copy, Check, Settings } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 interface Collection {
@@ -147,7 +148,19 @@ function FriendsTab({
   followingCount: number;
 }) {
   if (loading) {
-    return <div className="text-muted-foreground text-sm">Loading...</div>;
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-3">
+            <Skeleton className="h-9 w-9 rounded-full" />
+            <div className="flex-1 space-y-1.5">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (collections.length === 0) {
@@ -267,6 +280,21 @@ export default function DashboardPage() {
       <Header />
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
         {/* Profile section */}
+        {!profile && (
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 pb-8 border-b border-border">
+            <Skeleton className="h-16 w-16 rounded-full" />
+            <div className="flex-1 space-y-2 text-center sm:text-left">
+              <Skeleton className="h-6 w-36" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-3 w-40" />
+              <div className="flex items-center gap-3 justify-center sm:justify-start">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+        )}
         {profile && (
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 pb-8 border-b border-border">
             <Avatar className="h-16 w-16">
@@ -378,7 +406,17 @@ export default function DashboardPage() {
         {/* Tab content */}
         {activeTab === "mine" ? (
           loading ? (
-            <div className="text-muted-foreground text-sm">Loading...</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
+                  <Skeleton className="w-full aspect-[16/9]" />
+                  <div className="p-4 space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : collections.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-muted-foreground mb-4">No collections yet</p>

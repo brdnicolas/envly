@@ -85,14 +85,9 @@ export default function SignUpPage() {
           <CardDescription>Start creating and sharing wishlists</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
-              GitHub
-            </Button>
-            <Button variant="outline" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
-              Google
-            </Button>
-          </div>
+          <Button variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+            Google
+          </Button>
 
           <div className="relative">
             <Separator />

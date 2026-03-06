@@ -8,6 +8,7 @@ import { UserCard } from "@/components/user-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Users, UserCheck, Heart } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 type Tab = "following" | "followers" | "collections";
@@ -82,9 +83,17 @@ export default function FriendsPage() {
         </div>
 
         {loading ? (
-          <p className="text-sm text-muted-foreground text-center py-8">
-            Loading...
-          </p>
+          <div className="space-y-3 py-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : activeTab === "collections" ? (
           collections.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">

@@ -23,6 +23,7 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Plus, ArrowLeft, Copy, Pencil } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 interface Wish {
@@ -150,8 +151,29 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <p className="text-muted-foreground">Loading...</p>
+        <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
+          <Skeleton className="h-8 w-16 mb-4" />
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+            <div className="space-y-2">
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-9 w-20" />
+              <Skeleton className="h-9 w-20" />
+            </div>
+          </div>
+          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 [&>*]:mb-3 [&>*]:break-inside-avoid">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
+                <Skeleton className="w-full aspect-[3/4]" />
+                <div className="p-2 space-y-1.5">
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+            ))}
+          </div>
         </main>
       </div>
     );
