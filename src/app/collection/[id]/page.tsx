@@ -162,8 +162,8 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               <Skeleton className="h-9 w-20 rounded-xl" />
             </div>
           </div>
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 [&>*]:mb-3 [&>*]:break-inside-avoid">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div key={i} className="rounded-2xl border border-border/60 bg-card overflow-hidden">
                 <Skeleton className="w-full aspect-[3/4]" />
                 <div className="p-3 space-y-1.5">
