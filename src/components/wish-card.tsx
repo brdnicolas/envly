@@ -49,13 +49,13 @@ export function WishCard({
   onTogglePriority?: (wish: Wish) => void;
   onCancelReservation?: (wishId: string) => void;
 }) {
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirm("Supprimer ce souhait ?")) return;
-    const res = await fetch(`/api/wishes/${wish.id}`, { method: "DELETE" });
-    if (res.ok) {
-      onDeleted?.(wish.id);
-      toast.success("Souhait supprimé");
-    }
+    onDeleted?.(wish.id);
+    toast.success("Souhait supprimé");
+    fetch(`/api/wishes/${wish.id}`, { method: "DELETE" }).then((res) => {
+      if (!res.ok) toast.error("Échec de la suppression");
+    });
   };
 
   const isReserved = !!wish.reservation;

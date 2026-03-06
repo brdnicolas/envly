@@ -554,7 +554,7 @@ function AddPageContent() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full rounded-xl" disabled={saving || scraping}>
+            <Button type="submit" className="w-full rounded-xl" disabled={saving}>
               {saving ? "Ajout..." : "Ajouter le souhait"}
             </Button>
           </form>

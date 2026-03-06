@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "zip:ext": "cd extension && rm -f envly-extension.zip && zip -r envly-extension.zip . -x zip.sh envly-extension.zip && echo '✓ envly-extension.zip créé'"
+    "extension": "cd extension && rm -f envly-extension.zip && zip -r envly-extension.zip . -x zip.sh envly-extension.zip && echo '✓ envly-extension.zip créé'"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

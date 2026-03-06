@@ -35,6 +35,7 @@ interface Wish {
   imageOriginalUrl?: string | null;
   price: number | null;
   isPriority?: boolean;
+  collectionId?: string;
 }
 
 interface Collection {
@@ -130,19 +131,26 @@ export default function CollectionPage() {
 
   const handleTogglePriority = async (wish: Wish) => {
     if (!collection) return;
+    const newPriority = !wish.isPriority;
+    setCollection({
+      ...collection,
+      wishes: collection.wishes.map((w) =>
+        w.id === wish.id ? { ...w, isPriority: newPriority } : w
+      ),
+    });
+    toast.success(newPriority ? "Marqué comme prioritaire" : "Priorité retirée");
     const res = await fetch(`/api/wishes/${wish.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isPriority: !wish.isPriority }),
+      body: JSON.stringify({ isPriority: newPriority }),
     });
-    if (res.ok) {
-      setCollection({
-        ...collection,
-        wishes: collection.wishes.map((w) =>
-          w.id === wish.id ? { ...w, isPriority: !w.isPriority } : w
-        ),
-      });
-      toast.success(wish.isPriority ? "Priorité retirée" : "Marqué comme prioritaire");
+    if (!res.ok) {
+      setCollection((prev) =>
+        prev
+          ? { ...prev, wishes: prev.wishes.map((w) => (w.id === wish.id ? { ...w, isPriority: wish.isPriority } : w)) }
+          : prev
+      );
+      toast.error("Échec de la mise à jour");
     }
   };
 
