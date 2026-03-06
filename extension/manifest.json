@@ -3,8 +3,11 @@
   "name": "Add to Envly",
   "version": "1.0.0",
   "description": "Add any page to your Envly wishlist in one click",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "cookies"],
   "host_permissions": ["https://envly.vercel.app/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

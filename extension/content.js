@@ -128,19 +128,17 @@
 
   btn.innerHTML = ICON_PLUS;
 
-  // Check if this URL is already in the wishlist
-  fetch(`${ENVLY_URL}/api/wishes/check?url=${encodeURIComponent(window.location.href)}`, {
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.exists) {
+  // Check if this URL is already in the wishlist (via background for cookie access)
+  chrome.runtime.sendMessage(
+    { type: "CHECK_URL", url: window.location.href },
+    (data) => {
+      if (data?.exists) {
         btn.classList.add("envly-fab--done");
         btn.innerHTML = ICON_CHECK;
-        btn.title = "Already in Envly";
+        btn.title = "Déjà dans Envly";
       }
-    })
-    .catch(() => {});
+    }
+  );
 
   btn.addEventListener("click", () => {
     if (btn.classList.contains("envly-fab--done")) return;
