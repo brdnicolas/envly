@@ -142,12 +142,12 @@ export function EditWishDialog({
             <img
               src={imageUrl}
               alt="Preview"
-              className="w-full h-32 object-cover rounded-md bg-muted/30"
+              className="w-full h-32 object-cover rounded-xl bg-muted/30"
               onError={(e) => (e.currentTarget.style.display = "none")}
             />
           )}
 
-          <Button type="submit" className="w-full" disabled={saving}>
+          <Button type="submit" className="w-full rounded-xl" disabled={saving}>
             {saving ? "Saving..." : "Save changes"}
           </Button>
         </form>

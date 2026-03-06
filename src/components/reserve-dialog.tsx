@@ -94,7 +94,7 @@ export function ReserveDialog({
               required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full rounded-xl" disabled={loading}>
             {loading ? "Reserving..." : "Confirm reservation"}
           </Button>
         </form>
@@ -138,7 +138,7 @@ export function CancelReservationButton({
     <Button
       variant="outline"
       size="sm"
-      className="w-full h-7 text-[11px] mt-1.5"
+      className="w-full h-7 text-[11px] mt-1.5 rounded-xl"
       onClick={handleCancel}
       disabled={loading}
     >

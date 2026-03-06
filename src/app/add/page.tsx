@@ -40,8 +40,8 @@ function WishPreview({
 
   if (!hasContent) {
     return (
-      <div className="rounded-lg border border-dashed border-border bg-muted/20 flex flex-col items-center justify-center p-8 text-center min-h-[280px]">
-        <Gift className="h-10 w-10 text-muted-foreground/30 mb-3" />
+      <div className="rounded-2xl border border-dashed border-border/60 bg-muted/10 flex flex-col items-center justify-center p-8 text-center min-h-[280px]">
+        <Gift className="h-10 w-10 text-muted-foreground/20 mb-3" />
         <p className="text-sm text-muted-foreground/60">
           Your wish will appear here...
         </p>
@@ -50,7 +50,7 @@ function WishPreview({
   }
 
   return (
-    <div className="group relative flex flex-col rounded-lg overflow-hidden border border-border bg-card shadow-sm">
+    <div className="group relative flex flex-col rounded-2xl overflow-hidden border border-border/60 bg-card shadow-sm">
       {/* Image */}
       <div className="block overflow-hidden bg-muted/30">
         {imageUrl ? (
@@ -341,10 +341,12 @@ function AddPageContent() {
         </div>
 
         {!fromExtension && (
-          <div className="flex items-center gap-3 rounded-lg border border-dashed border-border bg-muted/20 px-4 py-3 mb-6">
-            <Puzzle className="h-4 w-4 text-muted-foreground shrink-0" />
+          <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6">
+            <div className="h-9 w-9 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
+              <Puzzle className="h-4 w-4 text-muted-foreground" />
+            </div>
             <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Tip:</span> Install our Chrome extension to add wishes directly from any store — images and prices are captured automatically.
+              <span className="font-medium text-foreground">Tip:</span> Install our Chrome extension to add wishes directly from any store.
             </p>
           </div>
         )}
@@ -382,7 +384,7 @@ function AddPageContent() {
             {/* Image */}
             <div className="space-y-1.5">
               <Label>Image</Label>
-              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-md border p-2">
+              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-xl border border-border/60 p-2">
                 {images.map((img) => (
                   <button
                     key={img}
@@ -490,7 +492,7 @@ function AddPageContent() {
                   autoComplete="off"
                 />
                 {collectionOpen && (
-                  <div className="absolute z-10 mt-1 w-full rounded-md border border-border bg-popover shadow-md max-h-48 overflow-y-auto">
+                  <div className="absolute z-10 mt-1 w-full rounded-xl border border-border/60 bg-popover/95 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
                     {filteredCollections.map((c) => (
                       <button
                         key={c.id}
@@ -552,7 +554,7 @@ function AddPageContent() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={saving || scraping}>
+            <Button type="submit" className="w-full rounded-xl" disabled={saving || scraping}>
               {saving ? "Adding..." : "Add wish"}
             </Button>
           </form>

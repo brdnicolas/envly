@@ -74,7 +74,6 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
 
       setCollection({ ...collection, wishes });
 
-      // Persist in background
       fetch("/api/wishes/reorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -152,22 +151,22 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
-          <Skeleton className="h-8 w-16 mb-4" />
+          <Skeleton className="h-8 w-16 mb-4 rounded-xl" />
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
             <div className="space-y-2">
               <Skeleton className="h-7 w-48" />
               <Skeleton className="h-4 w-32" />
             </div>
             <div className="flex gap-2">
-              <Skeleton className="h-9 w-20" />
-              <Skeleton className="h-9 w-20" />
+              <Skeleton className="h-9 w-20 rounded-xl" />
+              <Skeleton className="h-9 w-20 rounded-xl" />
             </div>
           </div>
           <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 [&>*]:mb-3 [&>*]:break-inside-avoid">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
+              <div key={i} className="rounded-2xl border border-border/60 bg-card overflow-hidden">
                 <Skeleton className="w-full aspect-[3/4]" />
-                <div className="p-2 space-y-1.5">
+                <div className="p-3 space-y-1.5">
                   <Skeleton className="h-3 w-full" />
                   <Skeleton className="h-3 w-16" />
                 </div>
@@ -188,7 +187,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
         <Button
           variant="ghost"
           size="sm"
-          className="mb-4"
+          className="mb-4 rounded-xl"
           onClick={() => router.push("/dashboard")}
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
@@ -206,7 +205,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0 mt-0.5"
+              className="h-8 w-8 shrink-0 mt-0.5 rounded-xl"
               onClick={() => setShowEditCollection(true)}
             >
               <Pencil className="h-3.5 w-3.5" />
@@ -226,6 +225,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             <Button
               variant="outline"
               size="sm"
+              className="rounded-xl"
               onClick={copyShareLink}
               disabled={!collection.isPublic}
             >
@@ -233,7 +233,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               Share
             </Button>
 
-            <Button size="sm" onClick={() => navigateToAdd()}>
+            <Button size="sm" className="rounded-xl" onClick={() => navigateToAdd()}>
               <Plus className="h-4 w-4 mr-1" />
               Add
             </Button>
@@ -245,9 +245,9 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 [&>*]:mb-3 [&>*]:break-inside-avoid">
               <button
                 onClick={() => navigateToAdd()}
-                className="w-full flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border bg-card aspect-[3/4] text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:shadow-md transition-all cursor-pointer"
+                className="w-full flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border/60 bg-card aspect-[3/4] text-muted-foreground hover:text-foreground hover:border-foreground/20 hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
-                <div className="h-10 w-10 rounded-full border-2 border-current flex items-center justify-center">
+                <div className="h-12 w-12 rounded-2xl border-2 border-current flex items-center justify-center">
                   <Plus className="h-5 w-5" />
                 </div>
                 <span className="text-sm font-medium">Add a wish</span>

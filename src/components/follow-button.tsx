@@ -51,6 +51,7 @@ export function FollowButton({
         size={size}
         onClick={toggle}
         disabled={loading}
+        className="rounded-xl"
       >
         {isFollowing ? (
           <>
@@ -73,6 +74,7 @@ export function FollowButton({
       size={size}
       onClick={toggle}
       disabled={loading}
+      className="rounded-xl"
     >
       {isFollowing ? (
         <>

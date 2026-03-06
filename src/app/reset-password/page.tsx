@@ -19,7 +19,7 @@ function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm rounded-2xl border-border/60 shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Invalid link</CardTitle>
           <CardDescription>This password reset link is invalid or has expired.</CardDescription>
@@ -60,7 +60,7 @@ function ResetPasswordForm() {
   };
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm rounded-2xl border-border/60 shadow-lg">
       <CardHeader className="text-center">
         <CardTitle className="text-xl">Set new password</CardTitle>
         <CardDescription>Enter your new password below</CardDescription>
@@ -92,7 +92,7 @@ function ResetPasswordForm() {
               minLength={6}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full rounded-xl" disabled={loading}>
             {loading ? "Resetting..." : "Reset password"}
           </Button>
         </form>

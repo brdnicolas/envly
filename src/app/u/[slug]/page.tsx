@@ -135,6 +135,9 @@ export default async function PublicProfilePage({
 
         {user.collections.length === 0 ? (
           <div className="text-center py-20">
+            <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-muted/50 mb-4">
+              <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
+            </div>
             <p className="text-muted-foreground">No public collections yet</p>
           </div>
         ) : (
@@ -148,10 +151,10 @@ export default async function PublicProfilePage({
                 <Link
                   key={collection.id}
                   href={`/w/${collection.slug}`}
-                  className="group rounded-lg border border-border bg-card overflow-hidden transition-shadow hover:shadow-md"
+                  className="group rounded-2xl border border-border/60 bg-card overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-foreground/15"
                 >
                   {images.length > 0 ? (
-                    <div className="w-full aspect-[2/1] overflow-hidden grid grid-cols-3 grid-rows-2 gap-px bg-border">
+                    <div className="w-full aspect-[2/1] overflow-hidden grid grid-cols-3 grid-rows-2 gap-px bg-border/40 rounded-t-2xl">
                       {images.slice(0, 6).map((img, i) => (
                         <img key={i} src={img} alt="" className="w-full h-full object-cover" />
                       ))}

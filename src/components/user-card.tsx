@@ -16,7 +16,7 @@ interface UserCardProps {
 
 export function UserCard({ user }: UserCardProps) {
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
+    <div className="flex items-center justify-between p-3 rounded-2xl border border-border/60 bg-card transition-all duration-300 hover:shadow-md hover:border-foreground/15">
       <div className="flex items-center gap-3 min-w-0">
         <Avatar className="h-10 w-10 shrink-0">
           <AvatarFallback>

@@ -113,10 +113,10 @@ export function CollectionForm({
               type="button"
               onClick={() => setIsPublic(!isPublic)}
               className={cn(
-                "flex w-full items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors",
+                "flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-all duration-200",
                 isPublic
-                  ? "border-primary bg-primary/5 text-foreground"
-                  : "border-input bg-transparent text-muted-foreground"
+                  ? "border-primary bg-primary/5 text-foreground shadow-sm"
+                  : "border-border/60 bg-transparent text-muted-foreground hover:border-foreground/20"
               )}
             >
               {isPublic ? (
@@ -131,7 +131,7 @@ export function CollectionForm({
             </button>
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full rounded-xl" disabled={loading}>
             {loading
               ? isEdit ? "Saving..." : "Creating..."
               : isEdit ? "Save changes" : "Create collection"

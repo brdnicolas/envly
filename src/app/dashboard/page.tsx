@@ -60,7 +60,7 @@ function FriendCollectionCard({ col }: { col: FriendCollection }) {
   return (
     <Link
       href={`/w/${col.slug}`}
-      className="group w-44 sm:w-52 shrink-0 snap-start rounded-lg border border-border bg-card overflow-hidden transition-shadow hover:shadow-md"
+      className="group w-44 sm:w-52 shrink-0 snap-start rounded-2xl border border-border/60 bg-card overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-foreground/15"
     >
       <ImageMosaic images={images} />
       <div className="p-3">
@@ -166,6 +166,9 @@ function FriendsTab({
   if (collections.length === 0) {
     return (
       <div className="text-center py-20">
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-muted/50 mb-4">
+          <Settings className="h-5 w-5 text-muted-foreground/50" />
+        </div>
         <p className="text-muted-foreground">
           {followingCount === 0
             ? "Follow users to see their collections here"
@@ -281,7 +284,7 @@ export default function DashboardPage() {
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
         {/* Profile section */}
         {!profile && (
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 pb-8 border-b border-border">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 pb-8 border-b border-border/60">
             <Skeleton className="h-16 w-16 rounded-full" />
             <div className="flex-1 space-y-2 text-center sm:text-left">
               <Skeleton className="h-6 w-36" />
@@ -296,7 +299,7 @@ export default function DashboardPage() {
           </div>
         )}
         {profile && (
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 pb-8 border-b border-border">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-10 pb-8 border-b border-border/60">
             <Avatar className="h-16 w-16">
               {profile.image ? <AvatarImage src={profile.image} alt={profile.name || ""} /> : null}
               <AvatarFallback className="text-xl">
@@ -306,10 +309,10 @@ export default function DashboardPage() {
             <div className="flex-1 text-center sm:text-left">
               <h1 className="text-xl font-semibold">{profile.name || "Anonymous"}</h1>
               {profile.description && (
-                <p className="text-sm text-muted-foreground">{profile.description}</p>
+                <p className="text-sm text-muted-foreground mt-0.5">{profile.description}</p>
               )}
               <p className="text-xs text-muted-foreground mt-0.5">{profile.email}</p>
-              <div className="flex items-center gap-3 mt-1.5 justify-center sm:justify-start">
+              <div className="flex items-center gap-3 mt-2 justify-center sm:justify-start">
                 <span className="text-sm">
                   <span className="font-medium">{stats.followingCount}</span>{" "}
                   <span className="text-muted-foreground">following</span>
@@ -320,7 +323,7 @@ export default function DashboardPage() {
                     follower{stats.followersCount !== 1 ? "s" : ""}
                   </span>
                 </span>
-                <span className="text-muted-foreground text-sm">·</span>
+                <span className="text-muted-foreground text-sm">&middot;</span>
                 <span className="text-sm text-muted-foreground">
                   {collections.length} collection{collections.length !== 1 ? "s" : ""}
                 </span>
@@ -332,7 +335,7 @@ export default function DashboardPage() {
                   <span className="text-xs text-muted-foreground truncate max-w-[200px]">
                     {origin}/u/{profile.slug}
                   </span>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleCopyLink}>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 rounded-xl" onClick={handleCopyLink}>
                     {slugCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                   </Button>
                 </>
@@ -348,12 +351,14 @@ export default function DashboardPage() {
 
         {/* Extension banner */}
         {showExtensionBanner && (
-          <div className="relative flex items-center gap-3 rounded-lg border border-border bg-muted/30 px-4 py-3 mb-6">
-            <Puzzle className="h-5 w-5 text-muted-foreground shrink-0" />
+          <div className="relative flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6 transition-all duration-300 hover:shadow-md">
+            <div className="h-10 w-10 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
+              <Puzzle className="h-5 w-5 text-muted-foreground" />
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium">Add wishes faster with our Chrome extension</p>
-              <p className="text-xs text-muted-foreground">
-                Browse any store and save items to your wishlist in one click — no copy-pasting needed.
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Browse any store and save items to your wishlist in one click.
               </p>
             </div>
             <button
@@ -371,14 +376,14 @@ export default function DashboardPage() {
 
         {/* Tabs + New button */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-1 border-b border-border -mb-px">
+          <div className="flex gap-1 rounded-xl bg-muted/50 p-1">
             <button
               onClick={() => setActiveTab("mine")}
               className={cn(
-                "px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
+                "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200",
                 activeTab === "mine"
-                  ? "border-foreground text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               My Collections
@@ -386,17 +391,17 @@ export default function DashboardPage() {
             <button
               onClick={() => setActiveTab("friends")}
               className={cn(
-                "px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
+                "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200",
                 activeTab === "friends"
-                  ? "border-foreground text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               Friends
             </button>
           </div>
           {activeTab === "mine" && (
-            <Button onClick={() => setShowForm(true)} size="sm">
+            <Button onClick={() => setShowForm(true)} size="sm" className="rounded-xl">
               <Plus className="h-4 w-4 mr-1" />
               New
             </Button>
@@ -408,7 +413,7 @@ export default function DashboardPage() {
           loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
+                <div key={i} className="rounded-2xl border border-border/60 bg-card overflow-hidden">
                   <Skeleton className="w-full aspect-[16/9]" />
                   <div className="p-4 space-y-2">
                     <Skeleton className="h-5 w-32" />
@@ -419,8 +424,11 @@ export default function DashboardPage() {
             </div>
           ) : collections.length === 0 ? (
             <div className="text-center py-20">
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-muted/50 mb-4">
+                <Plus className="h-6 w-6 text-muted-foreground/50" />
+              </div>
               <p className="text-muted-foreground mb-4">No collections yet</p>
-              <Button onClick={() => setShowForm(true)} variant="outline">
+              <Button onClick={() => setShowForm(true)} variant="outline" className="rounded-xl">
                 <Plus className="h-4 w-4 mr-2" />
                 Create your first collection
               </Button>

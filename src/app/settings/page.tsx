@@ -302,7 +302,7 @@ export default function SettingsPage() {
               />
             </div>
 
-            <Button onClick={handleSave} disabled={saving || !hasChanges || slugInvalid}>
+            <Button className="rounded-xl" onClick={handleSave} disabled={saving || !hasChanges || slugInvalid}>
               {saving ? "Saving..." : "Save changes"}
             </Button>
           </div>
@@ -319,10 +319,10 @@ export default function SettingsPage() {
                 key={key}
                 onClick={() => setTheme(key)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-colors",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl border text-sm transition-all duration-200",
                   theme === key
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border hover:border-foreground/30"
+                    ? "border-foreground bg-foreground text-background shadow-sm"
+                    : "border-border/60 hover:border-foreground/20 hover:shadow-sm"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -342,7 +342,7 @@ export default function SettingsPage() {
           </p>
           <Dialog open={deleteDialogOpen} onOpenChange={(open) => { setDeleteDialogOpen(open); if (!open) setDeleteConfirm(""); }}>
             <DialogTrigger asChild>
-              <Button variant="destructive">Delete my account</Button>
+              <Button variant="destructive" className="rounded-xl">Delete my account</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

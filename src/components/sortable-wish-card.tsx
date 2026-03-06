@@ -46,7 +46,7 @@ export function SortableWishCard({
   return (
     <div ref={setNodeRef} style={style} className="relative group/sortable">
       <button
-        className="absolute top-1.5 left-1.5 z-10 h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/sortable:opacity-100 transition-opacity cursor-grab active:cursor-grabbing shadow-sm"
+        className="absolute top-2 left-2 z-10 h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/sortable:opacity-100 transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm"
         {...attributes}
         {...listeners}
       >

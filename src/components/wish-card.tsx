@@ -58,20 +58,20 @@ export function WishCard({
 
   return (
     <div
-      className={`group relative flex flex-col rounded-lg overflow-hidden border border-border bg-card transition-shadow hover:shadow-md ${isReserved && !isOwner ? "opacity-60" : ""}`}
+      className={`group relative flex flex-col rounded-2xl overflow-hidden border border-border/60 bg-card transition-all duration-300 hover:shadow-lg hover:border-foreground/15 ${isReserved && !isOwner ? "opacity-60" : ""}`}
     >
       {/* Image */}
       <a
         href={wish.url || undefined}
         target="_blank"
         rel="noopener noreferrer"
-        className={`block overflow-hidden bg-muted/30 ${wish.url ? "cursor-pointer" : "cursor-default"}`}
+        className={`block overflow-hidden bg-muted/20 ${wish.url ? "cursor-pointer" : "cursor-default"}`}
       >
         {wish.imageUrl ? (
           <img
             src={wish.imageUrl}
             alt={wish.title}
-            className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
+            className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {
               if (wish.imageOriginalUrl && e.currentTarget.src !== wish.imageOriginalUrl) {
                 e.currentTarget.src = wish.imageOriginalUrl;
@@ -89,33 +89,33 @@ export function WishCard({
 
       {/* Owner actions */}
       {isOwner && (
-        <div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
           <button
-            className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm"
+            className="h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm transition-colors"
             onClick={() => onTogglePriority?.(wish)}
             title={wish.isPriority ? "Remove priority" : "Mark as priority"}
           >
-            <Star className={`h-2.5 w-2.5 ${wish.isPriority ? "fill-amber-400 text-amber-400" : ""}`} />
+            <Star className={`h-3 w-3 ${wish.isPriority ? "fill-amber-400 text-amber-400" : ""}`} />
           </button>
           <button
-            className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm"
+            className="h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm transition-colors"
             onClick={() => onEdit?.(wish)}
           >
-            <Pencil className="h-2.5 w-2.5" />
+            <Pencil className="h-3 w-3" />
           </button>
           <button
-            className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm text-destructive"
+            className="h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm text-destructive transition-colors"
             onClick={handleDelete}
           >
-            <Trash2 className="h-2.5 w-2.5" />
+            <Trash2 className="h-3 w-3" />
           </button>
         </div>
       )}
 
       {/* Priority indicator */}
       {wish.isPriority && (
-        <div className="absolute top-1.5 left-1.5">
-          <div className="h-6 w-6 rounded-full bg-amber-400/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+        <div className="absolute top-2 left-2">
+          <div className="h-7 w-7 rounded-xl bg-amber-400/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
             <Star className="h-3 w-3 fill-white text-white" />
           </div>
         </div>
@@ -123,17 +123,17 @@ export function WishCard({
 
       {/* Reserved badge */}
       {!isOwner && isReserved && (
-        <div className="absolute top-1.5 left-1.5">
-          <Badge variant="secondary" className="text-[10px] shadow-sm px-1.5 py-0">
+        <div className="absolute top-2 left-2">
+          <Badge variant="secondary" className="text-[10px] shadow-sm px-2 py-0.5 rounded-lg backdrop-blur-sm">
             Reserved by {wish.reservation?.reservedBy}
           </Badge>
         </div>
       )}
 
       {/* Info */}
-      <div className="p-2 flex flex-col gap-0.5 flex-1">
+      <div className="p-3 flex flex-col gap-0.5 flex-1">
         <h3 className="text-xs font-medium leading-tight line-clamp-2">{wish.title}</h3>
-        <div className="flex items-center justify-between mt-auto pt-0.5">
+        <div className="flex items-center justify-between mt-auto pt-1">
           {domain && (
             <span className="text-[10px] text-muted-foreground truncate">{domain}</span>
           )}
@@ -148,7 +148,7 @@ export function WishCard({
           <Button
             variant="default"
             size="sm"
-            className="w-full h-7 text-[11px] mt-1.5"
+            className="w-full h-7 text-[11px] mt-2 rounded-xl"
             onClick={() => onReserve?.(wish)}
           >
             Reserve

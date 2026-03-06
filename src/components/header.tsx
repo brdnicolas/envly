@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, X, Mail, LayoutGrid, Settings, LogOut } from "lucide-react";
+import { Search, X, Mail, LayoutGrid, Settings, LogOut, Users } from "lucide-react";
 
 interface SearchUser {
   id: string;
@@ -89,7 +89,7 @@ function HeaderSearch() {
             placeholder="Search users..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="h-8 w-48 pl-8 text-sm"
+            className="h-8 w-48 pl-8 text-sm rounded-xl"
           />
         </div>
         <Button
@@ -107,7 +107,7 @@ function HeaderSearch() {
       </div>
 
       {(results.length > 0 || loading || (query.trim().length >= 2 && !loading)) && (
-        <div className="absolute right-0 top-full mt-1 w-72 bg-popover border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-72 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-2xl shadow-xl z-50 overflow-hidden">
           {loading && (
             <p className="text-xs text-muted-foreground p-3">Searching...</p>
           )}
@@ -142,15 +142,20 @@ export function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-border/60 bg-background/70 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href={session ? "/dashboard" : "/"} className="font-semibold text-lg">
           Envly
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {session ? (
             <>
+              <Button variant="ghost" size="icon" className="rounded-full" asChild>
+                <Link href="/friends">
+                  <Users className="h-4 w-4" />
+                </Link>
+              </Button>
               <HeaderSearch />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -163,7 +168,7 @@ export function Header() {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="rounded-xl">
                   <DropdownMenuItem className="flex items-center gap-2 text-muted-foreground text-xs" disabled>
                     <Mail className="h-4 w-4" />
                     {session.user?.email}
@@ -193,7 +198,7 @@ export function Header() {
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/signin">Sign in</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button size="sm" className="rounded-xl" asChild>
                 <Link href="/signup">Sign up</Link>
               </Button>
             </div>

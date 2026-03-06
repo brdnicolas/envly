@@ -38,13 +38,13 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm rounded-2xl border-border/60 shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Sign in to Envly</CardTitle>
           <CardDescription>Choose your preferred sign in method</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
             Google
           </Button>
 
@@ -80,11 +80,11 @@ export default function SignInPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full rounded-xl" disabled={loading}>
               {loading ? "Signing in..." : "Sign in"}
             </Button>
             <div className="text-right">
-              <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground">
+              <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Forgot password?
               </Link>
             </div>

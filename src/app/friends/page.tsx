@@ -5,7 +5,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { UserSearch } from "@/components/user-search";
 import { UserCard } from "@/components/user-card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Users, UserCheck, Heart } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -64,16 +63,16 @@ export default function FriendsPage() {
 
         <UserSearch />
 
-        <div className="flex gap-1 mt-8 mb-4 border-b border-border">
+        <div className="flex gap-1 mt-8 mb-4 rounded-xl bg-muted/50 p-1">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
+                "flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 flex-1 justify-center",
                 activeTab === tab.key
-                  ? "border-foreground text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {tab.icon}
@@ -85,7 +84,7 @@ export default function FriendsPage() {
         {loading ? (
           <div className="space-y-3 py-2">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border border-border/60">
                 <Skeleton className="h-9 w-9 rounded-full" />
                 <div className="flex-1 space-y-1.5">
                   <Skeleton className="h-4 w-28" />
@@ -96,16 +95,21 @@ export default function FriendsPage() {
           </div>
         ) : activeTab === "collections" ? (
           collections.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No followed collections yet
-            </p>
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-muted/50 mb-4">
+                <Heart className="h-5 w-5 text-muted-foreground/50" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                No followed collections yet
+              </p>
+            </div>
           ) : (
             <div className="space-y-2">
               {collections.map((col) => (
                 <Link
                   key={col.id}
                   href={`/w/${col.slug}`}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:shadow-sm transition-shadow"
+                  className="flex items-center justify-between p-4 rounded-2xl border border-border/60 bg-card transition-all duration-300 hover:shadow-md hover:border-foreground/15"
                 >
                   <div className="min-w-0">
                     <p className="font-medium text-sm truncate">{col.name}</p>
@@ -123,11 +127,16 @@ export default function FriendsPage() {
             </div>
           )
         ) : users.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">
-            {activeTab === "following"
-              ? "You're not following anyone yet"
-              : "No followers yet"}
-          </p>
+          <div className="text-center py-12">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-muted/50 mb-4">
+              <Users className="h-5 w-5 text-muted-foreground/50" />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {activeTab === "following"
+                ? "You're not following anyone yet"
+                : "No followers yet"}
+            </p>
+          </div>
         ) : (
           <div className="space-y-2">
             {users.map((user) => (
