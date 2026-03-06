@@ -1,5 +1,5 @@
 (() => {
-  const WISHLY_URL = "http://localhost:3000";
+  const ENVLY_URL = "http://localhost:3000";
   const PRICE_REGEX =
     /(?:\d[\d\s.,]*\d\s*[€$£]|[€$£]\s*\d[\d\s.,]*\d|\d[\d\s.,]*\d\s*(?:EUR|USD|GBP))/i;
 
@@ -119,9 +119,9 @@
   }
 
   const btn = document.createElement("button");
-  btn.id = "wishly-fab";
-  btn.title = "Add to Wishly";
-  btn.setAttribute("aria-label", "Add to Wishly");
+  btn.id = "envly-fab";
+  btn.title = "Add to Envly";
+  btn.setAttribute("aria-label", "Add to Envly");
 
   const ICON_PLUS = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
   const ICON_CHECK = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -129,21 +129,21 @@
   btn.innerHTML = ICON_PLUS;
 
   // Check if this URL is already in the wishlist
-  fetch(`${WISHLY_URL}/api/wishes/check?url=${encodeURIComponent(window.location.href)}`, {
+  fetch(`${ENVLY_URL}/api/wishes/check?url=${encodeURIComponent(window.location.href)}`, {
     credentials: "include",
   })
     .then((res) => res.json())
     .then((data) => {
       if (data.exists) {
-        btn.classList.add("wishly-fab--done");
+        btn.classList.add("envly-fab--done");
         btn.innerHTML = ICON_CHECK;
-        btn.title = "Already in Wishly";
+        btn.title = "Already in Envly";
       }
     })
     .catch(() => {});
 
   btn.addEventListener("click", () => {
-    if (btn.classList.contains("wishly-fab--done")) return;
+    if (btn.classList.contains("envly-fab--done")) return;
 
     const pageUrl = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(scrapeTitle());
@@ -151,10 +151,10 @@
     const images = encodeURIComponent(JSON.stringify(scrapeImages()));
 
     window.open(
-      `${WISHLY_URL}/add?url=${pageUrl}&title=${title}&price=${price}&images=${images}&from=extension`,
+      `${ENVLY_URL}/add?url=${pageUrl}&title=${title}&price=${price}&images=${images}&from=extension`,
       "_blank"
     );
-    btn.classList.add("wishly-fab--done");
+    btn.classList.add("envly-fab--done");
     btn.innerHTML = ICON_CHECK;
   });
 

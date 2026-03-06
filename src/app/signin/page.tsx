@@ -40,7 +40,7 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Sign in to Wishly</CardTitle>
+          <CardTitle className="text-xl">Sign in to Envly</CardTitle>
           <CardDescription>Choose your preferred sign in method</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

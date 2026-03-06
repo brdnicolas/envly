@@ -18,7 +18,7 @@ export default async function PublicWishlistPage({
         include: { reservation: true },
         orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }],
       },
-      user: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true, slug: true } },
       followers: {
         select: {
           user: { select: { name: true, image: true } },
@@ -71,6 +71,7 @@ export default async function PublicWishlistPage({
         name: collection.name,
         description: collection.description,
         ownerName: collection.user.name,
+        ownerSlug: collection.user.slug,
       }}
       wishes={wishes}
       isOwner={isOwner}

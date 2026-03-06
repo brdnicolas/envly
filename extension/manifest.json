@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Add to Wishly",
+  "name": "Add to Envly",
   "version": "1.0.0",
-  "description": "Add any page to your Wishly wishlist in one click",
+  "description": "Add any page to your Envly wishlist in one click",
   "permissions": ["activeTab", "scripting"],
   "host_permissions": ["http://localhost:3000/*"],
   "action": {

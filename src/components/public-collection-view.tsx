@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { WishCard } from "@/components/wish-card";
@@ -39,6 +40,7 @@ export function PublicCollectionView({
     name: string;
     description: string | null;
     ownerName: string | null;
+    ownerSlug?: string | null;
   };
   wishes: Wish[];
   isOwner: boolean;
@@ -81,7 +83,17 @@ export function PublicCollectionView({
           )}
           {collection.ownerName && !isOwner && (
             <p className="text-muted-foreground text-xs mt-1">
-              by {collection.ownerName}
+              by{" "}
+              {collection.ownerSlug ? (
+                <Link
+                  href={`/u/${collection.ownerSlug}`}
+                  className="font-medium text-foreground hover:underline underline-offset-4"
+                >
+                  {collection.ownerName}
+                </Link>
+              ) : (
+                collection.ownerName
+              )}
             </p>
           )}
           {followData && (

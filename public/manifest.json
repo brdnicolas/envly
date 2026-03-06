@@ -1,6 +1,6 @@
 {
-  "name": "Wishly - Shared Wishlists",
-  "short_name": "Wishly",
+  "name": "Envly - Shared Wishlists",
+  "short_name": "Envly",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",

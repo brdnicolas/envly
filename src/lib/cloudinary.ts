@@ -7,7 +7,7 @@ export async function uploadToCloudinary(
 ): Promise<string | null> {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
-    const params = `folder=wishly&timestamp=${timestamp}&transformation=f_webp,q_auto,w_800`;
+    const params = `folder=envly&timestamp=${timestamp}&transformation=f_webp,q_auto,w_800`;
 
     const { createHash } = await import("crypto");
     const signature = createHash("sha1")
@@ -16,7 +16,7 @@ export async function uploadToCloudinary(
 
     const formData = new FormData();
     formData.append("file", imageUrl);
-    formData.append("folder", "wishly");
+    formData.append("folder", "envly");
     formData.append("timestamp", timestamp.toString());
     formData.append("transformation", "f_webp,q_auto,w_800");
     formData.append("api_key", API_KEY);
@@ -38,7 +38,7 @@ export async function uploadToCloudinary(
 
 export function getCloudinaryPublicId(url: string): string | null {
   try {
-    const match = url.match(/\/upload\/(?:v\d+\/)?(wishly\/.+?)(?:\.[a-z]+)?$/);
+    const match = url.match(/\/upload\/(?:v\d+\/)?((?:envly|wishly)\/.+?)(?:\.[a-z]+)?$/);
     return match?.[1] || null;
   } catch {
     return null;

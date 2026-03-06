@@ -1,4 +1,4 @@
-#wishly-fab {
+#envly-fab {
   all: initial;
   position: fixed;
   bottom: 16px;
@@ -20,17 +20,17 @@
   box-sizing: border-box;
 }
 
-#wishly-fab:hover {
+#envly-fab:hover {
   transform: scale(1.1);
   background: #222;
   border-color: #444;
 }
 
-#wishly-fab:active {
+#envly-fab:active {
   transform: scale(0.95);
 }
 
-#wishly-fab.wishly-fab--done {
+#envly-fab.envly-fab--done {
   background: #16a34a;
   border-color: #16a34a;
   pointer-events: none;

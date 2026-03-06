@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CollectionCard, ImageMosaic } from "@/components/collection-card";
 import { CollectionForm } from "@/components/collection-form";
-import { Plus, Share2, Puzzle, X } from "lucide-react";
-import { toast } from "sonner";
+import { Plus, Puzzle, X, Copy, Check, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Collection {
@@ -193,12 +192,17 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [friendsLoading, setFriendsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [generatingLink, setGeneratingLink] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("mine");
+  const [slugCopied, setSlugCopied] = useState(false);
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
   const [showExtensionBanner, setShowExtensionBanner] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("wishly-extension-banner-dismissed") !== "true") {
+    if (localStorage.getItem("envly-extension-banner-dismissed") !== "true") {
       setShowExtensionBanner(true);
     }
   }, []);
@@ -251,30 +255,12 @@ export default function DashboardPage() {
     setCollections((prev) => prev.filter((c) => c.id !== id));
   };
 
-  const handleShareProfile = async () => {
-    if (profile?.slug) {
-      navigator.clipboard.writeText(`${window.location.origin}/u/${profile.slug}`);
-      toast.success("Profile link copied!");
-      return;
-    }
-
-    setGeneratingLink(true);
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ generateSlug: true }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      setProfile((prev) => prev ? { ...prev, slug: data.slug } : prev);
-      navigator.clipboard.writeText(`${window.location.origin}/u/${data.slug}`);
-      toast.success("Profile link created and copied!");
-    }
-    setGeneratingLink(false);
+  const handleCopyLink = () => {
+    if (!profile?.slug) return;
+    navigator.clipboard.writeText(`${origin}/u/${profile.slug}`);
+    setSlugCopied(true);
+    setTimeout(() => setSlugCopied(false), 2000);
   };
-
-  const publicCount = collections.filter((c) => c.isPublic).length;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -312,15 +298,23 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShareProfile}
-              disabled={generatingLink}
-            >
-              <Share2 className="h-4 w-4 mr-1" />
-              {profile.slug ? "Copy profile link" : "Share my profile"}
-            </Button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {profile.slug ? (
+                <>
+                  <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                    {origin}/u/{profile.slug}
+                  </span>
+                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleCopyLink}>
+                    {slugCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  </Button>
+                </>
+              ) : (
+                <Link href="/settings" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                  <Settings className="h-3.5 w-3.5" />
+                  Set up your username to share your profile
+                </Link>
+              )}
+            </div>
           </div>
         )}
 
@@ -337,7 +331,7 @@ export default function DashboardPage() {
             <button
               onClick={() => {
                 setShowExtensionBanner(false);
-                localStorage.setItem("wishly-extension-banner-dismissed", "true");
+                localStorage.setItem("envly-extension-banner-dismissed", "true");
               }}
               className="text-muted-foreground hover:text-foreground transition-colors shrink-0 p-1"
               aria-label="Dismiss"

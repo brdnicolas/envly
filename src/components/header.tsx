@@ -145,7 +145,7 @@ export function Header() {
     <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href={session ? "/dashboard" : "/"} className="font-semibold text-lg">
-          Wishly
+          Envly
         </Link>
 
         <div className="flex items-center gap-2">

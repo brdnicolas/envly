@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Check, X, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -33,9 +33,15 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+  const [checkingSlug, setCheckingSlug] = useState(false);
+  const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     fetch("/api/profile")
@@ -43,25 +49,94 @@ export default function SettingsPage() {
       .then((data: Profile) => {
         setProfile(data);
         setName(data.name || "");
+        setSlug(data.slug || "");
         setDescription(data.description || "");
         setImage(data.image || "");
       });
   }, []);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    setUploadingImage(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const res = await fetch("/api/images/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageUrl: reader.result }),
+        });
+        const data = await res.json();
+        if (res.ok && data.cdnUrl) {
+          setImage(data.cdnUrl);
+          toast.success("Image uploaded");
+        } else {
+          toast.error("Upload failed");
+        }
+      } catch {
+        toast.error("Upload failed");
+      }
+      setUploadingImage(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const checkSlug = (val: string) => {
+    if (slugTimer.current) clearTimeout(slugTimer.current);
+    if (val === (profile?.slug || "")) {
+      setSlugAvailable(null);
+      setCheckingSlug(false);
+      return;
+    }
+    if (val.length < 3) {
+      setSlugAvailable(null);
+      setCheckingSlug(false);
+      return;
+    }
+    setCheckingSlug(true);
+    setSlugAvailable(null);
+    slugTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/profile/check-slug?slug=${val}`);
+        const data = await res.json();
+        setSlugAvailable(data.available);
+      } catch {
+        setSlugAvailable(null);
+      }
+      setCheckingSlug(false);
+    }, 400);
+  };
+
   const handleSave = async () => {
     setSaving(true);
+    const body: Record<string, string | null> = { name, description, image };
+    if (slug !== (profile?.slug || "")) {
+      body.slug = slug;
+    }
     const res = await fetch("/api/profile", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description, image }),
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
       const updated = await res.json();
       setProfile(updated);
+      setSlugAvailable(null);
       toast.success("Profile updated");
     } else {
-      toast.error("Failed to update profile");
+      const data = await res.json().catch(() => null);
+      toast.error(data?.error || "Failed to update profile");
     }
     setSaving(false);
   };
@@ -78,10 +153,13 @@ export default function SettingsPage() {
     );
   }
 
+  const slugChanged = slug !== (profile.slug || "");
   const hasChanges =
     name !== (profile.name || "") ||
+    slugChanged ||
     description !== (profile.description || "") ||
     image !== (profile.image || "");
+  const slugInvalid = slugChanged && (slug.length < 3 || slugAvailable === false);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -93,19 +171,49 @@ export default function SettingsPage() {
         <section>
           <h2 className="text-lg font-medium mb-4">Profile</h2>
           <div className="space-y-4">
-            {/* Avatar preview */}
+            {/* Avatar + info */}
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                {image ? (
-                  <AvatarImage src={image} alt={name} />
-                ) : null}
-                <AvatarFallback className="text-xl">
-                  {name?.[0]?.toUpperCase() || profile.email?.[0]?.toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage}
+                className="relative group"
+              >
+                <Avatar className="h-16 w-16">
+                  {image ? (
+                    <AvatarImage src={image} alt={name} />
+                  ) : null}
+                  <AvatarFallback className="text-xl">
+                    {name?.[0]?.toUpperCase() || profile.email?.[0]?.toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  {uploadingImage ? (
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Camera className="h-5 w-5 text-white" />
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </button>
               <div className="flex-1 min-w-0">
                 <p className="font-medium">{name || "Anonymous"}</p>
                 <p className="text-sm text-muted-foreground">{profile.email}</p>
+                {image && (
+                  <button
+                    type="button"
+                    onClick={() => setImage("")}
+                    className="text-xs text-destructive hover:underline mt-0.5"
+                  >
+                    Remove photo
+                  </button>
+                )}
               </div>
             </div>
 
@@ -120,15 +228,48 @@ export default function SettingsPage() {
               />
             </div>
 
-            {/* Profile picture URL */}
+            {/* Username */}
             <div className="space-y-1.5">
-              <Label htmlFor="image">Profile picture URL</Label>
-              <Input
-                id="image"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder="https://example.com/photo.jpg"
-              />
+              <Label htmlFor="slug">Username</Label>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm text-muted-foreground whitespace-nowrap">envly.app/u/</span>
+                <div className="relative flex-1">
+                  <Input
+                    id="slug"
+                    value={slug}
+                    onChange={(e) => {
+                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+                      setSlug(val);
+                      checkSlug(val);
+                    }}
+                    className={cn(
+                      "pr-7",
+                      slugChanged && slugAvailable === true && slug.length >= 3 && "border-green-500 focus-visible:ring-green-500/30",
+                      slugChanged && slugAvailable === false && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                    placeholder="nicolas"
+                    minLength={3}
+                    maxLength={30}
+                  />
+                  {slugChanged && slug.length >= 3 && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                      {checkingSlug ? (
+                        <div className="h-3.5 w-3.5 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
+                      ) : slugAvailable === true ? (
+                        <Check className="h-3.5 w-3.5 text-green-500" />
+                      ) : slugAvailable === false ? (
+                        <X className="h-3.5 w-3.5 text-destructive" />
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {slugChanged && slug.length >= 3 && slugAvailable === false && (
+                <p className="text-[11px] text-destructive">This username is already taken</p>
+              )}
+              {slugChanged && slug.length > 0 && slug.length < 3 && (
+                <p className="text-[11px] text-muted-foreground">Username must be at least 3 characters</p>
+              )}
             </div>
 
             {/* Description */}
@@ -143,7 +284,7 @@ export default function SettingsPage() {
               />
             </div>
 
-            <Button onClick={handleSave} disabled={saving || !hasChanges}>
+            <Button onClick={handleSave} disabled={saving || !hasChanges || slugInvalid}>
               {saving ? "Saving..." : "Save changes"}
             </Button>
           </div>

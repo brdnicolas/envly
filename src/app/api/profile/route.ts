@@ -52,6 +52,33 @@ export async function PATCH(req: Request) {
     return NextResponse.json(updated);
   }
 
+  // Custom vanity slug
+  if (body.slug !== undefined) {
+    const slug = body.slug
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, "")
+      .replace(/^-|-$/g, "");
+
+    if (slug.length < 3) {
+      return NextResponse.json({ error: "Slug must be at least 3 characters" }, { status: 400 });
+    }
+    if (slug.length > 30) {
+      return NextResponse.json({ error: "Slug must be 30 characters or less" }, { status: 400 });
+    }
+
+    const existing = await prisma.user.findUnique({ where: { slug } });
+    if (existing && existing.id !== session.user.id) {
+      return NextResponse.json({ error: "This link is already taken" }, { status: 409 });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: session.user.id },
+      data: { slug },
+      select: { slug: true },
+    });
+    return NextResponse.json(updated);
+  }
+
   const data: Record<string, string | null> = {};
   if (body.name !== undefined) data.name = body.name || null;
   if (body.image !== undefined) data.image = body.image || null;

@@ -1,4 +1,4 @@
-# Wishly
+# Envly
 
 Application de wishlists partagees construite **integralement par IA** (Claude, Anthropic) en une seule session de conversation.
 
@@ -6,7 +6,7 @@ L'objectif de ce projet est de tester les capacites de Claude (Claude Code CLI) 
 
 ## Le projet
 
-Wishly permet de creer des listes de souhaits et de les partager avec ses proches. La fonctionnalite cle : les reservations sont **anonymes et invisibles** pour le proprietaire de la liste, pour garder la surprise.
+Envly permet de creer des listes de souhaits et de les partager avec ses proches. La fonctionnalite cle : les reservations sont **anonymes et invisibles** pour le proprietaire de la liste, pour garder la surprise.
 
 ### Stack technique
 
