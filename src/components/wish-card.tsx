@@ -27,6 +27,11 @@ function getDomain(url: string | null) {
   }
 }
 
+function getProductUrl(url: string | null) {
+  if (!url) return undefined;
+  return `/api/go?url=${encodeURIComponent(url)}`;
+}
+
 export function WishCard({
   wish,
   isOwner,
@@ -62,7 +67,7 @@ export function WishCard({
     >
       {/* Image */}
       <a
-        href={wish.url || undefined}
+        href={getProductUrl(wish.url)}
         target="_blank"
         rel="noopener noreferrer"
         className={`block overflow-hidden bg-muted/20 ${wish.url ? "cursor-pointer" : "cursor-default"}`}
