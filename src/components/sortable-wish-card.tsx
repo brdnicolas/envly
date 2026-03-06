@@ -13,7 +13,7 @@ interface Wish {
   imageUrl: string | null;
   imageOriginalUrl?: string | null;
   price: number | null;
-  isPriority: boolean;
+  isPriority?: boolean;
 }
 
 export function SortableWishCard({
