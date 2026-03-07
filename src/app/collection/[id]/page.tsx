@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Header } from "@/components/header";
@@ -138,9 +138,11 @@ export default function CollectionPage() {
   const currentUserId = session?.user?.id;
 
   // Redirect on error (not found / unauthorized)
-  if (error) {
-    router.push("/");
-  }
+  useEffect(() => {
+    if (error) {
+      router.push("/");
+    }
+  }, [error, router]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })

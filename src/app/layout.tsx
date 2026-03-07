@@ -16,16 +16,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXTAUTH_URL || "https://envly.fr"),
-  title: "Envly — Vos wishlists, magnifiquement partagées",
-  description: "Créez de superbes wishlists, partagez-les avec vos proches et laissez-les réserver des cadeaux anonymement. Fini les doublons, fini les surprises gâchées.",
+  title: "Envly",
+  description: "Créez vos wishlists, partagez-les et laissez vos proches réserver anonymement.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",
     apple: "/icon-192.png",
   },
   openGraph: {
-    title: "Envly — Vos wishlists, magnifiquement partagées",
-    description: "Créez de superbes wishlists, partagez-les avec vos proches et laissez-les réserver des cadeaux anonymement. Fini les doublons, fini les surprises gâchées.",
+    title: "Envly",
+    description: "Créez vos wishlists, partagez-les et laissez vos proches réserver anonymement.",
     type: "website",
     siteName: "Envly",
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({

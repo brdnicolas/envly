@@ -1,12 +1,12 @@
 {
-  "name": "Envly — Vos wishlists, magnifiquement partagées",
+  "name": "Envly",
   "short_name": "Envly",
-  "description": "Créez de superbes wishlists, partagez-les en un clic et laissez vos proches réserver des cadeaux anonymement. Fini les doublons, fini les surprises gâchées.",
+  "description": "Créez vos wishlists, partagez-les et laissez vos proches réserver anonymement.",
   "categories": ["lifestyle", "shopping", "social"],
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -17,6 +17,12 @@
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "share_target": {

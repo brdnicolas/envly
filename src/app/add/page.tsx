@@ -400,7 +400,7 @@ function AddPageContent() {
                     <img
                       src={img}
                       alt=""
-                      className="w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
                       onError={(e) => {
                         (e.currentTarget.parentElement as HTMLElement).style.display = "none";
                       }}
