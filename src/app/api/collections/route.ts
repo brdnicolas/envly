@@ -21,7 +21,7 @@ export async function GET() {
           take: 6,
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { updatedAt: "desc" },
     }),
     prisma.collectionCollaborator.findMany({
       where: { userId: session.user.id, status: "ACCEPTED" },

@@ -34,18 +34,24 @@ export async function POST(req: Request) {
     }
   }
 
-  const wish = await prisma.wish.create({
-    data: {
-      title,
-      url,
-      description,
-      imageUrl: finalImageUrl,
-      imageOriginalUrl,
-      price: price ? parseFloat(price) : null,
-      collectionId,
-      creatorId: session.user.id,
-    },
-  });
+  const [wish] = await prisma.$transaction([
+    prisma.wish.create({
+      data: {
+        title,
+        url,
+        description,
+        imageUrl: finalImageUrl,
+        imageOriginalUrl,
+        price: price ? parseFloat(price) : null,
+        collectionId,
+        creatorId: session.user.id,
+      },
+    }),
+    prisma.collection.update({
+      where: { id: collectionId },
+      data: { updatedAt: new Date() },
+    }),
+  ]);
 
   return NextResponse.json(wish);
 }

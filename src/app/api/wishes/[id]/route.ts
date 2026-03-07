@@ -39,18 +39,24 @@ export async function PATCH(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const updated = await prisma.wish.update({
-    where: { id },
-    data: {
-      ...(body.title !== undefined && { title: body.title }),
-      ...(body.url !== undefined && { url: body.url }),
-      ...(body.description !== undefined && { description: body.description }),
-      ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl }),
-      ...(body.price !== undefined && { price: body.price ? parseFloat(body.price) : null }),
-      ...(body.isPriority !== undefined && { isPriority: body.isPriority }),
-      ...(body.collectionId !== undefined && { collectionId: body.collectionId }),
-    },
-  });
+  const [updated] = await prisma.$transaction([
+    prisma.wish.update({
+      where: { id },
+      data: {
+        ...(body.title !== undefined && { title: body.title }),
+        ...(body.url !== undefined && { url: body.url }),
+        ...(body.description !== undefined && { description: body.description }),
+        ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl }),
+        ...(body.price !== undefined && { price: body.price ? parseFloat(body.price) : null }),
+        ...(body.isPriority !== undefined && { isPriority: body.isPriority }),
+        ...(body.collectionId !== undefined && { collectionId: body.collectionId }),
+      },
+    }),
+    prisma.collection.update({
+      where: { id: wish.collectionId },
+      data: { updatedAt: new Date() },
+    }),
+  ]);
 
   return NextResponse.json(updated);
 }
@@ -72,7 +78,13 @@ export async function DELETE(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  await prisma.wish.delete({ where: { id } });
+  await prisma.$transaction([
+    prisma.wish.delete({ where: { id } }),
+    prisma.collection.update({
+      where: { id: wish.collectionId },
+      data: { updatedAt: new Date() },
+    }),
+  ]);
 
   if (wish.imageUrl?.includes("cloudinary")) {
     deleteFromCloudinary(wish.imageUrl);
