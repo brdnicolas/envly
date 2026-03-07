@@ -308,26 +308,24 @@ export function DashboardView() {
           </div>
         )}
 
-        {/* Extension banner */}
+        {/* Install banner */}
         {showExtensionBanner && (
           <div className="relative flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6 transition-all duration-300 hover:shadow-md">
             <div className="h-10 w-10 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
               <Puzzle className="h-5 w-5 text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium">Ajoutez des souhaits plus vite avec notre extension Chrome</p>
+              <p className="text-sm font-medium">Simplifiez l&apos;ajout de vos envies</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Parcourez n&apos;importe quelle boutique et enregistrez des articles en un clic.
+                Enregistrez des articles depuis n&apos;importe quel site en un tap.
               </p>
             </div>
-            <a
-              href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/install"
               className="shrink-0 text-xs font-medium bg-foreground text-background px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
             >
-              Installer
-            </a>
+              Découvrir
+            </Link>
             <button
               onClick={() => {
                 setShowExtensionBanner(false);

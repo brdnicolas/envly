@@ -93,38 +93,6 @@ function WishPreview({
   );
 }
 
-function TipBanner() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-  }, []);
-
-  if (isMobile) {
-    return (
-      <a href="/install" className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6 transition-colors hover:bg-accent">
-        <div className="h-9 w-9 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
-          <Puzzle className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">Astuce :</span> Installez le raccourci pour ajouter des souhaits depuis Safari en un tap.
-        </p>
-      </a>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6">
-      <div className="h-9 w-9 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
-        <Puzzle className="h-4 w-4 text-muted-foreground" />
-      </div>
-      <p className="text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">Astuce :</span> <a href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground transition-colors">Installez notre extension Chrome</a> pour ajouter des souhaits directement depuis n&apos;importe quel site.
-      </p>
-    </div>
-  );
-}
-
 export default function AddPage() {
   return (
     <Suspense fallback={
@@ -373,7 +341,14 @@ function AddPageContent() {
         </div>
 
         {!fromExtension && (
-          <TipBanner />
+          <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-5 py-4 mb-6">
+            <div className="h-9 w-9 rounded-xl bg-foreground/5 flex items-center justify-center shrink-0">
+              <Puzzle className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Astuce :</span> <a href="https://chromewebstore.google.com/detail/nfchfkcbbiedjgiebgfhlkondnekfdjp" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground transition-colors">Installez notre extension Chrome</a> pour ajouter des souhaits directement depuis n&apos;importe quel site.
+            </p>
+          </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 items-start">
