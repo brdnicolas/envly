@@ -2,37 +2,81 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import * as cheerio from "cheerio";
+import { ProxyAgent, fetch as undiciFetch } from "undici";
 
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 
-async function fetchHTML(url: string): Promise<string> {
+const FETCH_HEADERS: Record<string, string> = {
+  "User-Agent": BROWSER_UA,
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+  "Accept-Encoding": "gzip, deflate, br",
+  "Cache-Control": "no-cache",
+  "Sec-Fetch-Dest": "document",
+  "Sec-Fetch-Mode": "navigate",
+  "Sec-Fetch-Site": "none",
+  "Sec-Fetch-User": "?1",
+  "Upgrade-Insecure-Requests": "1",
+};
+
+function isAntiBot(html: string): boolean {
+  return (
+    html.includes("bm-verify") ||
+    html.includes("_sec/verify") ||
+    html.includes("challenge-platform") ||
+    (html.includes("http-equiv=\"refresh\"") && html.length < 5000)
+  );
+}
+
+async function directFetch(url: string): Promise<string> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
   try {
     const res = await fetch(url, {
-      headers: {
-        "User-Agent": BROWSER_UA,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Cache-Control": "no-cache",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-      },
+      headers: FETCH_HEADERS,
       redirect: "follow",
       signal: controller.signal,
     });
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.text();
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function proxyFetch(url: string): Promise<string> {
+  const proxyUrl = process.env.WEBSHARE_PROXY_URL;
+  if (!proxyUrl) throw new Error("No proxy configured");
+
+  const dispatcher = new ProxyAgent(proxyUrl);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const res = await undiciFetch(url, {
+      dispatcher,
+      headers: FETCH_HEADERS,
+      redirect: "follow",
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchHTML(url: string): Promise<string> {
+  // 1. Try direct fetch
+  try {
+    const html = await directFetch(url);
+    if (!isAntiBot(html)) return html;
+  } catch {
+    // Direct fetch failed, try proxy
+  }
+
+  // 2. Fallback to proxy
+  return proxyFetch(url);
 }
 
 function extractJsonLd($: cheerio.CheerioAPI) {
@@ -206,15 +250,6 @@ function extractPriceFromHtml(html: string): number | null {
   return [...freq.entries()].sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function isAntiBot(html: string): boolean {
-  return (
-    html.includes("bm-verify") ||
-    html.includes("_sec/verify") ||
-    html.includes("challenge-platform") ||
-    (html.includes("http-equiv=\"refresh\"") && html.length < 5000)
-  );
-}
-
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -229,14 +264,6 @@ export async function POST(req: Request) {
 
   try {
     const html = await fetchHTML(url);
-
-    if (isAntiBot(html)) {
-      return NextResponse.json(
-        { error: "This site blocks automated requests. Please fill in the details manually." },
-        { status: 422 }
-      );
-    }
-
     const $ = cheerio.load(html);
 
     // Try JSON-LD first (more structured), then fall back to Open Graph

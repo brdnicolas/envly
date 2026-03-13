@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -34,6 +34,14 @@ const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function FriendsPage() {
+  return (
+    <Suspense>
+      <FriendsPageContent />
+    </Suspense>
+  );
+}
+
+function FriendsPageContent() {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") === "followers" ? "followers" : "following";
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
