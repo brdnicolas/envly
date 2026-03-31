@@ -141,7 +141,18 @@ export function WishCard({
 
       {/* Info */}
       <div className="p-3 flex flex-col gap-0.5 flex-1">
-        <h3 className="text-xs font-medium leading-tight line-clamp-2">{wish.title}</h3>
+        {wish.url ? (
+          <a
+            href={getProductUrl(wish.url)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium leading-tight line-clamp-2 hover:underline underline-offset-2"
+          >
+            {wish.title}
+          </a>
+        ) : (
+          <h3 className="text-xs font-medium leading-tight line-clamp-2">{wish.title}</h3>
+        )}
         {wish.description && (
           <p className="text-[10px] text-muted-foreground line-clamp-2">{wish.description}</p>
         )}
