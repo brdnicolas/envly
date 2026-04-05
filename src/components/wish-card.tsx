@@ -96,16 +96,33 @@ export function WishCard({
         )}
       </a>
 
-      {/* Owner actions */}
+      {/* Priority toggle (top-left) */}
+      {isOwner && (
+        <button
+          className={`absolute top-2 left-2 h-7 w-7 rounded-xl backdrop-blur-sm flex items-center justify-center shadow-sm transition-all duration-200 ${
+            wish.isPriority
+              ? "bg-amber-400/90"
+              : "bg-background/80 hover:bg-background opacity-0 group-hover:opacity-100"
+          }`}
+          onClick={() => onTogglePriority?.(wish)}
+          title={wish.isPriority ? "Retirer la priorité" : "Marquer comme prioritaire"}
+        >
+          <Star className={`h-3 w-3 ${wish.isPriority ? "fill-white text-white" : ""}`} />
+        </button>
+      )}
+
+      {/* Priority indicator (non-owner) */}
+      {!isOwner && wish.isPriority && (
+        <div className="absolute top-2 left-2">
+          <div className="h-7 w-7 rounded-xl bg-amber-400/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+            <Star className="h-3 w-3 fill-white text-white" />
+          </div>
+        </div>
+      )}
+
+      {/* Owner actions (top-right) */}
       {isOwner && (
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
-          <button
-            className="h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm transition-colors"
-            onClick={() => onTogglePriority?.(wish)}
-            title={wish.isPriority ? "Retirer la priorité" : "Marquer comme prioritaire"}
-          >
-            <Star className={`h-3 w-3 ${wish.isPriority ? "fill-amber-400 text-amber-400" : ""}`} />
-          </button>
           <button
             className="h-7 w-7 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background shadow-sm transition-colors"
             onClick={() => onEdit?.(wish)}
@@ -118,15 +135,6 @@ export function WishCard({
           >
             <Trash2 className="h-3 w-3" />
           </button>
-        </div>
-      )}
-
-      {/* Priority indicator */}
-      {wish.isPriority && (
-        <div className="absolute top-2 left-2">
-          <div className="h-7 w-7 rounded-xl bg-amber-400/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-            <Star className="h-3 w-3 fill-white text-white" />
-          </div>
         </div>
       )}
 

@@ -383,7 +383,7 @@ function AddPageContent() {
             {/* Image */}
             <div className="space-y-1.5">
               <Label>Image</Label>
-              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-xl border border-border/60 p-2">
+              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-xl border border-border/60 p-2 [transform:translateZ(0)]">
                 {images.map((img) => (
                   <button
                     key={img}
@@ -399,7 +399,7 @@ function AddPageContent() {
                     <img
                       src={img}
                       alt=""
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="block w-full h-full object-cover"
                       onError={(e) => {
                         (e.currentTarget.parentElement as HTMLElement).style.display = "none";
                       }}

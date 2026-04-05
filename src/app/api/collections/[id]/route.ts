@@ -25,7 +25,7 @@ export async function GET(
     include: {
       user: { select: { id: true, name: true, image: true } },
       wishes: {
-        orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+        orderBy: [{ isPriority: "desc" }, { position: "asc" }, { createdAt: "desc" }],
         include: {
           creator: { select: { id: true, name: true } },
         },
