@@ -383,7 +383,7 @@ function AddPageContent() {
             {/* Image */}
             <div className="space-y-1.5">
               <Label>Image</Label>
-              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-xl border border-border/60 p-2 [transform:translateZ(0)]">
+              <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto rounded-xl border border-border/60 p-2 [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
                 {images.map((img) => (
                   <button
                     key={img}
