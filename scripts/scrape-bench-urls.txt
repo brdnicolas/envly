@@ -1,0 +1,26 @@
+# Product URLs used by scripts/scrape-bench.mjs (one per line, # for comments).
+# Product pages go stale: replace dead ones rather than deleting coverage of a site.
+
+# Marketplaces / big retailers
+https://www.amazon.fr/Apple-Airpods-Pro-2%E1%B5%89-g%C3%A9n%C3%A9ration-bo%C3%AEtier/dp/B0BDJ37NF5?ref_=xx&utm_source=test
+https://www.amazon.fr/-/en/Earbuds-Reduction-Silicone-Portable-Charging/dp/B08HT46TVP
+https://www.fnac.com/Casque-audio-a-reduction-de-bruit-Bluetooth-Sony-WH1000XM5-Noir/a16864769/w-4
+https://www.decathlon.fr/p/tente-de-camping-instantanee-2-places-2-seconds-bleu/340082/c98m8755225
+https://www.zalando.fr/nike-sportswear-air-force-1-07-baskets-basses-whiteblack-ni112o0h3-a11.html
+https://www.darty.com/nav/achat/ref/MC343110831.html
+https://www.leroymerlin.fr/produits/tableau-imprime-loi-de-nature-40-x-60-cm-83461033.html
+https://www.king-jouet.com/jeu-jouet/jeux-exterieur/jeux-recreation/ref-925284-starter-pack-beyblade-burst-quadstrike-hydra-poseidon-p8.htm
+https://www.ikea.com/ee/et/p/yxstaby-ratastel-abilaud-maenguritele-tammespoon-hall-90620005/
+
+# Brands (custom / SFCC / headless)
+https://www.sezane.com/fr-fr/product/pendentif-sara-or-9-carats-lettres-a-a-h/lettre-d
+https://www.lecreuset.fr/fr_FR/p/skillet-rond-classique-en-fonte-emaillee/CI0124.html
+https://www.bensimon.com/p/tennis-elastique-enfant-327.html
+https://www.nike.com/at/t/ja-basketballshorts-fur-herren-ca-355-cm-p7R9TTGN
+
+# Shopify
+https://www.allbirds.com/products/womens-tree-breezers-jet-black
+https://www.gymshark.com/products/gymshark-vital-seamless-leggings-dark-green-marl-logo
+https://www.typology.com/products/soin-flouteur-unifiant
+https://respire.co/products/deodorant-roll-on-fraicheur-24h-fraicheur-daloe
+https://www.asphalte.com/f/products/henley-archive-stock

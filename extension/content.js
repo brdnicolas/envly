@@ -6,6 +6,24 @@
   // Only show on pages that contain a price
   if (!PRICE_REGEX.test(document.body.innerText)) return;
 
+  // All schema.org Product nodes in JSON-LD, including ones nested in @graph / ProductGroup
+  function ldProducts() {
+    const out = [];
+    const walk = (node, depth) => {
+      if (!node || typeof node !== "object" || depth > 10) return;
+      if (Array.isArray(node)) return node.forEach((n) => walk(n, depth + 1));
+      const types = [].concat(node["@type"] || []).map((t) => String(t).toLowerCase());
+      if (types.some((t) => /(^|[/:])(product|productgroup|individualproduct)$/.test(t))) out.push(node);
+      Object.values(node).forEach((v) => walk(v, depth + 1));
+    };
+    document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => {
+      try {
+        walk(JSON.parse(el.textContent), 0);
+      } catch {}
+    });
+    return out;
+  }
+
   function scrapeImages() {
     const images = new Set();
 
@@ -14,21 +32,13 @@
     if (ogImage) images.add(ogImage);
 
     // JSON-LD product images
-    document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => {
-      try {
-        const data = JSON.parse(el.textContent);
-        const items = Array.isArray(data) ? data : [data];
-        for (const item of items) {
-          if (item["@type"] === "Product" || item["@type"]?.includes?.("Product")) {
-            const raw = Array.isArray(item.image) ? item.image : item.image ? [item.image] : [];
-            raw.forEach((img) => {
-              const url = typeof img === "string" ? img : img?.url;
-              if (url) images.add(url);
-            });
-          }
-        }
-      } catch {}
-    });
+    for (const item of ldProducts()) {
+      const raw = Array.isArray(item.image) ? item.image : item.image ? [item.image] : [];
+      raw.forEach((img) => {
+        const url = typeof img === "string" ? img : img?.url || img?.contentUrl;
+        if (url) images.add(url);
+      });
+    }
 
     // Product images from img tags (filter out tiny icons)
     document.querySelectorAll("img").forEach((img) => {
@@ -57,17 +67,11 @@
     if (priceMeta) return priceMeta;
 
     // JSON-LD
-    for (const el of document.querySelectorAll('script[type="application/ld+json"]')) {
-      try {
-        const data = JSON.parse(el.textContent);
-        const items = Array.isArray(data) ? data : [data];
-        for (const item of items) {
-          if (item["@type"] === "Product" || item["@type"]?.includes?.("Product")) {
-            const price = item.offers?.price ?? item.offers?.[0]?.price;
-            if (price) return String(price);
-          }
-        }
-      } catch {}
+    for (const item of ldProducts()) {
+      for (const offer of [].concat(item.offers || [])) {
+        const price = offer?.price ?? offer?.lowPrice ?? offer?.priceSpecification?.price;
+        if (price) return String(price);
+      }
     }
 
     // DOM fallback: look for price in visible elements
@@ -103,17 +107,8 @@
     if (ogTitle) return ogTitle.trim();
 
     // JSON-LD
-    for (const el of document.querySelectorAll('script[type="application/ld+json"]')) {
-      try {
-        const data = JSON.parse(el.textContent);
-        const items = Array.isArray(data) ? data : [data];
-        for (const item of items) {
-          if (item["@type"] === "Product" || item["@type"]?.includes?.("Product")) {
-            if (item.name) return item.name.trim();
-          }
-        }
-      } catch {}
-    }
+    const named = ldProducts().find((item) => typeof item.name === "string" && item.name.trim());
+    if (named) return named.name.trim();
 
     return document.title;
   }
