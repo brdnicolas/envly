@@ -9,6 +9,7 @@ The site and the API are deployed by Vercel on every push to `main`.
 | Setting | Value |
 | --- | --- |
 | Root Directory | `apps/web` |
+| Include files outside the root directory in the Build Step | **Enabled** (needed for `yarn.lock` and `.yarn/` at the repo root) |
 | Framework | Next.js (auto-detected) |
 | Install command | `yarn workspaces focus @envly/web` (installs only the web app, not Expo), set in `apps/web/vercel.json` |
 | Build command | `yarn build` → `prisma generate && next build`, set in `apps/web/vercel.json` |

@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["fra1"],
-  "installCommand": "node ../../.yarn/releases/yarn-4.10.3.cjs workspaces focus @envly/web",
+  "installCommand": "test -f ../../.yarn/releases/yarn-4.10.3.cjs || { echo 'Monorepo files missing: enable Settings > Build and Deployment > Root Directory > Include files outside the root directory in the Build Step'; exit 1; } && node ../../.yarn/releases/yarn-4.10.3.cjs workspaces focus @envly/web",
   "buildCommand": "node ../../.yarn/releases/yarn-4.10.3.cjs build"
 }
