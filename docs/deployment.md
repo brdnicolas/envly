@@ -17,7 +17,7 @@ The site and the API are deployed by Vercel on every push to `main`.
 
 > ⚠️ Since the move to `apps/`, **Root Directory must be `apps/web`**, otherwise the build fails.
 >
-> Yarn: Vercel's own `yarn` is Yarn 1, which ignores `.yarnrc.yml`. So `vercel.json` calls the pinned Yarn 4 directly (`node ../../.yarn/releases/yarn-4.10.3.cjs …`). When upgrading Yarn (`yarn set version`), update that path too. Leave the Install/Build overrides in the dashboard **empty** so `vercel.json` applies.
+> Yarn: Vercel's own `yarn` is Yarn 1, which ignores `.yarnrc.yml`. So `vercel.json` runs `apps/web/scripts/vercel-yarn.sh`, which calls the pinned Yarn 4 (`.yarn/releases`). When upgrading Yarn (`yarn set version`), update the path in that script. Leave the Install/Build overrides in the dashboard **empty** so `vercel.json` applies.
 
 ### Environment variables
 
