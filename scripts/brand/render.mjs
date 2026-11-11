@@ -130,6 +130,9 @@ await png("mobile/assets/images/android-icon-foreground.png", svg({ background: 
 await png("mobile/assets/images/android-icon-background.png", `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">${defs}<rect width="1024" height="1024" fill="url(#bg)"/></svg>`, 512);
 await png("mobile/assets/images/android-icon-monochrome.png", svg({ background: false, pad: 190, mono: "#FFFFFF" }), 432);
 
+// ── Chrome extension ──
+for (const size of [16, 48, 128]) await png(`extension/icons/icon-${size}.png`, rounded, size);
+
 // ── Website / PWA ───────────────────────────────────────────────────────
 await png("public/icon-192.png", rounded, 192);
 await png("public/icon-512.png", rounded, 512);

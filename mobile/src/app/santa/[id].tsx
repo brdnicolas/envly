@@ -6,6 +6,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CollectionMenu, type MenuItem } from '@/components/collection-menu';
+import { CollectionPicker } from '@/components/collection-picker';
 import { Icon, Icons, type IconName } from '@/components/icon';
 import { NavBar } from '@/components/nav-bar';
 import { Avatar, Button, EmptyState, Skeleton, Txt } from '@/components/primitives';
@@ -19,7 +20,7 @@ import { useAuth } from '@/lib/auth';
 import { haptic } from '@/lib/haptics';
 import { thumb } from '@/lib/image';
 import { registerForPush } from '@/lib/push';
-import { deleteSanta, drawSanta, joinSanta, leaveSanta, removeFromSanta, shareSantaLink } from '@/lib/santa';
+import { createSantaList, deleteSanta, drawSanta, joinSanta, leaveSanta, removeFromSanta, shareSantaLink } from '@/lib/santa';
 import type { CollectionSummary, Santa } from '@/lib/types';
 
 const GOLD = '#E8C872';
@@ -74,6 +75,23 @@ export default function SantaScreen() {
   const myList = collections?.find((c) => c.id === s.me?.collection?.id);
   const daysLeft = s.date ? Math.ceil((new Date(s.date).getTime() - now) / DAY) : null;
   const stage = isOpen ? 0 : daysLeft !== null && daysLeft <= 0 ? 2 : 1;
+
+  const openImport = (listId: string) => router.push({ pathname: '/santa/import', params: { id: s.id, listId } });
+
+  // One tap: the private list is created and shared here, then wishes can be picked right away.
+  async function createMyList() {
+    setBusy(true);
+    try {
+      const { collection, santa: next } = await createSantaList(s.id);
+      mutate(next);
+      haptic.success();
+      openImport(collection.id);
+    } catch (e) {
+      Alert.alert('Erreur', errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function draw() {
     const missing = joined.filter((m) => !m.hasList).length;
@@ -208,9 +226,8 @@ export default function SantaScreen() {
                 style={{ flex: 1 }}
                 loading={busy}
                 onPress={async () => {
-                  await run(() => joinSanta(s.id, null));
+                  await run(() => joinSanta(s.id, null), 'Vous participez 🎁');
                   void registerForPush({ ask: true }); // to know when the draw happens
-                  router.push({ pathname: '/santa/list', params: { id: s.id } });
                 }}
               />
             </View>
@@ -246,28 +263,30 @@ export default function SantaScreen() {
                 <Icon name={Icons.chevronRight} size={13} color={Colors.text3} />
               </Pressable>
             ) : (
-              <Pressable
-                onPress={() => router.push({ pathname: '/santa/list', params: { id: s.id } })}
-                style={({ pressed }) => [styles.emptyList, pressed && { opacity: 0.85 }]}>
-                <View style={styles.emptyListIcon}>
-                  <Icon name={Icons.plus} size={18} color={GOLD} />
+              <View style={styles.emptyList}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: Space.md }}>
+                  <View style={styles.emptyListIcon}>
+                    <Icon name={Icons.gift} size={18} color={GOLD} />
+                  </View>
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Txt variant="bodyMedium">Et vous, qu’est-ce qui vous ferait plaisir ?</Txt>
+                    <Txt variant="footnote" color="text2">
+                      Seule la personne qui vous tire au sort verra votre liste.
+                    </Txt>
+                  </View>
                 </View>
-                <View style={{ flex: 1, gap: 2 }}>
-                  <Txt variant="bodyMedium">Créer ma liste</Txt>
-                  <Txt variant="footnote" color="text2">
-                    Pour que votre Secret Santa sache quoi vous offrir.
-                  </Txt>
-                </View>
-              </Pressable>
+                <Button title="Créer ma liste" icon={Icons.plus} size="md" loading={busy} onPress={() => void createMyList()} />
+                <CollectionPicker collections={collections} value="" onChange={(cid) => void run(() => joinSanta(s.id, cid), 'Liste partagée')} label="ou utiliser une liste existante" />
+              </View>
             )}
             {s.me.collection && (
               <Pressable
-                onPress={() => router.push({ pathname: '/santa/list', params: { id: s.id, importTo: s.me!.collection!.id } })}
+                onPress={() => openImport(s.me!.collection!.id)}
                 hitSlop={6}
                 style={styles.inlineAction}>
-                <Icon name={{ ios: 'square.and.arrow.down', android: 'download' }} size={15} color={Colors.text2} />
+                <Icon name={Icons.plus} size={15} color={Colors.text2} />
                 <Txt variant="callout" color="text2">
-                  Importer des vœux de mes autres listes
+                  Ajouter des vœux de mes autres listes
                 </Txt>
               </Pressable>
             )}
@@ -398,9 +417,7 @@ const styles = StyleSheet.create({
   myListThumbs: { width: 56, height: 56, flexDirection: 'row', flexWrap: 'wrap', gap: 2, borderRadius: 12, overflow: 'hidden' },
   myListThumb: { width: 27, height: 27, backgroundColor: Colors.muted, overflow: 'hidden' },
   emptyList: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Space.md,
+    gap: Space.lg,
     padding: Space.lg,
     borderRadius: Radius.lg,
     borderWidth: 1.5,

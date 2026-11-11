@@ -1,6 +1,6 @@
 import { File, Paths } from 'expo-file-system';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { api, errorMessage } from '@/lib/api';
 
@@ -39,9 +39,13 @@ export function clearApiCache() {
   } catch {}
 }
 
+// Mounted hooks, so an invalidation refreshes what's already on screen (not just the next visit).
+const listeners = new Set<{ path: string; reload: () => void }>();
+
 export function invalidate(prefix: string) {
   for (const key of cache.keys()) if (key.startsWith(prefix)) cache.delete(key);
   persist();
+  for (const l of listeners) if (l.path.startsWith(prefix)) l.reload();
 }
 
 /** Warm the cache for a screen the user is likely to open next. */
@@ -85,6 +89,13 @@ export function useApi<T>(path: string | null) {
       void load();
     }, [load])
   );
+
+  useEffect(() => {
+    if (!path) return;
+    const entry = { path, reload: () => void load() };
+    listeners.add(entry);
+    return () => void listeners.delete(entry);
+  }, [path, load]);
 
   const mutate = (next: T) => {
     if (path) {

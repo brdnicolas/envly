@@ -100,7 +100,7 @@ export default function NewSantaFlow() {
       });
       haptic.success();
       void registerForPush({ ask: true }); // to hear when friends join and when it's drawn
-      router.replace({ pathname: '/santa/list', params: { id: santa.id, welcome: '1' } });
+      router.replace({ pathname: '/santa/[id]', params: { id: santa.id } });
     } catch (e) {
       setError(errorMessage(e));
       setSaving(false);

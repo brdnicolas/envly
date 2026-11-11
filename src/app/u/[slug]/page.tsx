@@ -20,21 +20,24 @@ export async function generateMetadata({
   const { slug } = await params;
   const user = await prisma.user.findFirst({
     where: { OR: [{ slug }, { id: slug }] },
-    select: { name: true, description: true, image: true },
+    select: { name: true, description: true, slug: true, _count: { select: { collections: { where: { isPublic: true } } } } },
   });
 
   if (!user) return {};
 
   const name = user.name || "Utilisateur";
+  const lists = user._count.collections;
+  const description =
+    user.description || `Les listes d’envies de ${name} sur Envly${lists ? ` : ${lists} liste${lists > 1 ? "s" : ""} à découvrir` : ""}. Trouvez le cadeau parfait, réservé en secret.`;
 
   return {
-    title: `${name} - Envly`,
-    description: user.description || `Profil de ${name} sur Envly`,
-    openGraph: {
-      title: name,
-      description: user.description || `Profil de ${name} sur Envly`,
-      ...(user.image ? { images: [{ url: user.image }] } : {}),
-    },
+    title: `${name} — ses listes d’envies`,
+    description,
+    alternates: { canonical: `/u/${user.slug ?? slug}` },
+    openGraph: { type: "profile", title: `${name} sur Envly`, description, url: `/u/${user.slug ?? slug}` },
+    twitter: { card: "summary_large_image", title: `${name} sur Envly`, description },
+    // Profiles without any public list have nothing worth indexing.
+    ...(lists === 0 && { robots: { index: false, follow: true } }),
   };
 }
 

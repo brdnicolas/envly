@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,23 +16,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL || "https://envly.fr"),
-  title: "Envly",
-  description: "Créez vos wishlists, partagez-les et laissez vos proches réserver anonymement.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "wishlist",
+    "liste d'envies",
+    "liste de cadeaux",
+    "liste de souhaits",
+    "idées cadeaux",
+    "liste de Noël",
+    "liste d'anniversaire",
+    "Secret Santa",
+    "tirage au sort cadeaux",
+    "réserver un cadeau",
+  ],
+  alternates: { canonical: "/" },
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.svg",
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico" }],
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Envly",
-    description: "Créez vos wishlists, partagez-les et laissez vos proches réserver anonymement.",
     type: "website",
-    siteName: "Envly",
+    siteName: SITE_NAME,
+    locale: "fr_FR",
+    url: SITE_URL,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
   },
+  robots: { index: true, follow: true, "max-image-preview": "large" },
+  formatDetection: { telephone: false },
   other: {
     "apple-mobile-web-app-capable": "yes",
     "mobile-web-app-capable": "yes",

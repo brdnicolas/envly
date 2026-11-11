@@ -77,3 +77,13 @@ export function usePushRouting(enabled: boolean) {
     }
   }, [enabled, last]);
 }
+
+/** Current notification permission, without prompting. */
+export async function pushStatus(): Promise<'granted' | 'denied' | 'undetermined'> {
+  try {
+    const { status } = await Notifications.getPermissionsAsync();
+    return status === 'granted' ? 'granted' : status === 'denied' ? 'denied' : 'undetermined';
+  } catch {
+    return 'undetermined';
+  }
+}

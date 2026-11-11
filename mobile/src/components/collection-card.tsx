@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { CollectionMenu, type MenuItem } from "@/components/collection-menu";
 import { Icon, Icons } from "@/components/icon";
-import { Badge, IconButton, Txt } from "@/components/primitives";
+import { IconButton, Txt } from "@/components/primitives";
 import { Colors, Radius, Space } from "@/constants/theme";
 import { thumb } from "@/lib/image";
 import type { CollectionSummary } from "@/lib/types";
@@ -81,15 +81,22 @@ export function CollectionCard({
           )}
           {actions && <CollectionMenu groups={actions} size={32} />}
         </View>
+        {/* One quiet line: count · visibility (no loud badges) */}
         <View style={styles.infoRow}>
           <Txt variant="footnote" color="text2">
-            {subtitle ?? `${count} souhait${count > 1 ? "s" : ""}`}
+            {subtitle ?? (count === 0 ? "Vide" : `${count} souhait${count > 1 ? "s" : ""}`)}
           </Txt>
-          {collection.isPublic ? (
-            <Badge label="Publique" tone="light" />
-          ) : (
-            <Badge label="Privée" icon={Icons.lock} />
-          )}
+          <Txt variant="footnote" color="text3">
+            ·
+          </Txt>
+          <Icon
+            name={collection.isPublic ? Icons.globe : Icons.lock}
+            size={12}
+            color={Colors.text3}
+          />
+          <Txt variant="footnote" color="text3">
+            {collection.isPublic ? "Publique" : "Privée"}
+          </Txt>
         </View>
       </View>
     </Pressable>
@@ -141,5 +148,5 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   titleRow: { flexDirection: "row", alignItems: "center", gap: Space.xs },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: Space.sm },
+  infoRow: { flexDirection: "row", alignItems: "center", gap: 6 },
 });

@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Envly — Ajouter à ma wishlist",
-  "version": "1.0.0",
-  "description": "Ajoutez n'importe quel produit à votre wishlist Envly en un clic. Prix, images et détails sont récupérés automatiquement.",
-  "permissions": ["activeTab", "scripting"],
-  "host_permissions": ["https://envly.fr/*"],
+  "version": "2.0.0",
+  "description": "Ajoutez n'importe quel produit à votre liste Envly sans quitter la page. Photo, titre et prix sont récupérés automatiquement.",
+  "permissions": ["activeTab"],
+  "host_permissions": ["https://www.envly.fr/*", "https://envly.fr/*"],
   "background": {
     "service_worker": "background.js"
   },
@@ -26,7 +26,6 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "css": ["content.css"],
       "run_at": "document_idle"
     }
   ]

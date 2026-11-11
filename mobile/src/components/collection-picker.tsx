@@ -17,17 +17,24 @@ export function CollectionPicker({
   collections,
   value,
   onChange,
+  label = 'Collection',
 }: {
   collections: CollectionSummary[] | undefined;
   value: string;
   onChange: (id: string) => void;
+  label?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const current = collections?.find((c) => c.id === value);
+  // Shown right away after creating one here, before the refreshed list comes back.
+  const [created, setCreated] = useState<CollectionSummary | null>(null);
+  const all = collections && created && !collections.some((c) => c.id === created.id) ? [created, ...collections] : collections;
+  const current = all?.find((c) => c.id === value);
 
   return (
     <View style={{ gap: Space.sm }}>
-      <Txt variant="callout">Collection</Txt>
+      <Txt variant="callout" color={label === 'Collection' ? 'text' : 'text2'}>
+        {label}
+      </Txt>
       <Pressable
         onPress={() => {
           haptic.select();
@@ -62,8 +69,9 @@ export function CollectionPicker({
 
       <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setOpen(false)}>
         <PickerSheet
-          collections={collections ?? []}
+          collections={all ?? []}
           value={value}
+          onCreated={setCreated}
           onClose={() => setOpen(false)}
           onPick={(id) => {
             haptic.select();
@@ -80,17 +88,20 @@ function PickerSheet({
   collections,
   value,
   onPick,
+  onCreated,
   onClose,
 }: {
   collections: CollectionSummary[];
   value: string;
   onPick: (id: string) => void;
+  onCreated: (c: CollectionSummary) => void;
   onClose: () => void;
 }) {
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
+  const [newPublic, setNewPublic] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,7 +114,8 @@ function PickerSheet({
     setSaving(true);
     setError(null);
     try {
-      const created = await api<{ id: string }>('/api/collections', { method: 'POST', body: { name, isPublic: true } });
+      const created = await api<{ id: string; slug: string }>('/api/collections', { method: 'POST', body: { name, isPublic: newPublic } });
+      onCreated({ id: created.id, name, slug: created.slug, description: null, isPublic: newPublic, _count: { wishes: 0 }, wishes: [], role: 'owner' });
       invalidate('/api/collections');
       haptic.success();
       onPick(created.id);
@@ -149,28 +161,64 @@ function PickerSheet({
         contentContainerStyle={{ paddingBottom: insets.bottom + Space.lg }}
         ListHeaderComponent={
           creating ? (
-            <View style={styles.createRow}>
-              <View style={[styles.thumb, styles.newThumb, { width: 48, height: 48 }]}>
-                <Icon name={Icons.plus} size={18} />
+            <View>
+              <View style={styles.createRow}>
+                <View style={[styles.thumb, styles.newThumb, { width: 48, height: 48 }]}>
+                  <Icon name={Icons.plus} size={18} />
+                </View>
+                <TextInput
+                  value={newName}
+                  onChangeText={(v) => {
+                    setNewName(v);
+                    setError(null);
+                  }}
+                  placeholder="Nom de la collection"
+                  placeholderTextColor={Colors.text3}
+                  selectionColor={Colors.text}
+                  keyboardAppearance="dark"
+                  autoFocus
+                  returnKeyType="done"
+                  onSubmitEditing={create}
+                  style={[Type.body, { flex: 1, color: Colors.text, paddingVertical: 10 }]}
+                />
+                <Pressable onPress={create} disabled={!newName.trim() || saving} hitSlop={8} style={[styles.createBtn, !newName.trim() && { opacity: 0.4 }]}>
+                  {saving ? (
+                    <ActivityIndicator size="small" color={Colors.bg} />
+                  ) : (
+                    <Txt variant="footnote" style={{ color: Colors.bg, fontWeight: '600' }}>
+                      Créer
+                    </Txt>
+                  )}
+                </Pressable>
               </View>
-              <TextInput
-                value={newName}
-                onChangeText={(v) => {
-                  setNewName(v);
-                  setError(null);
-                }}
-                placeholder="Nom de la collection"
-                placeholderTextColor={Colors.text3}
-                selectionColor={Colors.text}
-                keyboardAppearance="dark"
-                autoFocus
-                returnKeyType="done"
-                onSubmitEditing={create}
-                style={[Type.body, { flex: 1, color: Colors.text, paddingVertical: 10 }]}
-              />
-              <Pressable onPress={create} disabled={!newName.trim() || saving} hitSlop={8} style={[styles.createBtn, !newName.trim() && { opacity: 0.4 }]}>
-                {saving ? <ActivityIndicator size="small" color={Colors.bg} /> : <Txt variant="footnote" style={{ color: Colors.bg, fontWeight: '600' }}>Créer</Txt>}
-              </Pressable>
+              <View style={styles.visibility}>
+                {[
+                  { pub: true, label: 'Publique', icon: Icons.globe },
+                  { pub: false, label: 'Privée', icon: Icons.lock },
+                ].map((o) => {
+                  const on = newPublic === o.pub;
+                  return (
+                    <Pressable
+                      key={o.label}
+                      onPress={() => {
+                        haptic.select();
+                        setNewPublic(o.pub);
+                      }}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected: on }}
+                      hitSlop={6}
+                      style={[styles.visOption, on && styles.visOn]}>
+                      <Icon name={o.icon} size={12} color={on ? Colors.bg : Colors.text2} />
+                      <Txt variant="footnote" style={{ fontWeight: '600', color: on ? Colors.bg : Colors.text2 }}>
+                        {o.label}
+                      </Txt>
+                    </Pressable>
+                  );
+                })}
+                <Txt variant="micro" color="text3" style={{ marginLeft: 4 }}>
+                  {newPublic ? 'Visible avec le lien' : 'Vous seul'}
+                </Txt>
+              </View>
             </View>
           ) : (
             <Pressable
@@ -189,7 +237,13 @@ function PickerSheet({
             </Pressable>
           )
         }
-        ListFooterComponent={error ? <Txt variant="footnote" color="danger" style={{ paddingHorizontal: Space.lg }}>{error}</Txt> : undefined}
+        ListFooterComponent={
+          error ? (
+            <Txt variant="footnote" color="danger" style={{ paddingHorizontal: Space.lg }}>
+              {error}
+            </Txt>
+          ) : undefined
+        }
         ListEmptyComponent={
           <Txt color="text3" center style={{ paddingVertical: Space.x3 }}>
             Aucune collection ne correspond.
@@ -243,10 +297,7 @@ function countLabel(c: CollectionSummary) {
 }
 
 function normalize(s: string) {
-  return s
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
 const styles = StyleSheet.create({
@@ -264,7 +315,14 @@ const styles = StyleSheet.create({
   },
   sheet: { flex: 1, backgroundColor: Colors.bg },
   grabber: { alignSelf: 'center', width: 36, height: 5, borderRadius: 3, backgroundColor: Colors.borderStrong, marginTop: 6 },
-  sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: Space.lg, paddingTop: Space.md, paddingBottom: Space.md },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Space.lg,
+    paddingTop: Space.md,
+    paddingBottom: Space.md,
+  },
   close: { width: 28, height: 28, borderRadius: 14, backgroundColor: Colors.muted, alignItems: 'center', justifyContent: 'center' },
   search: {
     flexDirection: 'row',
@@ -280,6 +338,17 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, color: Colors.text, paddingVertical: 0 },
   row: { flexDirection: 'row', alignItems: 'center', gap: Space.md, paddingHorizontal: Space.lg, paddingVertical: 8 },
   createRow: { flexDirection: 'row', alignItems: 'center', gap: Space.md, paddingHorizontal: Space.lg, paddingVertical: 8 },
+  visibility: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingBottom: Space.md, paddingLeft: Space.lg + 48 + Space.md, paddingRight: Space.lg },
+  visOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    height: 28,
+    paddingHorizontal: 11,
+    borderRadius: Radius.pill,
+    backgroundColor: Colors.muted,
+  },
+  visOn: { backgroundColor: Colors.text },
   selectedRow: { backgroundColor: Colors.card },
   pressed: { backgroundColor: Colors.card },
   thumb: { borderRadius: Radius.sm, overflow: 'hidden', backgroundColor: Colors.card, alignItems: 'center', justifyContent: 'center' },

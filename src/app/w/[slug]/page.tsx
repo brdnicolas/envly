@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { SITE_URL } from "@/lib/site";
 import { PublicCollectionView } from "@/components/public-collection-view";
 
 export async function generateMetadata({
@@ -16,28 +17,31 @@ export async function generateMetadata({
     select: {
       name: true,
       description: true,
+      isPublic: true,
       user: { select: { name: true } },
-      wishes: {
-        where: { imageUrl: { not: null } },
-        select: { imageUrl: true },
-        take: 1,
-      },
+      _count: { select: { wishes: true } },
+      wishes: { select: { title: true }, orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }], take: 3 },
     },
   });
 
   if (!collection) return {};
+  // Private lists: no index, no details in previews.
+  if (!collection.isPublic) return { title: "Liste privée", robots: { index: false, follow: false } };
 
-  const ogImage = collection.wishes[0]?.imageUrl;
-  const ownerName = collection.user.name || "Quelqu'un";
+  const owner = collection.user.name || "Quelqu’un";
+  const n = collection._count.wishes;
+  const picks = collection.wishes.map((w) => w.title.split(/[|–-]/)[0].trim()).filter(Boolean);
+  const description =
+    collection.description ||
+    `La liste d’envies de ${owner} : ${n} idée${n > 1 ? "s" : ""} cadeau${picks.length ? ` (${picks.join(", ")}…)` : ""}. Réservez un cadeau en secret sur Envly.`;
+  const title = `${collection.name} — la liste de ${owner}`;
 
   return {
-    title: `${collection.name} - Envly`,
-    description: collection.description || `Wishlist de ${ownerName}`,
-    openGraph: {
-      title: collection.name,
-      description: collection.description || `Wishlist de ${ownerName}`,
-      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
-    },
+    title,
+    description: description.slice(0, 300),
+    alternates: { canonical: `/w/${slug}` },
+    openGraph: { type: "website", title, description: description.slice(0, 300), url: `/w/${slug}` },
+    twitter: { card: "summary_large_image", title, description: description.slice(0, 200) },
   };
 }
 
@@ -115,7 +119,29 @@ export default async function PublicWishlistPage({
 
   const recentFollowers = collection.followers.map((f) => f.user);
 
+  // Structured data: the list as an ItemList of products (rich results, Google Shopping signals).
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: collection.name,
+    url: `${SITE_URL}/w/${slug}`,
+    numberOfItems: wishes.length,
+    itemListElement: wishes.slice(0, 30).map((w, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Product",
+        name: w.title,
+        ...(w.imageUrl && { image: w.imageUrl }),
+        ...(w.url && { url: w.url }),
+        ...(w.price != null && { offers: { "@type": "Offer", price: w.price, priceCurrency: "EUR" } }),
+      },
+    })),
+  };
+
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd).replace(/</g, "\\u003c") }} />
     <PublicCollectionView
       collection={{
         name: collection.name,
@@ -137,5 +163,6 @@ export default async function PublicWishlistPage({
           : undefined
       }
     />
+    </>
   );
 }

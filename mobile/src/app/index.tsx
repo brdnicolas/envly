@@ -9,6 +9,7 @@ import { CollectionCard } from '@/components/collection-card';
 import { collectionActions, editCollection } from '@/components/collection-menu';
 import { Icons } from '@/components/icon';
 import { Avatar, Button, Divider, EmptyState, IconButton, Skeleton, Txt } from '@/components/primitives';
+import { NotifyCard } from '@/components/notify-card';
 import { SantaCard } from '@/components/santa';
 import { useToast } from '@/components/toast';
 import { Colors, Radius, Space } from '@/constants/theme';
@@ -125,6 +126,8 @@ export default function HomeScreen() {
         </View>
       </Pressable>
       <Divider style={{ marginHorizontal: Space.lg }} />
+
+      <NotifyCard />
 
       {activeSantas.length > 0 && (
         <View style={{ paddingTop: Space.xl, gap: Space.md }}>

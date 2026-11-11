@@ -265,7 +265,10 @@ export function Avatar({ uri, name, size = 40 }: { uri?: string | null; name?: s
     <Image alt="" source={uri} style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: Colors.muted }} transition={150} />
   ) : (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: Colors.muted, alignItems: 'center', justifyContent: 'center' }}>
-      <Txt style={{ fontFamily: Fonts.semibold, fontSize: size * 0.4 }} color="text2">
+      {/* Line height = circle height, so the letter is truly centred whatever the size. */}
+      <Txt
+        style={{ fontFamily: Fonts.semibold, fontSize: Math.round(size * 0.42), lineHeight: size, height: size, textAlign: 'center', includeFontPadding: false }}
+        color="text2">
         {initial}
       </Txt>
     </View>

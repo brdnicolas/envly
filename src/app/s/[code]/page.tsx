@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!s) return {};
   const title = `Secret Santa « ${s.name} »`;
   const description = `${s.organizer.name ?? "Un ami"} vous invite à participer sur Envly.`;
-  return { title: `${title} - Envly`, description, openGraph: { title, description } };
+  return { title, description, robots: { index: false, follow: false }, openGraph: { title, description }, twitter: { card: "summary_large_image", title, description } };
 }
 
 /** Invite link landing: join (with a list), then follow the draw and see who you give to. */
