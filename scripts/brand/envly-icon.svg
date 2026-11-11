@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#1B1B1E"/><stop offset="1" stop-color="#050506"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="600" cy="420" r="420" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity=".16"/><stop offset=".45" stop-color="#FFFFFF" stop-opacity=".05"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="fTL" x1="350" y1="170" x2="600" y2="420" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F1F1F4"/><stop offset="1" stop-color="#B4B4BC"/>
+  </linearGradient>
+  <linearGradient id="fTR" x1="850" y1="170" x2="600" y2="420" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#E4E4EA"/><stop offset=".45" stop-color="#55555C"/><stop offset="1" stop-color="#A2A2AA"/>
+  </linearGradient>
+  <linearGradient id="fBR" x1="850" y1="670" x2="600" y2="420" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#C7C7CE"/><stop offset="1" stop-color="#7A7A82"/>
+  </linearGradient>
+  <linearGradient id="fBL" x1="350" y1="670" x2="600" y2="420" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#2A2A2F"/><stop offset=".55" stop-color="#5C5C64"/><stop offset="1" stop-color="#D2D2D8"/>
+  </linearGradient>
+  <linearGradient id="tr" x1="168" y1="872" x2="600" y2="510" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".55" stop-color="#C9C9D0" stop-opacity=".45"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".95"/>
+  </linearGradient>
+</defs><rect width="1024" height="1024" rx="0" fill="url(#bg)"/><g transform="translate(0 0) scale(1)">
+  <circle cx="600" cy="420" r="420" fill="url(#glow)"/>
+  <path d="M168 872C330 770 450 640 548 482C562 508 584 532 612 552C462 680 336 784 168 872Z" fill="url(#tr)"/>
+  <path d="M262 892C380 820 476 738 556 650" fill="none" stroke="url(#tr)" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+  <path d="M318 600Q320.88 615.12 336 618Q320.88 620.88 318 636Q315.12 620.88 300 618Q315.12 615.12 318 600Z" fill="#FFFFFF" opacity=".55"/>
+  <path d="M236 731Q237.76 740.24 247 742Q237.76 743.76 236 753Q234.24 743.76 225 742Q234.24 740.24 236 731Z" fill="#FFFFFF" opacity=".35"/>
+  <path d="M600 420L600 170Q576 396 350 420Z" fill="url(#fTL)"/>
+  <path d="M600 420L600 170Q624 396 850 420Z" fill="url(#fTR)"/>
+  <path d="M600 420L850 420Q624 444 600 670Z" fill="url(#fBR)"/>
+  <path d="M600 420L600 670Q576 444 350 420Z" fill="url(#fBL)"/>
+  <path d="M600 170Q624 396 850 420Q624 444 600 670Q576 444 350 420Q576 396 600 170Z" fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="2"/></g></svg>

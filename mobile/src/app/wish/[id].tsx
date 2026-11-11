@@ -1,18 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Share,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -29,16 +18,19 @@ import type { CollectionDetail, Wish } from '@/lib/types';
 
 /**
  * Wish viewer, presented as a sheet:
- * swipe down to close · swipe left/right for the previous/next wish · double-tap the photo to prioritise.
+ * swipe down to close · swipe left/right for the previous/next wish · double-tap the photo to favourite.
  */
 export default function WishViewer() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const toast = useToast();
-  const { id, collectionId } = useLocalSearchParams<{ id: string; collectionId: string }>();
+  const { id, collectionId, edit } = useLocalSearchParams<{ id: string; collectionId: string; edit?: string }>();
   const { data, mutate } = useApi<CollectionDetail>(`/api/collections/${collectionId}`);
   const wishes = data?.wishes ?? [];
-  const startIndex = Math.max(0, wishes.findIndex((w) => w.id === id));
+  const startIndex = Math.max(
+    0,
+    wishes.findIndex((w) => w.id === id),
+  );
   const [picked, setIndex] = useState<number | null>(null);
   const index = Math.min(picked ?? startIndex, Math.max(wishes.length - 1, 0));
   const current = wishes[index];
@@ -125,6 +117,8 @@ export default function WishViewer() {
               wish={item}
               collectionName={collection.name}
               bottomInset={insets.bottom}
+              readOnly={collection.role === 'viewer'}
+              startEditing={edit === '1' && item.id === id}
               onTogglePriority={() => void togglePriority(item)}
               onSave={(patch) => save(item, patch)}
               onDelete={() => void remove(item)}
@@ -140,6 +134,8 @@ function WishPage({
   wish,
   collectionName,
   bottomInset,
+  readOnly,
+  startEditing,
   onTogglePriority,
   onSave,
   onDelete,
@@ -147,15 +143,17 @@ function WishPage({
   wish: Wish;
   collectionName: string;
   bottomInset: number;
+  readOnly: boolean;
+  startEditing: boolean;
   onTogglePriority: () => void;
   onSave: (patch: Partial<Wish>) => Promise<void>;
   onDelete: () => void;
 }) {
   const [ratio, setRatio] = useState(1);
-  const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [note, setNote] = useState('');
+  const [editing, setEditing] = useState(startEditing && !readOnly);
+  const [title, setTitle] = useState(wish.title);
+  const [price, setPrice] = useState(wish.price != null ? String(wish.price).replace('.', ',') : '');
+  const [note, setNote] = useState(wish.description ?? '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [burst, setBurst] = useState(0);
@@ -165,6 +163,7 @@ function WishPage({
   const priceLabel = formatPrice(wish.price);
 
   function onImagePress() {
+    if (readOnly) return;
     const now = Date.now();
     if (now - lastTap.current < 280) {
       lastTap.current = 0;
@@ -205,7 +204,7 @@ function WishPage({
         <Pressable
           onPress={onImagePress}
           accessibilityRole="imagebutton"
-          accessibilityLabel="Photo du produit. Toucher deux fois pour marquer comme prioritaire."
+          accessibilityLabel="Photo du produit. Toucher deux fois pour ajouter aux favoris."
           style={styles.imageCard}>
           {wish.imageUrl ? (
             <Image
@@ -265,18 +264,20 @@ function WishPage({
 
             {wish.url && <Button title="Voir le produit" iconRight={Icons.arrowUpRight} onPress={() => openProduct(wish.url!)} />}
 
-            <View style={styles.list}>
-              <Row
-                icon={wish.isPriority ? Icons.starFill : Icons.star}
-                iconColor={wish.isPriority ? Colors.star : Colors.text}
-                label={wish.isPriority ? 'Prioritaire' : 'Marquer comme prioritaire'}
-                onPress={onTogglePriority}
-              />
-              <Divider style={{ marginLeft: 50 }} />
-              <Row icon={Icons.pencil} label="Modifier" onPress={startEdit} />
-              <Divider style={{ marginLeft: 50 }} />
-              <Row icon={Icons.trash} iconColor={Colors.danger} label="Supprimer" danger onPress={onDelete} />
-            </View>
+            {!readOnly && (
+              <View style={styles.list}>
+                <Row
+                  icon={wish.isPriority ? Icons.starFill : Icons.star}
+                  iconColor={wish.isPriority ? Colors.star : Colors.text}
+                  label={wish.isPriority ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  onPress={onTogglePriority}
+                />
+                <Divider style={{ marginLeft: 50 }} />
+                <Row icon={Icons.pencil} label="Modifier" onPress={startEdit} />
+                <Divider style={{ marginLeft: 50 }} />
+                <Row icon={Icons.trash} iconColor={Colors.danger} label="Supprimer" danger onPress={onDelete} />
+              </View>
+            )}
           </View>
         )}
       </ScrollView>
@@ -297,7 +298,19 @@ function BurstStar({ onDone }: { onDone: () => void }) {
   );
 }
 
-function Row({ icon, label, onPress, danger, iconColor }: { icon: typeof Icons.star; label: string; onPress: () => void; danger?: boolean; iconColor?: string }) {
+function Row({
+  icon,
+  label,
+  onPress,
+  danger,
+  iconColor,
+}: {
+  icon: typeof Icons.star;
+  label: string;
+  onPress: () => void;
+  danger?: boolean;
+  iconColor?: string;
+}) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.row, pressed && { backgroundColor: Colors.elevated }]} accessibilityRole="button">
       <Icon name={icon} size={18} color={iconColor ?? Colors.text} />
@@ -313,7 +326,17 @@ const styles = StyleSheet.create({
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: Space.sm, paddingVertical: Space.xs },
   imageCard: { borderRadius: Radius.xl, overflow: 'hidden', backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: Colors.border },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.card },
-  priorityTag: { position: 'absolute', top: 10, left: 10, width: 26, height: 26, borderRadius: 9, backgroundColor: Colors.star, alignItems: 'center', justifyContent: 'center' },
+  priorityTag: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    width: 26,
+    height: 26,
+    borderRadius: 9,
+    backgroundColor: Colors.star,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   burst: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
   burstInner: { width: 96, height: 96, borderRadius: 48, backgroundColor: 'rgba(10,10,10,0.55)', alignItems: 'center', justifyContent: 'center' },
   list: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },

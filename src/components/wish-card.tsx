@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CancelReservationButton, getReservationToken } from "@/components/reserve-dialog";
@@ -78,7 +79,9 @@ export function WishCard({
       >
         {wish.imageUrl ? (
           <img
-            src={wish.imageUrl}
+            src={thumb(wish.imageUrl, 640)}
+            loading="lazy"
+            decoding="async"
             alt={wish.title}
             className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {

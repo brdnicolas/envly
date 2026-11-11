@@ -14,20 +14,30 @@ export async function GET(
   }
 
   const { id } = await params;
-  const role = await getCollectionAccess(id, session.user.id);
+  const access = await getCollectionAccess(id, session.user.id);
 
-  if (role === "none") {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  // Anyone signed in may read a public collection (friends' lists in the app),
+  // as a "viewer": read-only, and the only role that sees reservations.
+  let role: "owner" | "collaborator" | "viewer" = "viewer";
+  if (access === "none") {
+    const pub = await prisma.collection.findUnique({ where: { id }, select: { isPublic: true } });
+    if (!pub?.isPublic) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+  } else {
+    role = access;
   }
 
   const collection = await prisma.collection.findUnique({
     where: { id },
     include: {
-      user: { select: { id: true, name: true, image: true } },
+      user: { select: { id: true, name: true, image: true, slug: true } },
       wishes: {
         orderBy: [{ isPriority: "desc" }, { position: "asc" }, { createdAt: "desc" }],
         include: {
           creator: { select: { id: true, name: true } },
+          // Surprise preserved: owners and collaborators never see who reserved what.
+          ...(role === "viewer" && { reservation: { select: { reservedBy: true } } }),
         },
       },
       collaborators: {

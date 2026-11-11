@@ -2,12 +2,12 @@ import { Image } from 'expo-image';
 import { Link, type Href } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { CollectionMenu, type MenuItem } from '@/components/collection-menu';
 import { Icon, Icons } from '@/components/icon';
 import { Badge, IconButton, Txt } from '@/components/primitives';
 import { Colors, Radius, Space } from '@/constants/theme';
+import { thumb } from '@/lib/image';
 import type { CollectionSummary } from '@/lib/types';
-
-type Menu = { onShare?: () => void; onTogglePublic?: () => void; onDelete?: () => void };
 
 /** Web-style collection card: 3×2 photo grid, name, count and visibility. */
 export function CollectionCard({
@@ -15,19 +15,18 @@ export function CollectionCard({
   href,
   onPress,
   onShare,
-  onMore,
+  actions,
   subtitle,
   width,
-  menu,
 }: {
   collection: CollectionSummary;
   href?: Href;
   onPress?: () => void;
   onShare?: () => void;
-  onMore?: () => void;
+  /** Grouped actions: shown in the "…" pull-down and on long-press. */
+  actions?: MenuItem[][];
   subtitle?: string;
   width?: number;
-  menu?: Menu;
 }) {
   const images = collection.wishes.map((w) => w.imageUrl).filter((u): u is string => !!u).slice(0, 6);
   const count = collection._count.wishes;
@@ -45,7 +44,7 @@ export function CollectionCard({
             <View key={row} style={styles.row}>
               {cells.slice(row * 3, row * 3 + 3).map((uri, i) => (
                 <View key={i} style={styles.cell}>
-                  {uri && <Image alt="" source={uri} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} recyclingKey={uri} />}
+                  {uri && <Image alt="" source={thumb(uri, 360)} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} recyclingKey={uri} />}
                 </View>
               ))}
             </View>
@@ -58,7 +57,7 @@ export function CollectionCard({
             {collection.name}
           </Txt>
           {onShare && <IconButton icon={Icons.share} label="Partager" size={30} onPress={onShare} />}
-          {onMore && <IconButton icon={Icons.more} label="Options" size={30} onPress={onMore} />}
+          {actions && <CollectionMenu groups={actions} size={32} />}
         </View>
         <View style={styles.infoRow}>
           <Txt variant="footnote" color="text2">
@@ -75,17 +74,11 @@ export function CollectionCard({
     <Link href={href} asChild>
       <Link.Trigger>{card}</Link.Trigger>
       <Link.Preview />
-      {menu && (
+      {actions && (
         <Link.Menu>
-          {menu.onShare && <Link.MenuAction title="Partager" icon="square.and.arrow.up" onPress={menu.onShare} />}
-          {menu.onTogglePublic && (
-            <Link.MenuAction
-              title={collection.isPublic ? 'Rendre privée' : 'Rendre publique'}
-              icon={collection.isPublic ? 'lock' : 'globe'}
-              onPress={menu.onTogglePublic}
-            />
-          )}
-          {menu.onDelete && <Link.MenuAction title="Supprimer" icon="trash" destructive onPress={menu.onDelete} />}
+          {actions.flat().map((a) => (
+            <Link.MenuAction key={a.label} title={a.label} icon={a.icon as never} destructive={a.destructive} onPress={a.onPress} />
+          ))}
         </Link.Menu>
       )}
     </Link>

@@ -11,9 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCallbackUrl, goToCallback, useCallbackHref } from "@/lib/callback-url";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const switchHref = useCallbackHref("/signin");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -80,7 +82,7 @@ export default function SignUpPage() {
       setError("Compte créé mais la connexion a échoué. Veuillez vous connecter manuellement.");
       setLoading(false);
     } else {
-      router.push("/");
+      goToCallback(router);
     }
   };
 
@@ -92,7 +94,7 @@ export default function SignUpPage() {
           <CardDescription>Commencez à créer et partager des wishlists</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: "/" })}>
+          <Button variant="outline" className="w-full rounded-xl" onClick={() => signIn("google", { callbackUrl: getCallbackUrl() })}>
             Google
           </Button>
 
@@ -201,7 +203,7 @@ export default function SignUpPage() {
 
           <p className="text-center text-sm text-muted-foreground">
             Déjà un compte ?{" "}
-            <Link href="/signin" className="text-foreground underline underline-offset-4 hover:text-primary">
+            <Link href={switchHref} className="text-foreground underline underline-offset-4 hover:text-primary">
               Se connecter
             </Link>
           </p>

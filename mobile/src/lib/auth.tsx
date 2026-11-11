@@ -12,10 +12,8 @@ const USER_KEY = 'envly.user';
 type AuthState = { loading: boolean; token: string | null; user: User | null };
 
 type AuthContextValue = AuthState & {
-  signIn: (email: string, password: string) => Promise<void>;
-  /** Google (or any method) through the website's sign-in page. Resolves false if cancelled. */
-  signInWithBrowser: () => Promise<boolean>;
-  signUp: (input: { name: string; email: string; password: string }) => Promise<void>;
+  /** Sign in (or up) on envly.fr — Google or email — and come back with a token. Resolves false if cancelled. */
+  signInWithBrowser: (mode?: 'signin' | 'signup') => Promise<boolean>;
   signOut: () => Promise<void>;
 };
 
@@ -31,14 +29,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ loading: false, token: null, user: null });
   }
 
-  async function signIn(email: string, password: string) {
-    const res = await api<{ token: string; user: User }>('/api/auth/mobile', {
-      method: 'POST',
-      body: { email: email.trim(), password },
-    });
-    await storeSession(res.token, res.user);
-  }
-
   async function storeSession(token: string, user: User) {
     await SecureStore.setItemAsync(TOKEN_KEY, token);
     await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
@@ -46,10 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ loading: false, token, user });
   }
 
-  async function signInWithBrowser() {
+  async function signInWithBrowser(mode: 'signin' | 'signup' = 'signin') {
     const state = randomState();
     const result = await WebBrowser.openAuthSessionAsync(
-      `${API_URL}/api/auth/mobile/authorize?state=${state}`,
+      `${API_URL}/api/auth/mobile/authorize?state=${state}${mode === 'signup' ? '&mode=signup' : ''}`,
       'envly://auth'
     );
     if (result.type !== 'success') return false;
@@ -60,11 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const user = await api<User>('/api/profile');
     await storeSession(token, user);
     return true;
-  }
-
-  async function signUp({ name, email, password }: { name: string; email: string; password: string }) {
-    await api('/api/auth/register', { method: 'POST', body: { name: name.trim(), email: email.trim(), password } });
-    await signIn(email, password);
   }
 
   useEffect(() => {
@@ -87,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setOnUnauthorized(null);
   });
 
-  return <AuthContext value={{ ...state, signIn, signInWithBrowser, signUp, signOut }}>{children}</AuthContext>;
+  return <AuthContext value={{ ...state, signInWithBrowser, signOut }}>{children}</AuthContext>;
 }
 
 export function useAuth() {

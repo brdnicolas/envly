@@ -23,8 +23,10 @@ export async function GET(req: Request) {
   const userId = session?.user?.id;
 
   if (!userId) {
-    const signIn = new URL("/signin", url.origin);
-    signIn.searchParams.set("callbackUrl", `${url.pathname}${url.search}`);
+    const page = url.searchParams.get("mode") === "signup" ? "/signup" : "/signin";
+    const signIn = new URL(page, url.origin);
+    // Come back here (without `mode`) once signed in, to hand the token to the app.
+    signIn.searchParams.set("callbackUrl", `${url.pathname}?state=${state}`);
     return NextResponse.redirect(signIn);
   }
 

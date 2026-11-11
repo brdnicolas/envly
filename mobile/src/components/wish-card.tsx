@@ -8,33 +8,40 @@ import { Txt } from '@/components/primitives';
 import { Colors, Radius, Space, Type } from '@/constants/theme';
 import { formatPrice } from '@/lib/api';
 import { domainOf } from '@/lib/format';
+import { thumb } from '@/lib/image';
 import type { Wish } from '@/lib/types';
 
-/** Pinterest-style card: the photo keeps its natural ratio. */
+export type CardAction = { title: string; icon: string; onPress: () => void; destructive?: boolean };
+
+/**
+ * Pinterest-style card: the photo keeps its natural ratio.
+ * Tap → `onPress` (the product page) or, without it, `href`. Long-press → native menu of `actions`.
+ */
 export function WishCard({
   wish,
   href,
-  onOpenProduct,
-  onTogglePriority,
-  onDelete,
+  onPress,
+  actions,
+  reserved,
 }: {
   wish: Wish;
   href: Href;
-  onOpenProduct?: () => void;
-  onTogglePriority?: () => void;
-  onDelete?: () => void;
+  onPress?: () => void;
+  actions: CardAction[];
+  /** Friends' lists: someone already offers this gift. */
+  reserved?: boolean;
 }) {
   const [ratio, setRatio] = useState(1);
   const price = formatPrice(wish.price);
   const domain = domainOf(wish.url);
 
   const card = (
-    <Pressable style={styles.card}>
+    <Pressable style={StyleSheet.flatten([styles.card, reserved && { opacity: 0.55 }])}>
       {wish.imageUrl ? (
         <View style={{ aspectRatio: ratio, backgroundColor: '#FFFFFF' }}>
           <Image
             alt=""
-            source={wish.imageUrl}
+            source={thumb(wish.imageUrl, 600)}
             style={StyleSheet.absoluteFill}
             contentFit="cover"
             transition={150}
@@ -59,6 +66,14 @@ export function WishCard({
         <Txt variant="callout" numberOfLines={2} style={{ fontSize: 13, lineHeight: 17 }}>
           {wish.title}
         </Txt>
+        {reserved && (
+          <View style={styles.reserved}>
+            <Icon name={Icons.check} size={11} color={Colors.text2} weight="semibold" />
+            <Txt variant="micro" color="text2">
+              Réservé
+            </Txt>
+          </View>
+        )}
         {(domain || price) && (
           <View style={styles.bottom}>
             <Txt variant="micro" color="text3" numberOfLines={1} style={{ flex: 1 }}>
@@ -72,19 +87,22 @@ export function WishCard({
   );
 
   return (
-    <Link href={href} asChild>
+    <Link
+      href={href}
+      asChild
+      onPress={(e) => {
+        if (!onPress) return;
+        e.preventDefault();
+        onPress();
+      }}>
       <Link.Trigger>{card}</Link.Trigger>
-      <Link.Menu>
-        {onOpenProduct && <Link.MenuAction title="Voir le produit" icon="arrow.up.right" onPress={onOpenProduct} />}
-        {onTogglePriority && (
-          <Link.MenuAction
-            title={wish.isPriority ? 'Retirer des prioritaires' : 'Marquer prioritaire'}
-            icon={wish.isPriority ? 'star.slash' : 'star'}
-            onPress={onTogglePriority}
-          />
-        )}
-        {onDelete && <Link.MenuAction title="Supprimer" icon="trash" destructive onPress={onDelete} />}
-      </Link.Menu>
+      {actions.length > 0 && (
+        <Link.Menu>
+          {actions.map((a) => (
+            <Link.MenuAction key={a.title} title={a.title} icon={a.icon as never} destructive={a.destructive} onPress={a.onPress} />
+          ))}
+        </Link.Menu>
+      )}
     </Link>
   );
 }
@@ -109,8 +127,19 @@ export function Masonry<T extends { id: string }>({ items, render }: { items: T[
 const styles = StyleSheet.create({
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.muted },
-  star: { position: 'absolute', top: 8, left: 8, width: 26, height: 26, borderRadius: 9, backgroundColor: Colors.star, alignItems: 'center', justifyContent: 'center' },
+  star: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    width: 26,
+    height: 26,
+    borderRadius: 9,
+    backgroundColor: Colors.star,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   info: { padding: Space.md, gap: 6 },
+  reserved: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   bottom: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
   masonry: { flexDirection: 'row', gap: Space.md, alignItems: 'flex-start' },
   column: { flex: 1, gap: Space.md },

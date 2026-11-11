@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { thumb } from "@/lib/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -157,7 +158,7 @@ export default async function PublicProfilePage({
                   {images.length > 0 ? (
                     <div className="w-full aspect-[2/1] overflow-hidden grid grid-cols-3 grid-rows-2 gap-px bg-border/40 rounded-t-2xl">
                       {images.slice(0, 6).map((img, i) => (
-                        <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+                        <img key={i} src={thumb(img, 400)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       ))}
                       {Array.from({ length: Math.max(0, 6 - images.length) }).map((_, i) => (
                         <div key={`empty-${i}`} className="bg-muted/30" />

@@ -9,30 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-// Where to go after signing in: only same-origin paths (e.g. the mobile app's
-// /api/auth/mobile/authorize, or a protected page the middleware bounced from).
-function getCallbackUrl(): string {
-  if (typeof window === "undefined") return "/";
-  const raw = new URLSearchParams(window.location.search).get("callbackUrl");
-  if (!raw) return "/";
-  try {
-    const target = new URL(raw, window.location.origin);
-    return target.origin === window.location.origin ? target.pathname + target.search : "/";
-  } catch {
-    return "/";
-  }
-}
-
-function goToCallback(router: ReturnType<typeof useRouter>) {
-  const target = getCallbackUrl();
-  // API routes must be a full navigation (they redirect to the app's scheme)
-  if (target.startsWith("/api/")) window.location.replace(target);
-  else router.replace(target);
-}
+import { getCallbackUrl, goToCallback, useCallbackHref } from "@/lib/callback-url";
 
 export default function SignInPage() {
   const router = useRouter();
+  const switchHref = useCallbackHref("/signup");
   const { status } = useSession();
 
   useEffect(() => {
@@ -119,7 +100,7 @@ export default function SignInPage() {
 
           <p className="text-center text-sm text-muted-foreground">
             Pas encore de compte ?{" "}
-            <Link href="/signup" className="text-foreground underline underline-offset-4 hover:text-primary">
+            <Link href={switchHref} className="text-foreground underline underline-offset-4 hover:text-primary">
               S&apos;inscrire
             </Link>
           </p>

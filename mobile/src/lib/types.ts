@@ -32,11 +32,12 @@ export type Wish = {
   isPriority: boolean;
   collectionId: string;
   creator?: { id: string; name: string | null } | null;
-  reservation?: unknown;
+  /** Only sent to viewers (friends), never to the owner. */
+  reservation?: { reservedBy: string } | null;
 };
 
 export type CollectionDetail = Omit<CollectionSummary, 'wishes' | 'role'> & {
-  user: { id: string; name: string | null; image: string | null };
+  user: { id: string; name: string | null; image: string | null; slug?: string | null };
   wishes: Wish[];
   role: 'owner' | 'collaborator' | 'viewer';
 };

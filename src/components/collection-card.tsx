@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,7 @@ export function ImageMosaic({ images }: { images: string[] }) {
   if (images.length === 1) {
     return (
       <div className="w-full aspect-[2/1] rounded-t-2xl overflow-hidden">
-        <img src={images[0]} alt="" className="w-full h-full object-cover" />
+        <img src={thumb(images[0], 800)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
       </div>
     );
   }
@@ -44,7 +45,7 @@ export function ImageMosaic({ images }: { images: string[] }) {
     return (
       <div className="w-full aspect-[2/1] rounded-t-2xl overflow-hidden grid grid-cols-2 gap-px bg-border/40">
         {images.map((img, i) => (
-          <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+          <img key={i} src={thumb(img, 400)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
         ))}
       </div>
     );
@@ -54,7 +55,7 @@ export function ImageMosaic({ images }: { images: string[] }) {
     return (
       <div className="w-full aspect-[2/1] rounded-t-2xl overflow-hidden grid grid-cols-3 gap-px bg-border/40">
         {images.map((img, i) => (
-          <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+          <img key={i} src={thumb(img, 400)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
         ))}
       </div>
     );
@@ -66,7 +67,7 @@ export function ImageMosaic({ images }: { images: string[] }) {
   return (
     <div className="w-full aspect-[2/1] rounded-t-2xl overflow-hidden grid grid-cols-3 grid-rows-2 gap-px bg-border/40">
       {slots.map((img, i) => (
-        <img key={i} src={img} alt="" className="w-full h-full object-cover" />
+        <img key={i} src={thumb(img, 400)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
       ))}
       {Array.from({ length: Math.max(0, 6 - slots.length) }).map((_, i) => (
         <div key={`empty-${i}`} className="bg-muted/20" />

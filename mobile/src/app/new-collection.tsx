@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,11 +10,15 @@ import { invalidate } from '@/hooks/use-api';
 import { api, errorMessage } from '@/lib/api';
 import { haptic } from '@/lib/haptics';
 
-export default function NewCollectionScreen() {
+/** Create a collection, or edit one when opened with `id` (+ current values). */
+export default function CollectionFormScreen() {
   const insets = useSafeAreaInsets();
   const toast = useToast();
-  const [name, setName] = useState('');
-  const [isPublic, setIsPublic] = useState(true);
+  const params = useLocalSearchParams<{ id?: string; name?: string; description?: string; isPublic?: string }>();
+  const editing = !!params.id;
+  const [name, setName] = useState(params.name ?? '');
+  const [description, setDescription] = useState(params.description ?? '');
+  const [isPublic, setIsPublic] = useState(params.isPublic !== 'false');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,10 +27,12 @@ export default function NewCollectionScreen() {
     setSaving(true);
     setError(null);
     try {
-      await api('/api/collections', { method: 'POST', body: { name: name.trim(), isPublic } });
+      const body = { name: name.trim(), isPublic, ...(editing && { description: description.trim() || null }) };
+      if (editing) await api(`/api/collections/${params.id}`, { method: 'PATCH', body });
+      else await api('/api/collections', { method: 'POST', body });
       invalidate('/api/collections');
       haptic.success();
-      toast('Collection créée');
+      toast(editing ? 'Modifications enregistrées' : 'Collection créée');
       router.back();
     } catch (e) {
       setError(errorMessage(e));
@@ -37,7 +43,7 @@ export default function NewCollectionScreen() {
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom + Space.lg }]}>
-      <Txt variant="title2">Nouvelle collection</Txt>
+      <Txt variant="title2">{editing ? 'Modifier la collection' : 'Nouvelle collection'}</Txt>
       <Field
         label="Nom"
         value={name}
@@ -46,10 +52,13 @@ export default function NewCollectionScreen() {
           setError(null);
         }}
         placeholder="🎂 Anniversaire"
-        autoFocus
+        autoFocus={!editing}
         returnKeyType="done"
         onSubmitEditing={create}
       />
+      {editing && (
+        <Field label="Description" value={description} onChangeText={setDescription} placeholder="Une note pour vos proches (facultatif)" multiline />
+      )}
       <View style={styles.row}>
         <View style={{ flex: 1, gap: 2 }}>
           <Txt variant="bodyMedium">Collection publique</Txt>
@@ -60,7 +69,7 @@ export default function NewCollectionScreen() {
         <Switch value={isPublic} onValueChange={setIsPublic} trackColor={{ true: Colors.text, false: Colors.muted }} thumbColor={isPublic ? Colors.bg : Colors.text2} />
       </View>
       <ErrorText message={error} />
-      <Button title="Créer la collection" onPress={create} loading={saving} disabled={!name.trim()} />
+      <Button title={editing ? 'Enregistrer' : 'Créer la collection'} onPress={create} loading={saving} disabled={!name.trim()} />
     </View>
   );
 }

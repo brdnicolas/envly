@@ -9,6 +9,7 @@ import { Colors, Radius, Space, Type } from '@/constants/theme';
 import { invalidate } from '@/hooks/use-api';
 import { api, errorMessage } from '@/lib/api';
 import { haptic } from '@/lib/haptics';
+import { thumb } from '@/lib/image';
 import type { CollectionSummary } from '@/lib/types';
 
 /** Field showing the chosen collection; opens a searchable sheet to pick or create one. */
@@ -228,7 +229,7 @@ function Thumb({ collection, size }: { collection: CollectionSummary; size: numb
   return (
     <View style={[styles.thumb, { width: size, height: size }]}>
       {uri ? (
-        <Image source={uri} style={StyleSheet.absoluteFill} contentFit="cover" recyclingKey={uri} transition={120} />
+        <Image source={thumb(uri, 160)} style={StyleSheet.absoluteFill} contentFit="cover" recyclingKey={uri} transition={120} />
       ) : (
         <Icon name={Icons.gift} size={size * 0.4} color={Colors.text3} />
       )}

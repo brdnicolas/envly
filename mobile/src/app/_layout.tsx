@@ -17,7 +17,7 @@ SplashScreen.preventAutoHideAsync();
 Appearance.setColorScheme('dark');
 
 // Deep links (shared product → /add) still get the tabs underneath the modal
-export const unstable_settings = { anchor: '(tabs)' };
+export const unstable_settings = { anchor: 'index' };
 
 export default function RootLayout() {
   return (
@@ -56,9 +56,18 @@ function App() {
       <StatusBar style="light" />
       <ToastProvider>
         <ShareHandler />
-        <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal', contentStyle: { backgroundColor: Colors.bg }, statusBarStyle: 'light' }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: Colors.bg },
+            statusBarStyle: 'light',
+            fullScreenGestureEnabled: true,
+          }}>
           <Stack.Protected guard={!!token}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" />
+            <Stack.Screen name="collection/[id]" />
+            <Stack.Screen name="friends" />
+            <Stack.Screen name="profile" />
             <Stack.Screen name="wish/[id]" options={{ headerShown: false, presentation: 'modal' }} />
             <Stack.Screen name="add" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen
@@ -67,8 +76,7 @@ function App() {
             />
           </Stack.Protected>
           <Stack.Protected guard={!token}>
-            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-            <Stack.Screen name="sign-up" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="sign-in" options={{ animation: 'fade' }} />
           </Stack.Protected>
         </Stack>
       </ToastProvider>
