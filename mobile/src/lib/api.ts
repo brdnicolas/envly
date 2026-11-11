@@ -1,4 +1,6 @@
-export const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? 'https://envly.fr').replace(/\/$/, '');
+const PROD_API = 'https://www.envly.fr';
+// Dev builds may point at a local server (.env.development.local); release builds always talk to envly.fr.
+export const API_URL = (__DEV__ ? (process.env.EXPO_PUBLIC_API_URL ?? PROD_API) : PROD_API).replace(/\/$/, '');
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;

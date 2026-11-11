@@ -9,7 +9,7 @@ import { Txt } from '@/components/primitives';
 import { Colors, Fonts, Radius } from '@/constants/theme';
 import { haptic } from '@/lib/haptics';
 
-const HEIGHT = 48;
+const HEIGHT = 40;
 const GLASS = isLiquidGlassAvailable();
 
 /** Height to leave under scrolling content so the last item clears the pill. */
@@ -42,7 +42,7 @@ export function BottomAction({ title, onPress, visible = true }: { title: string
 
   const content = (
     <View style={styles.content}>
-      <Icon name={Icons.plus} size={17} weight="semibold" />
+      <Icon name={Icons.plus} size={15} weight="semibold" />
       <Txt style={styles.label}>{title}</Txt>
     </View>
   );
@@ -72,8 +72,8 @@ export function BottomAction({ title, onPress, visible = true }: { title: string
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   shadow: { shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
-  pill: { height: HEIGHT, borderRadius: Radius.pill, overflow: 'hidden', justifyContent: 'center', paddingHorizontal: 22 },
+  pill: { height: HEIGHT, borderRadius: Radius.pill, overflow: 'hidden', justifyContent: 'center', paddingHorizontal: 16 },
   fallback: { backgroundColor: Colors.elevated, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.borderStrong },
-  content: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  label: { fontFamily: Fonts.semibold, fontSize: 15, color: Colors.text },
+  content: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  label: { fontFamily: Fonts.semibold, fontSize: 14, color: Colors.text },
 });

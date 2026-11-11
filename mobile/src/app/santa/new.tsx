@@ -1,9 +1,19 @@
 import { DatePicker, Host } from '@expo/ui/swift-ui';
 import { datePickerStyle, tint } from '@expo/ui/swift-ui/modifiers';
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
-import Animated, { FadeIn, FadeInRight, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import { useMemo, useState } from 'react';
+import { FlatList, KeyboardAvoidingView, PanResponder, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import Animated, {
+  FadeIn,
+  FadeInLeft,
+  FadeInRight,
+  FadeOutLeft,
+  FadeOutRight,
+  LinearTransition,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, Icons } from '@/components/icon';
@@ -26,6 +36,8 @@ const BUDGETS = [10, 20, 30, 50, 100];
 export default function NewSantaFlow() {
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState(0);
+  const [dir, setDir] = useState<1 | -1>(1);
+  const dragX = useSharedValue(0);
   const [name, setName] = useState('');
   const [budget, setBudget] = useState<number | null>(30);
   const [customBudget, setCustomBudget] = useState('');
@@ -40,13 +52,39 @@ export default function NewSantaFlow() {
   function next() {
     if (!canContinue) return;
     haptic.select();
-    if (step < STEPS - 1) setStep(step + 1);
-    else void create();
+    if (step < STEPS - 1) {
+      setDir(1);
+      setStep(step + 1);
+    } else void create();
   }
   function back() {
     if (step === 0) router.back();
-    else setStep(step - 1);
+    else {
+      setDir(-1);
+      setStep(step - 1);
+    }
   }
+
+  // Swipe right to go back a step, like iOS back navigation. Only clearly horizontal
+  // gestures are claimed, so lists and the calendar keep scrolling vertically.
+  const swipe = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, g) => step > 0 && g.dx > 12 && Math.abs(g.dx) > Math.abs(g.dy) * 2,
+        onPanResponderMove: (_, g) => dragX.set(Math.max(0, g.dx)),
+        onPanResponderRelease: (_, g) => {
+          dragX.set(withSpring(0, { damping: 20, stiffness: 220 }));
+          if (g.dx > 80 || g.vx > 0.6) {
+            haptic.select();
+            setDir(-1);
+            setStep((s) => Math.max(0, s - 1));
+          }
+        },
+        onPanResponderTerminate: () => dragX.set(withSpring(0)),
+      }),
+    [step, dragX],
+  );
+  const dragStyle = useAnimatedStyle(() => ({ transform: [{ translateX: dragX.get() * 0.6 }] }));
 
   async function create() {
     setSaving(true);
@@ -90,13 +128,17 @@ export default function NewSantaFlow() {
         <View style={{ width: 36 }} />
       </View>
 
-      <Animated.View key={step} entering={FadeInRight.duration(260)} exiting={FadeOutLeft.duration(160)} style={{ flex: 1 }}>
-        {step === 0 && <NameStep name={name} setName={setName} onSubmit={next} />}
-        {step === 1 && (
-          <BudgetStep budget={budget} setBudget={setBudget} custom={customBudget} setCustom={setCustomBudget} />
-        )}
-        {step === 2 && <FriendsStep picked={picked} setPicked={setPicked} />}
-        {step === 3 && <DateStep date={date} setDate={setDate} noDate={noDate} setNoDate={setNoDate} />}
+      <Animated.View {...swipe.panHandlers} style={[{ flex: 1 }, dragStyle]}>
+        <Animated.View
+          key={step}
+          entering={(dir === 1 ? FadeInRight : FadeInLeft).duration(260)}
+          exiting={(dir === 1 ? FadeOutLeft : FadeOutRight).duration(160)}
+          style={{ flex: 1 }}>
+          {step === 0 && <NameStep name={name} setName={setName} onSubmit={next} />}
+          {step === 1 && <BudgetStep budget={budget} setBudget={setBudget} custom={customBudget} setCustom={setCustomBudget} />}
+          {step === 2 && <FriendsStep picked={picked} setPicked={setPicked} />}
+          {step === 3 && <DateStep date={date} setDate={setDate} noDate={noDate} setNoDate={setNoDate} />}
+        </Animated.View>
       </Animated.View>
 
       <View style={[styles.bottom, { paddingBottom: insets.bottom + Space.sm }]}>
@@ -166,8 +208,6 @@ function BudgetStep({
   custom: string;
   setCustom: (v: string) => void;
 }) {
-  const { width } = useWindowDimensions();
-  const tile = { width: (width - Space.xl * 2 - Space.md * 2) / 3, height: 72 };
   const pick = (v: number | null) => {
     haptic.select();
     setCustom('');
@@ -176,20 +216,29 @@ function BudgetStep({
   return (
     <ScrollView contentContainerStyle={styles.step} keyboardShouldPersistTaps="handled">
       <StepTitle title="Quel budget par cadeau ?" subtitle="Tout le monde joue à armes égales." />
-      <View style={styles.budgetGrid}>
-        {BUDGETS.map((b) => {
-          const on = !custom && budget === b;
-          return (
-            <Pressable key={b} onPress={() => pick(b)} style={[styles.budget, tile, on && styles.budgetOn]}>
-              <Txt style={[styles.budgetValue, on && { color: Colors.bg }]}>{b} €</Txt>
-            </Pressable>
-          );
-        })}
-        <Pressable onPress={() => pick(null)} style={[styles.budget, tile, !custom && budget === null && styles.budgetOn]}>
-          <Txt variant="bodyMedium" style={!custom && budget === null ? { color: Colors.bg } : undefined}>
-            Libre
-          </Txt>
-        </Pressable>
+      {/* Two explicit rows of three: always the full width, whatever the screen size. */}
+      <View style={{ gap: Space.md }}>
+        {[BUDGETS.slice(0, 3), [...BUDGETS.slice(3), null]].map((row, r) => (
+          <View key={r} style={styles.budgetRow}>
+            {row.map((b) => {
+              const on = !custom && budget === b;
+              return (
+                <Pressable key={b ?? 'free'} onPress={() => pick(b)} style={[styles.budget, on && styles.budgetOn]}>
+                  {b === null ? (
+                    <Txt variant="bodyMedium" style={on ? { color: Colors.bg } : undefined}>
+                      Libre
+                    </Txt>
+                  ) : (
+                    <Txt style={[styles.budgetValue, on && { color: Colors.bg }]} numberOfLines={1} adjustsFontSizeToFit>
+                      {b}
+                      {'\u00a0'}€
+                    </Txt>
+                  )}
+                </Pressable>
+              );
+            })}
+          </View>
+        ))}
       </View>
       <View style={[styles.customBudget, !!custom && { borderColor: Colors.text }]}>
         <TextInput
@@ -286,17 +335,7 @@ function FriendsStep({ picked, setPicked }: { picked: Person[]; setPicked: (p: P
   );
 }
 
-function DateStep({
-  date,
-  setDate,
-  noDate,
-  setNoDate,
-}: {
-  date: Date;
-  setDate: (d: Date) => void;
-  noDate: boolean;
-  setNoDate: (v: boolean) => void;
-}) {
+function DateStep({ date, setDate, noDate, setNoDate }: { date: Date; setDate: (d: Date) => void; noDate: boolean; setNoDate: (v: boolean) => void }) {
   return (
     <ScrollView contentContainerStyle={styles.step}>
       <StepTitle title="Quand a lieu l’échange ?" subtitle="Pour que chacun ait son cadeau à temps." />
@@ -333,11 +372,20 @@ const styles = StyleSheet.create({
   segmentOn: { backgroundColor: GOLD },
   step: { paddingHorizontal: Space.xl, paddingTop: Space.xl, gap: Space.xl },
   title: { fontFamily: Fonts.semibold, fontSize: 30, lineHeight: 36, color: Colors.text, letterSpacing: -0.4 },
-  bigInput: { fontFamily: Fonts.medium, fontSize: 26, color: Colors.text, paddingVertical: Space.sm, borderBottomWidth: 1, borderBottomColor: Colors.borderStrong },
+  bigInput: {
+    fontFamily: Fonts.medium,
+    fontSize: 26,
+    color: Colors.text,
+    paddingVertical: Space.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderStrong,
+  },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: Space.sm },
   chip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: Radius.pill, backgroundColor: Colors.card, borderWidth: 1, borderColor: Colors.border },
-  budgetGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Space.md },
+  budgetRow: { flexDirection: 'row', gap: Space.md },
   budget: {
+    flex: 1,
+    height: 72,
     borderRadius: Radius.lg,
     alignItems: 'center',
     justifyContent: 'center',
@@ -358,7 +406,15 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     backgroundColor: Colors.card,
   },
-  search: { flexDirection: 'row', alignItems: 'center', gap: Space.sm, height: 42, paddingHorizontal: 12, borderRadius: Radius.md, backgroundColor: Colors.card },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Space.sm,
+    height: 42,
+    paddingHorizontal: 12,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.card,
+  },
   pickedItem: { alignItems: 'center', gap: 4 },
   pickedX: {
     position: 'absolute',

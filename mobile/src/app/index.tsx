@@ -82,7 +82,6 @@ export default function HomeScreen() {
       remove: () => void remove(c),
     });
 
-
   const header = (
     <View>
       <View style={[styles.topBar, { paddingTop: insets.top + Space.sm }]}>
@@ -99,23 +98,32 @@ export default function HomeScreen() {
       </View>
       <Divider />
 
-      <View style={styles.profile}>
-        <Avatar uri={user?.image} name={user?.name} size={80} />
-        <View style={{ alignItems: 'center', gap: 4 }}>
-          <Txt variant="title2">{user?.name ?? ''}</Txt>
+      <Pressable
+        onPress={() => router.push('/profile')}
+        accessibilityRole="button"
+        accessibilityLabel="Voir mon profil"
+        style={({ pressed }) => [styles.profile, pressed && { opacity: 0.7 }]}>
+        <Avatar uri={user?.image} name={user?.name} size={52} />
+        <View style={{ flex: 1, gap: 2 }}>
+          <Txt variant="headline" numberOfLines={1}>
+            {user?.name ?? ''}
+          </Txt>
           {!!user?.description && (
-            <Txt variant="subhead" color="text2" center>
+            <Txt variant="footnote" color="text2" numberOfLines={1}>
               {user.description}
             </Txt>
           )}
+          <Txt variant="footnote" color="text3" numberOfLines={1}>
+            {[
+              stats ? `${stats.followingCount} abonnements` : null,
+              stats ? `${stats.followersCount} abonnés` : null,
+              data ? `${data.length} collections` : null,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </Txt>
         </View>
-        <View style={styles.stats}>
-          <Stat value={stats?.followingCount} label="abonnements" />
-          <Stat value={stats?.followersCount} label="abonnés" />
-          <Txt color="text3">·</Txt>
-          <Stat value={data?.length} label="collections" />
-        </View>
-      </View>
+      </Pressable>
       <Divider style={{ marginHorizontal: Space.lg }} />
 
       {activeSantas.length > 0 && (
@@ -162,10 +170,16 @@ export default function HomeScreen() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: Space.lg }} />}
         ListHeaderComponent={header}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
               void refresh();
               void refreshSantas();
-            }} tintColor={Colors.text2} />}
+            }}
+            tintColor={Colors.text2}
+          />
+        }
         onScroll={reveal.onScroll}
         scrollEventThrottle={32}
         renderItem={({ item: c }) => (
@@ -211,17 +225,6 @@ export default function HomeScreen() {
   );
 }
 
-function Stat({ value, label }: { value?: number; label: string }) {
-  return (
-    <Txt variant="subhead" color="text2">
-      <Txt variant="bodyMedium" style={{ fontSize: 14 }}>
-        {value ?? '–'}
-      </Txt>{' '}
-      {label}
-    </Txt>
-  );
-}
-
 const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
@@ -237,10 +240,11 @@ const styles = StyleSheet.create({
   brand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   logo: { width: 28, height: 30 },
   profile: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: Space.md,
-    paddingVertical: Space.xxl,
-    paddingHorizontal: Space.xl,
+    paddingVertical: Space.lg,
+    paddingHorizontal: Space.lg,
   },
   stats: {
     flexDirection: 'row',

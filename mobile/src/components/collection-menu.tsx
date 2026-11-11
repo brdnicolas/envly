@@ -1,4 +1,5 @@
 import { Button, Divider, Host, Image, Menu } from '@expo/ui/swift-ui';
+import { contentShape, frame, shapes } from '@expo/ui/swift-ui/modifiers';
 import { router } from 'expo-router';
 import { Platform, View } from 'react-native';
 
@@ -43,6 +44,8 @@ export function collectionActions(
  * like Photos or Notes. Groups are separated by a divider.
  */
 export function CollectionMenu({ groups, size = 36 }: { groups: MenuItem[][]; size?: number }) {
+  // Apple's minimum touch target. The thin "…" glyph alone is only ~18×5 pt.
+  const target = Math.max(size, 44);
   const visible = groups.filter((g) => g.length > 0);
 
   if (Platform.OS !== 'ios') {
@@ -57,13 +60,22 @@ export function CollectionMenu({ groups, size = 36 }: { groups: MenuItem[][]; si
   }
 
   return (
-    // Claim the touch so it never reaches a parent Pressable/Link (the card would open).
+    // The whole square opens the menu: the label fills it (frame + contentShape), so no tap
+    // lands on the wrapper. The wrapper still claims stray touches so a parent card never opens.
     <View
       onStartShouldSetResponder={() => true}
       onResponderTerminationRequest={() => false}
-      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Host matchContents>
-        <Menu label={<Image systemName="ellipsis" size={Math.round(size * 0.5)} color={Colors.text} />}>
+      style={{ width: target, height: target, margin: (size - target) / 2, alignItems: 'center', justifyContent: 'center' }}>
+      <Host style={{ width: target, height: target }}>
+        <Menu
+          label={
+            <Image
+              systemName="ellipsis"
+              size={Math.round(size * 0.5)}
+              color={Colors.text}
+              modifiers={[frame({ width: target, height: target }), contentShape(shapes.rectangle())]}
+            />
+          }>
           {visible.map((group, gi) => [
             gi > 0 ? <Divider key={`d${gi}`} /> : null,
             ...group.map((item) => (
