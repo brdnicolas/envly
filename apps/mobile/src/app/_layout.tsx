@@ -100,12 +100,15 @@ function App() {
   );
 }
 
-/** Notification taps open their screen; a granted permission refreshes this device's token. */
+/**
+ * Notification taps open their screen. As soon as the user is signed in, ask for notification permission
+ * (iOS shows its prompt only once; afterwards this just refreshes the device token).
+ */
 function PushHandler() {
   const { token } = useAuth();
   usePushRouting(!!token);
   useEffect(() => {
-    if (token) void registerForPush({ ask: false });
+    if (token) void registerForPush({ ask: true });
   }, [token]);
   return null;
 }

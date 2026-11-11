@@ -25,8 +25,8 @@ function projectId(): string | undefined {
 }
 
 /**
- * Register this device for push. With `ask`, shows the system prompt if needed —
- * call it at a meaningful moment (creating or joining a Secret Santa), not at launch.
+ * Register this device for push. With `ask`, shows the system prompt if it was never answered
+ * (done right after sign-in, see PushHandler in app/_layout.tsx).
  * Silently does nothing on simulators, without permission, or before `eas init` (no projectId).
  */
 export async function registerForPush({ ask }: { ask: boolean }) {

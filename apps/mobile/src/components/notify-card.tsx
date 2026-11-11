@@ -13,17 +13,17 @@ const KEY = 'envly.notifyCard.dismissedAt';
 const SNOOZE = 14 * 24 * 3600 * 1000; // "Plus tard" hides it for two weeks
 
 /**
- * Soft prompt on the home screen. Friends can only invite you to a Secret Santa (and you only
- * learn the draw result) if notifications are on *before* it happens, so we ask early, with
- * context. iOS shows its system prompt only once: we never trigger it without a tap here.
+ * Home-screen card for people who declined notifications: iOS won't show its prompt again,
+ * so the only way back is the Settings app.
  */
 export function NotifyCard() {
   const [state, setState] = useState<'hidden' | 'ask' | 'settings'>('hidden');
 
   useEffect(() => {
     void (async () => {
+      // The system prompt is shown at sign-in (PushHandler); this card only catches people who said no.
       const status = await pushStatus();
-      if (status === 'granted') return;
+      if (status !== 'denied') return;
       const dismissed = Number((await SecureStore.getItemAsync(KEY)) ?? 0);
       if (Date.now() - dismissed < SNOOZE) return;
       setState(status === 'denied' ? 'settings' : 'ask');
@@ -53,7 +53,7 @@ export function NotifyCard() {
       <View style={{ flex: 1, gap: 2 }}>
         <Txt variant="bodyMedium">Ne ratez pas une invitation</Txt>
         <Txt variant="footnote" color="text2">
-          Soyez prévenu quand un ami vous invite à un Secret Santa ou réserve dans vos listes.
+          Soyez prévenu quand quelqu’un vous suit ou vous invite à un Secret Santa.
         </Txt>
         <View style={styles.actions}>
           <Button title={state === 'settings' ? 'Ouvrir les réglages' : 'Activer'} size="sm" onPress={() => void enable()} />
