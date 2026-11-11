@@ -1,61 +1,88 @@
 # Envly
 
-Application de wishlists partagees construite **integralement par IA** (Claude, Anthropic) en une seule session de conversation.
+> Wishlists partagées, surprises préservées.
 
-L'objectif de ce projet est de tester les capacites de Claude (Claude Code CLI) a generer une application web complete, fonctionnelle et deployable, a partir d'un plan d'implementation fourni en langage naturel.
+Envly lets you collect gift ideas from any online shop, share your lists with friends and family, and let them reserve gifts **anonymously**: you never know who offers what, and nobody gives the same thing twice. It also runs **Secret Santa** draws.
 
-## Le projet
+This repository is a monorepo with three apps that share one backend:
 
-Envly permet de creer des listes de souhaits et de les partager avec ses proches. La fonctionnalite cle : les reservations sont **anonymes et invisibles** pour le proprietaire de la liste, pour garder la surprise.
+| App | Folder | Stack | Ships to |
+| --- | --- | --- | --- |
+| **Web + API** | [`apps/web`](apps/web) | Next.js 16, Prisma 7, Neon Postgres, NextAuth | [www.envly.fr](https://www.envly.fr) (Vercel) |
+| **iOS app** | [`apps/mobile`](apps/mobile) | Expo SDK 58, React Native, expo-router | iPhone (TestFlight / App Store) |
+| **Chrome extension** | [`apps/extension`](apps/extension) | Manifest V3, vanilla JS | Chrome Web Store |
 
-### Stack technique
-
-- **Next.js 16** (App Router, Server Components)
-- **NextAuth.js** (Google, GitHub, Email/Password)
-- **SQLite + Prisma 7** (avec driver adapter)
-- **Tailwind CSS + shadcn/ui**
-- **cheerio** (scraping d'URLs pour auto-remplir les souhaits)
-- **framer-motion** (animations)
-- **next-themes** (dark/light mode)
-
-### Fonctionnalites
-
-- Authentification multi-provider (Google, GitHub, credentials)
-- CRUD collections et souhaits
-- Scraping automatique au collage d'URL (titre, description, images, prix)
-- Selection d'images parmi celles scrappees
-- Partage public via lien unique (`/w/[slug]`)
-- Reservation anonyme (invisible pour le proprietaire)
-- Affichage masonry responsive
-- Mode sombre/clair
-
-## Lancer le projet
-
-```bash
-npm install
-npx prisma migrate dev
-npm run dev
-```
-
-Configurer `.env` avec les variables NextAuth (voir `.env.example` ou la doc NextAuth).
+The mobile app and the extension have no backend of their own: they call the Next.js API (`apps/web/src/app/api`).
 
 ---
 
-## Points positifs
+## Quick start
 
-- **Vitesse de developpement** — L'ensemble du projet (scaffolding, auth, CRUD, scraping, partage, landing page, UI) a ete genere en une seule session. Ce qui prendrait plusieurs jours a un dev a ete fait en quelques heures.
-- **Bonne comprehension du plan** — Claude a su interpreter un plan d'implementation haut niveau et produire du code fonctionnel pour chaque etape, en respectant l'architecture demandee.
-- **Resolution de problemes techniques** — Adaptation a Prisma 7 (driver adapters), migration Next.js 16 (middleware), gestion des SPAs pour le scraping... Claude a su debloquer les situations sans aide exterieure.
-- **Iterations rapides sur le design** — Chaque retour UI (masonry, cursor pointer, taille des images, layout mobile) a ete applique rapidement, souvent en un seul echange.
-- **Code lisible et structure** — Le code produit est propre, bien organise, et suit les conventions du framework.
-- **Connaissance large de l'ecosysteme** — shadcn/ui, NextAuth, Prisma, cheerio, framer-motion... Claude maitrise bien les libs populaires et sait les assembler.
+Requirements: **Node 22** (`nvm use`), **Yarn** (any version: the repo pins Yarn 4.10 in `.yarn/releases`, or run `corepack enable`), and for iOS: **Xcode 26** + CocoaPods.
 
-## Points negatifs
+```bash
+yarn install                          # one install for the whole monorepo
+cp apps/web/.env.example apps/web/.env # then fill in the secrets
+yarn db:generate                      # Prisma client
+yarn dev                              # → http://localhost:3000
+```
 
-- **Iterations excessives sur le CSS/layout** — Le masonry a necessite de nombreux allers-retours (masonry → grid → masonry, tailles de colonnes, gaps...). Claude propose parfois des solutions qui ne marchent pas du premier coup sur des sujets visuels.
-- **Scraping fragile** — Les sites SPA (Zalando, Zara) restent difficiles a scraper cote serveur. Claude a produit des fallbacks regex, mais ca reste approximatif (ex: prix a 6000€ sur Zalando).
-- **Pas de tests** — Aucun test unitaire ou d'integration n'a ete genere. Le code fonctionne mais il n'y a aucun filet de securite.
-- **Tendance a over-engineer** — Sur certaines demandes simples, Claude ajoute parfois plus de complexite que necessaire avant de converger vers la bonne solution.
-- **Corrections en chaine** — Certains bugs (chemins Prisma, casing des imports, emplacement de la DB) ont necessite plusieurs corrections successives plutot qu'une resolution directe.
-- **Cursor pointer oublie** — Un detail CSS basique qui a du etre rappele plusieurs fois avant d'etre correctement applique partout.
-- **Pas de validation cote serveur robuste** — Les API routes font le minimum. Il n'y a pas de validation de schema (zod, etc.) sur les inputs.
+Mobile (in a second terminal, with the web server running):
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env.development.local
+yarn ios                              # builds and opens the iOS simulator
+```
+
+---
+
+## Scripts
+
+Everything runs from the repo root. The repo is a **Yarn 4 workspace** (`apps/web` = `@envly/web`, `apps/mobile` = `@envly/mobile`): one `yarn install`, one `yarn.lock`. Each app still gets its own `node_modules` (`installConfig.hoistingLimits: "workspaces"`), because the web and the mobile app need different React and TypeScript versions.
+
+| Command | What it does |
+| --- | --- |
+| `yarn install` | Install all dependencies (root + web + mobile) |
+| `yarn dev` / `dev:web` | Next.js dev server on :3000 |
+| `yarn dev:mobile` | Metro bundler for an already-installed dev build |
+| `yarn ios` | Build the iOS app and run it in the simulator |
+| `yarn ios:device` | Build a Release and install it on a plugged-in iPhone |
+| `yarn build` | Production build of the web app (runs `prisma generate`) |
+| `yarn check` | Type-check + lint web and mobile (run before every commit) |
+| `yarn typecheck` / `lint` | The two halves of `check`, also available per app (`:web`, `:mobile`) |
+| `yarn db:migrate` | Create & apply a migration in development (`prisma migrate dev`) |
+| `yarn db:deploy` | Apply pending migrations to the configured database |
+| `yarn db:status` / `db:studio` | Migration status / Prisma Studio |
+| `yarn extension:zip` | Package the extension → `apps/extension/dist/envly-extension.zip` |
+| `yarn brand` | Regenerate every logo, icon, favicon and OG asset from one source |
+| `yarn scrape:bench` | Benchmark the product-page scraper on real URLs |
+
+---
+
+## Repository layout
+
+```
+envly/
+├── apps/
+│   ├── web/              Next.js site + REST API + Prisma schema
+│   │   ├── src/app/      Pages (App Router) and /api routes
+│   │   ├── src/lib/      Auth, Prisma, scraping, Secret Santa, push, SEO…
+│   │   ├── prisma/       schema.prisma + migrations
+│   │   └── assets/og/    Fonts and marks for generated social images
+│   ├── mobile/           Expo app (iOS), routes in src/app
+│   └── extension/        Chrome extension (content script + popup)
+│       └── store/        Chrome Web Store listing: text, screenshots, promo images
+├── docs/                 Architecture, deployment, mobile, extension guides
+├── scripts/brand/        Single source for the Envly logo and all its exports
+├── .yarn/releases/       Pinned Yarn binary (used automatically by any `yarn`)
+├── yarn.lock             Single lockfile for every app
+└── package.json          Workspaces + scripts that orchestrate every app
+```
+
+## Documentation
+
+- [Architecture](docs/architecture.md): how the apps talk to each other, auth, data model, key flows
+- [Deployment](docs/deployment.md): Vercel, environment variables, database migrations
+- [Mobile](docs/mobile.md): running, installing on an iPhone, push notifications, App Store
+- [Chrome extension](docs/extension.md): local install, packaging, Web Store publishing
+- [Contributing](docs/contributing.md): conventions, checks, commit style

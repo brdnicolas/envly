@@ -1,6 +1,6 @@
 // Envly brand: chrome shooting star on near-black.
 // One source of truth → every icon / favicon / splash the app and the site need.
-// Usage: node scripts/brand/render.mjs
+// Usage: yarn brand  (from the repo root)
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -109,35 +109,42 @@ function write(file, content) {
 const fullBleed = svg({}); // iOS masks the corners itself
 const rounded = svg({ radius: 230 }); // web / favicon
 write("scripts/brand/envly-icon.svg", fullBleed);
-write("public/favicon.svg", rounded);
+write("apps/web/public/favicon.svg", rounded);
 // Header / inline use: the bare mark, cropped tight around the art, no app-icon tile.
-write("public/logo.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="160 160 700 740">${defs}${mark({ glow: false })}</svg>`);
+write("apps/web/public/logo.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="160 160 700 740">${defs}${mark({ glow: false })}</svg>`);
+
+// OG images (apps/web/src/lib/og) embed the bare mark as a PNG (satori has no SVG gradients support).
+await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="700" height="740" viewBox="160 160 700 740">${defs}${mark({ glow: false })}</svg>`))
+  .resize(240)
+  .png()
+  .toFile(join(root, "apps/web/assets/og/star.png"));
+console.log("✓ apps/web/assets/og/star.png");
 
 {
   // App header mark (transparent, tight crop) — the mobile twin of public/logo.svg
   const bare = `<svg xmlns="http://www.w3.org/2000/svg" width="700" height="740" viewBox="160 160 700 740">${defs}${mark({ glow: false })}</svg>`;
-  const out = join(root, "mobile/assets/images/logo-mark.png");
+  const out = join(root, "apps/mobile/assets/images/logo-mark.png");
   await sharp(Buffer.from(bare)).resize(140, 148).png().toFile(out);
   console.log("✓ mobile/assets/images/logo-mark.png");
 }
 
 // ── Mobile app ──────────────────────────────────────────────────────────
-await png("mobile/assets/images/icon.png", fullBleed, 1024);
-await png("mobile/assets/images/splash-icon.png", svg({ background: false, pad: 60 }), 512);
-await png("mobile/assets/images/favicon.png", rounded, 48);
+await png("apps/mobile/assets/images/icon.png", fullBleed, 1024);
+await png("apps/mobile/assets/images/splash-icon.png", svg({ background: false, pad: 60 }), 512);
+await png("apps/mobile/assets/images/favicon.png", rounded, 48);
 // Android adaptive icon: art must sit in the central 66% safe zone.
-await png("mobile/assets/images/android-icon-foreground.png", svg({ background: false, pad: 190 }), 512);
-await png("mobile/assets/images/android-icon-background.png", `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">${defs}<rect width="1024" height="1024" fill="url(#bg)"/></svg>`, 512);
-await png("mobile/assets/images/android-icon-monochrome.png", svg({ background: false, pad: 190, mono: "#FFFFFF" }), 432);
+await png("apps/mobile/assets/images/android-icon-foreground.png", svg({ background: false, pad: 190 }), 512);
+await png("apps/mobile/assets/images/android-icon-background.png", `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">${defs}<rect width="1024" height="1024" fill="url(#bg)"/></svg>`, 512);
+await png("apps/mobile/assets/images/android-icon-monochrome.png", svg({ background: false, pad: 190, mono: "#FFFFFF" }), 432);
 
 // ── Chrome extension ──
-for (const size of [16, 48, 128]) await png(`extension/icons/icon-${size}.png`, rounded, size);
+for (const size of [16, 48, 128]) await png(`apps/extension/icons/icon-${size}.png`, rounded, size);
 
 // ── Website / PWA ───────────────────────────────────────────────────────
-await png("public/icon-192.png", rounded, 192);
-await png("public/icon-512.png", rounded, 512);
-await png("public/icon-maskable-512.png", svg({ pad: 110 }), 512);
-await png("public/apple-touch-icon.png", fullBleed, 180);
+await png("apps/web/public/icon-192.png", rounded, 192);
+await png("apps/web/public/icon-512.png", rounded, 512);
+await png("apps/web/public/icon-maskable-512.png", svg({ pad: 110 }), 512);
+await png("apps/web/public/apple-touch-icon.png", fullBleed, 180);
 await png("scripts/brand/preview-1024.png", rounded, 1024);
 
 // favicon.ico (Next serves src/app/favicon.ico): ICO container holding PNG images.
@@ -159,5 +166,5 @@ await png("scripts/brand/preview-1024.png", rounded, 1024);
     header.writeUInt32LE(offset, e + 12);
     offset += pngs[i].length;
   });
-  write("src/app/favicon.ico", Buffer.concat([header, ...pngs]));
+  write("apps/web/src/app/favicon.ico", Buffer.concat([header, ...pngs]));
 }

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["fra1"],
+  "installCommand": "yarn workspaces focus @envly/web",
+  "buildCommand": "yarn build"
+}
