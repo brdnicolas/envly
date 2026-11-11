@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCollectionAccess } from "@/lib/collection-access";
+import { isSantaOfCollection } from "@/lib/secret-santa";
 
 export async function GET(
   req: Request,
@@ -21,7 +22,8 @@ export async function GET(
   let role: "owner" | "collaborator" | "viewer" = "viewer";
   if (access === "none") {
     const pub = await prisma.collection.findUnique({ where: { id }, select: { isPublic: true } });
-    if (!pub?.isPublic) {
+    // Private lists stay readable by the owner's Secret Santa (the list they shared for it).
+    if (!pub?.isPublic && !(await isSantaOfCollection(session.user.id, id))) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
   } else {

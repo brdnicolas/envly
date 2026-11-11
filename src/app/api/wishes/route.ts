@@ -5,6 +5,30 @@ import { prisma } from "@/lib/prisma";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { getCollectionAccess } from "@/lib/collection-access";
 
+/** All my wishes across my own lists (for importing into another list). */
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const wishes = await prisma.wish.findMany({
+    where: { collection: { userId: session.user.id } },
+    select: {
+      id: true,
+      title: true,
+      url: true,
+      imageUrl: true,
+      price: true,
+      isPriority: true,
+      collectionId: true,
+      collection: { select: { name: true } },
+    },
+    orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }],
+    take: 500,
+  });
+  return NextResponse.json(wishes);
+}
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

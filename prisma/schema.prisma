@@ -52,39 +52,44 @@ model PasswordResetToken {
 }
 
 model User {
-  id               String                    @id @default(cuid())
-  name             String?
-  email            String?                   @unique
-  emailVerified    DateTime?
-  image            String?
-  description      String?
-  password         String?
-  slug             String?                   @unique
-  accounts         Account[]
-  sessions         Session[]
-  collections      Collection[]
-  followers        UserFollow[]              @relation("following")
-  following        UserFollow[]              @relation("followers")
+  id                String                   @id @default(cuid())
+  name              String?
+  email             String?                  @unique
+  emailVerified     DateTime?
+  image             String?
+  description       String?
+  password          String?
+  slug              String?                  @unique
+  accounts          Account[]
+  sessions          Session[]
+  collections       Collection[]
+  followers         UserFollow[]             @relation("following")
+  following         UserFollow[]             @relation("followers")
   collectionFollows CollectionFollow[]
-  collaborations   CollectionCollaborator[]
-  notifications    Notification[]
-  createdWishes    Wish[]                    @relation("createdWishes")
-  createdAt        DateTime                  @default(now())
+  collaborations    CollectionCollaborator[]
+  notifications     Notification[]
+  createdWishes     Wish[]                   @relation("createdWishes")
+  organizedSantas   SecretSanta[]            @relation("organizedSantas")
+  santaMemberships  SecretSantaMember[]      @relation("santaMember")
+  santaGifts        SecretSantaMember[]      @relation("santaGiftTo")
+  createdAt         DateTime                 @default(now())
+  pushTokens        PushToken[]
 }
 
 model Collection {
-  id            String                    @id @default(cuid())
+  id            String                   @id @default(cuid())
   name          String
   description   String?
-  slug          String                    @unique
-  isPublic      Boolean                   @default(false)
+  slug          String                   @unique
+  isPublic      Boolean                  @default(false)
   userId        String
-  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   wishes        Wish[]
   followers     CollectionFollow[]
   collaborators CollectionCollaborator[]
-  createdAt     DateTime                  @default(now())
-  updatedAt     DateTime                  @updatedAt
+  santaMembers  SecretSantaMember[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
 }
 
 model Wish {
@@ -168,4 +173,60 @@ model Notification {
   read      Boolean          @default(false)
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime         @default(now())
+}
+
+enum SecretSantaStatus {
+  OPEN
+  DRAWN
+}
+
+enum SecretSantaMemberStatus {
+  INVITED
+  JOINED
+}
+
+/// A gift exchange: members join (sharing one of their lists), then the organizer draws.
+model SecretSanta {
+  id          String              @id @default(cuid())
+  name        String
+  budget      Int?
+  date        DateTime?
+  inviteCode  String              @unique
+  status      SecretSantaStatus   @default(OPEN)
+  organizerId String
+  organizer   User                @relation("organizedSantas", fields: [organizerId], references: [id], onDelete: Cascade)
+  members     SecretSantaMember[]
+  drawnAt     DateTime?
+  createdAt   DateTime            @default(now())
+}
+
+/// One participant. `giftToId` is set by the draw and only ever sent to this member.
+model SecretSantaMember {
+  id           String                  @id @default(cuid())
+  santaId      String
+  userId       String
+  status       SecretSantaMemberStatus @default(JOINED)
+  collectionId String?
+  giftToId     String?
+  santa        SecretSanta             @relation(fields: [santaId], references: [id], onDelete: Cascade)
+  user         User                    @relation("santaMember", fields: [userId], references: [id], onDelete: Cascade)
+  collection   Collection?             @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  giftTo       User?                   @relation("santaGiftTo", fields: [giftToId], references: [id], onDelete: SetNull)
+  createdAt    DateTime                @default(now())
+
+  @@unique([santaId, userId])
+  @@index([userId])
+}
+
+/// Expo push token of one device (a user can have several phones).
+model PushToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  platform  String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

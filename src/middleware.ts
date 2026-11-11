@@ -5,6 +5,8 @@ const PROTECTED = [
   /^\/collection(\/|$)/,
   /^\/settings$/,
   /^\/api\/collections(\/|$)/,
+  /^\/api\/santas(\/|$)/,
+  /^\/api\/push$/,
   /^\/api\/wishes(\/|$)/,
   /^\/api\/follows(\/|$)/,
   /^\/api\/users(\/|$)/,

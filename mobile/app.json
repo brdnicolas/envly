@@ -53,7 +53,14 @@
           ]
         }
       ],
-      "expo-font"
+      "expo-font",
+      "./plugins/with-optional-push.js",
+      [
+        "expo-notifications",
+        {
+          "color": "#0A0A0A"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

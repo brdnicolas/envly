@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CollectionCard } from '@/components/collection-card';
-import { Icons } from '@/components/icon';
+import { Icon, Icons } from '@/components/icon';
 import { NavBar } from '@/components/nav-bar';
 import { Avatar, Button, Divider, EmptyState, Skeleton, Txt } from '@/components/primitives';
 import { Colors, Radius, Space } from '@/constants/theme';
@@ -44,7 +44,27 @@ export default function FriendsScreen() {
         keyExtractor={(g) => g.owner.id}
         contentContainerStyle={{ paddingBottom: insets.bottom + Space.x3 }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={Colors.text2} />}
-        ListHeaderComponent={<Divider />}
+        ListHeaderComponent={
+          <View>
+            <Divider />
+            <Pressable
+              onPress={() => router.push('/santa/new')}
+              accessibilityRole="button"
+              style={({ pressed }) => [styles.santaRow, pressed && { backgroundColor: Colors.card }]}>
+              <View style={styles.santaIcon}>
+                <Icon name={Icons.gift} size={18} color="#E8C872" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Txt variant="bodyMedium">Organiser un Secret Santa</Txt>
+                <Txt variant="footnote" color="text2">
+                  Tirage au sort, listes partagées, surprise garantie.
+                </Txt>
+              </View>
+              <Icon name={Icons.chevronRight} size={13} color={Colors.text3} />
+            </Pressable>
+            <Divider />
+          </View>
+        }
         ItemSeparatorComponent={() => <Divider style={{ marginHorizontal: Space.lg }} />}
         renderItem={({ item }) => (
           <View style={{ paddingVertical: Space.xl, gap: Space.lg }}>
@@ -98,5 +118,14 @@ export default function FriendsScreen() {
 }
 
 const styles = StyleSheet.create({
+  santaRow: { flexDirection: 'row', alignItems: 'center', gap: Space.md, paddingHorizontal: Space.lg, paddingVertical: Space.md },
+  santaIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(232,200,114,0.12)',
+  },
   owner: { flexDirection: 'row', alignItems: 'center', gap: Space.md, paddingHorizontal: Space.lg },
 });

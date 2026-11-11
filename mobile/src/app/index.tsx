@@ -9,13 +9,15 @@ import { CollectionCard } from '@/components/collection-card';
 import { collectionActions, editCollection } from '@/components/collection-menu';
 import { Icons } from '@/components/icon';
 import { Avatar, Button, Divider, EmptyState, IconButton, Skeleton, Txt } from '@/components/primitives';
+import { SantaCard } from '@/components/santa';
 import { useToast } from '@/components/toast';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { prefetch, useApi } from '@/hooks/use-api';
 import { confirm, deleteCollection, setCollectionPublic, shareCollection } from '@/lib/actions';
 import { errorMessage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
-import type { CollectionSummary, User } from '@/lib/types';
+import { leaveSanta } from '@/lib/santa';
+import type { CollectionSummary, Santa, User } from '@/lib/types';
 import appIcon from '../../assets/images/logo-mark.png';
 
 export default function HomeScreen() {
@@ -29,6 +31,9 @@ export default function HomeScreen() {
     followingCount: number;
   }>('/api/follows/me?tab=stats');
   const { data, error, loading, refreshing, refresh, mutate } = useApi<CollectionSummary[]>('/api/collections');
+  // Secret Santas only show up while you're in (or invited to) one that isn't over (the API filters).
+  const { data: santas, refresh: refreshSantas } = useApi<Santa[]>('/api/santas');
+  const activeSantas = santas ?? [];
   const user = profile ?? cached;
   const lists = data ?? [];
   // Warm the next screens so they open instantly: the first lists and the friends feed.
@@ -113,6 +118,23 @@ export default function HomeScreen() {
       </View>
       <Divider style={{ marginHorizontal: Space.lg }} />
 
+      {activeSantas.length > 0 && (
+        <View style={{ paddingTop: Space.xl, gap: Space.md }}>
+          {activeSantas.map((s) => (
+            <SantaCard
+              key={s.id}
+              santa={s}
+              onAccept={() => router.push({ pathname: '/santa/[id]', params: { id: s.id } })}
+              onDecline={() =>
+                void leaveSanta(s.id)
+                  .then(refreshSantas)
+                  .catch((e) => Alert.alert('Erreur', errorMessage(e)))
+              }
+            />
+          ))}
+        </View>
+      )}
+
       <View style={styles.sectionHeader}>
         <Txt variant="headline">Mes collections</Txt>
         <Button
@@ -140,7 +162,10 @@ export default function HomeScreen() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: Space.lg }} />}
         ListHeaderComponent={header}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={Colors.text2} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
+              void refresh();
+              void refreshSantas();
+            }} tintColor={Colors.text2} />}
         onScroll={reveal.onScroll}
         scrollEventThrottle={32}
         renderItem={({ item: c }) => (

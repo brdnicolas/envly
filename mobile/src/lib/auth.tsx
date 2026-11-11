@@ -3,6 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { createContext, use, useEffect, useState, type ReactNode } from 'react';
 
 import { api, API_URL, setAuthToken, setOnUnauthorized } from '@/lib/api';
+import { unregisterPush } from '@/lib/push';
 import { clearApiCache } from '@/hooks/use-api';
 import type { User } from '@/lib/types';
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({ loading: true, token: null, user: null });
 
   async function signOut() {
+    await unregisterPush(); // while still authenticated
     await Promise.all([SecureStore.deleteItemAsync(TOKEN_KEY), SecureStore.deleteItemAsync(USER_KEY)]);
     setAuthToken(null);
     clearApiCache();

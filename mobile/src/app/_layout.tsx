@@ -10,6 +10,7 @@ import { ToastProvider } from '@/components/toast';
 import { Colors, Fonts } from '@/constants/theme';
 import { extractUrl } from '@/lib/api';
 import { AuthProvider, useAuth } from '@/lib/auth';
+import { registerForPush, usePushRouting } from '@/lib/push';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,6 +18,9 @@ SplashScreen.preventAutoHideAsync();
 Appearance.setColorScheme('dark');
 
 // Deep links (shared product → /add) still get the tabs underneath the modal
+/** Routes drawn as our own bottom-attached <Sheet> over the current screen. */
+const SHEET = { presentation: 'transparentModal', animation: 'none', contentStyle: { backgroundColor: 'transparent' } } as const;
+
 export const unstable_settings = { anchor: 'index' };
 
 export default function RootLayout() {
@@ -56,6 +60,7 @@ function App() {
       <StatusBar style="light" />
       <ToastProvider>
         <ShareHandler />
+        <PushHandler />
         <Stack
           screenOptions={{
             headerShown: false,
@@ -67,12 +72,21 @@ function App() {
             <Stack.Screen name="index" />
             <Stack.Screen name="collection/[id]" />
             <Stack.Screen name="friends" />
+            <Stack.Screen name="santa/[id]" />
+            <Stack.Screen name="s/[code]" />
+
+            <Stack.Screen name="santa/new" options={{ presentation: 'fullScreenModal' }} />
+            <Stack.Screen name="santa/list" options={{ presentation: 'fullScreenModal' }} />
+            <Stack.Screen
+              name="santa/invite"
+              options={SHEET}
+            />
             <Stack.Screen name="profile" />
             <Stack.Screen name="wish/[id]" options={{ headerShown: false, presentation: 'modal' }} />
             <Stack.Screen name="add" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen
               name="new-collection"
-              options={{ presentation: 'formSheet', headerShown: false, sheetAllowedDetents: 'fitToContents', sheetGrabberVisible: true }}
+              options={SHEET}
             />
           </Stack.Protected>
           <Stack.Protected guard={!token}>
@@ -82,6 +96,16 @@ function App() {
       </ToastProvider>
     </ThemeProvider>
   );
+}
+
+/** Notification taps open their screen; a granted permission refreshes this device's token. */
+function PushHandler() {
+  const { token } = useAuth();
+  usePushRouting(!!token);
+  useEffect(() => {
+    if (token) void registerForPush({ ask: false });
+  }, [token]);
+  return null;
 }
 
 /** "Partager → Envly" from Safari, Amazon, etc. opens the add screen with the shared link. */

@@ -50,3 +50,32 @@ export type ScrapeResult = {
   price: number | null;
   currency: string | null;
 };
+
+export type Person = { id: string; name: string | null; image: string | null };
+
+export type Santa = {
+  id: string;
+  name: string;
+  budget: number | null;
+  date: string | null;
+  status: 'OPEN' | 'DRAWN';
+  inviteCode: string;
+  isOrganizer: boolean;
+  organizer: Person;
+  me: { status: 'INVITED' | 'JOINED'; collection: { id: string; name: string } | null } | null;
+  members: (Person & { status: 'INVITED' | 'JOINED'; hasList: boolean })[];
+  /** Only ever my own pairing. */
+  assignment: { user: Person; collection: { id: string; name: string } | null } | null;
+};
+
+/** A wish from any of my lists (import picker). */
+export type MyWish = {
+  id: string;
+  title: string;
+  url: string | null;
+  imageUrl: string | null;
+  price: number | null;
+  isPriority: boolean;
+  collectionId: string;
+  collection: { name: string };
+};
