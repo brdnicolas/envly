@@ -429,18 +429,23 @@
 
   /* ───────────── Amazon: a native-looking button in the buy box ───────────── */
 
+  // Never inserted inside Amazon's buy box (its scripts lay that area out and break on foreign nodes).
+  // The button lives on <html>, absolutely positioned under "Acheter cet article"; the only change
+  // to Amazon's DOM is a bottom margin on that button's wrapper to make room.
   let inline = null;
+  function findAnchor() {
+    return ["#buyNow_feature_div", "#addToCart_feature_div", "#buy-now-button", "#add-to-cart-button"]
+      .map((q) => document.querySelector(q))
+      .find((el) => el && el.getBoundingClientRect().width > 0);
+  }
   function mountAmazonButton() {
-    // Right under "Acheter cet article" (or "Ajouter au panier" when there's no buy-now).
-    const anchor = ["#buyNow_feature_div", "#buy-now-button", "#addToCart_feature_div", "#add-to-cart-button"].map((q) => document.querySelector(q)).find(Boolean);
-    if (!anchor || document.getElementById("envly-inline")) return !!inline;
-    const slot = anchor.closest("#buyNow_feature_div, #addToCart_feature_div") || anchor.parentElement;
+    if (!findAnchor()) return false;
     const wrap = document.createElement("div");
     wrap.id = "envly-inline";
-    wrap.style.cssText = "margin:8px 0 2px;";
+    wrap.style.cssText = "position:absolute;z-index:1;top:0;left:0;width:0;"; // low: Amazon's zoom, menus and popups stay above it
     const sh = wrap.attachShadow({ mode: "closed" });
     sh.innerHTML = `<style>
-      button{all:unset;box-sizing:border-box;width:100%;height:35px;border-radius:100px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
+      button{all:unset;box-sizing:border-box;width:100%;height:36px;border-radius:100px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
         font:500 13px "Amazon Ember",Arial,sans-serif;color:#fff;background:#0c0c0e;border:1px solid #0c0c0e;transition:background .15s, transform .1s}
       button:hover{background:#26262b}button:active{transform:scale(.99)}
       button svg{width:15px;height:15px}
@@ -449,7 +454,30 @@
     </style><button type="button" aria-label="Ajouter à Envly">${star()}<span class="lb">Ajouter à ma liste Envly</span><span class="ck">✓</span></button>`;
     const b = sh.querySelector("button");
     b.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); open(); });
-    slot.insertAdjacentElement("afterend", wrap);
+    document.documentElement.appendChild(wrap);
+
+    let anchor = null;
+    const GAP = 8, H = 36;
+    const place = () => {
+      const a = findAnchor();
+      if (!a) { wrap.style.display = "none"; return; }
+      if (a !== anchor) {
+        if (anchor) anchor.style.marginBottom = anchor.dataset.envlyMb ?? "";
+        anchor = a;
+        anchor.dataset.envlyMb = anchor.style.marginBottom || "";
+        anchor.style.marginBottom = `${H + GAP * 2}px`;
+      }
+      const r = anchor.getBoundingClientRect();
+      wrap.style.display = "block";
+      wrap.style.top = `${r.bottom + window.scrollY + GAP}px`;
+      wrap.style.left = `${r.left + window.scrollX}px`;
+      wrap.style.width = `${r.width}px`;
+    };
+    place();
+    // Follow Amazon's layout changes (variants, lazy content) without observing its DOM tree.
+    window.addEventListener("resize", place, { passive: true });
+    new ResizeObserver(place).observe(document.body);
+    setInterval(place, 1000);
     inline = { setDone() { b.classList.add("done"); b.querySelector(".lb").textContent = "Dans votre liste Envly"; } };
     return true;
   }
@@ -460,10 +488,7 @@
   if (isProductPage()) {
     // On Amazon the button lives in the buy box (re-mounted if Amazon redraws it); elsewhere, the floating pill.
     const onAmazon = /(^|\.)amazon\.[a-z.]+$/i.test(location.hostname) && mountAmazonButton();
-    if (onAmazon) {
-      new MutationObserver(() => { if (!document.getElementById("envly-inline")) { inline = null; mountAmazonButton(); if (state.done) inline?.setDone(); } })
-        .observe(document.body, { childList: true, subtree: true });
-    } else {
+    if (!onAmazon) {
       pill.classList.remove("hidden");
       requestAnimationFrame(() => setTimeout(() => pill.classList.add("in"), 400));
     }
