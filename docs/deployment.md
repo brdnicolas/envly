@@ -10,13 +10,13 @@ The site and the API are deployed by Vercel on every push to `main`.
 | --- | --- |
 | Root Directory | `apps/web` |
 | Framework | Next.js (auto-detected) |
-| Install command | `yarn workspaces focus @envly/web`, set in `apps/web/vercel.json` (installs only the web app, not Expo) |
+| Install command | `yarn workspaces focus @envly/web` (installs only the web app, not Expo), set in `apps/web/vercel.json` |
 | Build command | `yarn build` → `prisma generate && next build`, set in `apps/web/vercel.json` |
 | Functions region | `fra1`, set in `apps/web/vercel.json` (same region as the database) |
 
 > ⚠️ Since the move to `apps/`, **Root Directory must be `apps/web`**, otherwise the build fails.
 >
-> Yarn: Vercel detects `yarn.lock` at the repo root and runs the Yarn 4 binary committed in `.yarn/releases` (via `yarnPath`). Leave the Install/Build command overrides in the dashboard **empty** so `vercel.json` applies.
+> Yarn: Vercel's own `yarn` is Yarn 1, which ignores `.yarnrc.yml`. So `vercel.json` calls the pinned Yarn 4 directly (`node ../../.yarn/releases/yarn-4.10.3.cjs …`). When upgrading Yarn (`yarn set version`), update that path too. Leave the Install/Build overrides in the dashboard **empty** so `vercel.json` applies.
 
 ### Environment variables
 
