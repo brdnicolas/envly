@@ -44,4 +44,6 @@ export const Icons = {
   gift: { ios: 'gift', android: 'redeem' },
   sparkles: { ios: 'sparkles', android: 'auto_awesome' },
   bell: { ios: 'bell', android: 'notifications' },
+  search: { ios: 'magnifyingglass', android: 'search' },
+  personAdd: { ios: 'person.badge.plus', android: 'person_add' },
 } satisfies Record<string, IconName>;

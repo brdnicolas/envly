@@ -82,3 +82,49 @@ export type MyWish = {
   collectionId: string;
   collection: { name: string };
 };
+
+/** Someone I follow, as shown on the "Amis" screen. */
+export type Friend = {
+  id: string;
+  name: string | null;
+  image: string | null;
+  slug: string | null;
+  listCount: number;
+  wishCount: number;
+  lastAddedAt: string | null;
+  /** Added something to a public list in the last 7 days. */
+  hasNew: boolean;
+};
+
+/** A wish recently added by a friend (public lists only). */
+export type FeedWish = {
+  id: string;
+  title: string;
+  url: string | null;
+  imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  price: number | null;
+  createdAt: string;
+  collection: { id: string; name: string };
+  owner: { id: string; name: string | null; image: string | null };
+};
+
+export type FriendsHome = { people: Friend[]; feed: FeedWish[] };
+
+export type PublicProfile = {
+  id: string;
+  name: string | null;
+  image: string | null;
+  slug: string | null;
+  description: string | null;
+  isMe: boolean;
+  isFollowing: boolean;
+  followsMe: boolean;
+  followersCount: number;
+  followingCount: number;
+  wishCount: number;
+  collections: CollectionSummary[];
+};
+
+export type UserSearchResult = { id: string; name: string | null; image: string | null; slug: string | null; isFollowing: boolean };

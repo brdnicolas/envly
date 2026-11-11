@@ -185,7 +185,19 @@ export default function CollectionScreen() {
               </Txt>
             )}
             <View style={styles.actions}>
-              <Avatar uri={data.user.image} name={data.user.name} size={28} />
+              {isViewer ? (
+                <Pressable
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Profil de ${data.user.name ?? 'cet ami'}`}
+                  onPress={() =>
+                    router.push({ pathname: '/user/[id]', params: { id: data.user.id, name: data.user.name ?? '', image: data.user.image ?? '' } })
+                  }>
+                  <Avatar uri={data.user.image} name={data.user.name} size={28} />
+                </Pressable>
+              ) : (
+                <Avatar uri={data.user.image} name={data.user.name} size={28} />
+              )}
               {isViewer ? null : isOwner ? (
                 <Pressable
                   onPress={togglePublic}
