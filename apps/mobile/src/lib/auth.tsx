@@ -1,3 +1,4 @@
+import * as AppleAuthentication from 'expo-apple-authentication';
 import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
 import { createContext, use, useEffect, useState, type ReactNode } from 'react';
@@ -15,6 +16,8 @@ type AuthState = { loading: boolean; token: string | null; user: User | null };
 type AuthContextValue = AuthState & {
   /** Sign in (or up) on envly.fr — Google or email — and come back with a token. Resolves false if cancelled. */
   signInWithBrowser: (mode?: 'signin' | 'signup') => Promise<boolean>;
+  /** Native Sign in with Apple (iOS). Resolves false if the user cancelled the Apple sheet. */
+  signInWithApple: () => Promise<boolean>;
   signOut: () => Promise<void>;
 };
 
@@ -54,6 +57,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   }
 
+  async function signInWithApple() {
+    let credential: AppleAuthentication.AppleAuthenticationCredential;
+    try {
+      credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+    } catch (e) {
+      if ((e as { code?: string }).code === 'ERR_REQUEST_CANCELED') return false;
+      throw e;
+    }
+    if (!credential.identityToken) throw new Error('Connexion Apple interrompue, réessaie.');
+    // Apple gives the name only the first time: the server keeps it.
+    const { token, user } = await api<{ token: string; user: User }>('/api/auth/mobile/apple', {
+      method: 'POST',
+      body: { identityToken: credential.identityToken, fullName: credential.fullName },
+    });
+    await storeSession(token, user);
+    return true;
+  }
+
   useEffect(() => {
     (async () => {
       try {
@@ -74,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setOnUnauthorized(null);
   });
 
-  return <AuthContext value={{ ...state, signInWithBrowser, signOut }}>{children}</AuthContext>;
+  return <AuthContext value={{ ...state, signInWithBrowser, signInWithApple, signOut }}>{children}</AuthContext>;
 }
 
 export function useAuth() {

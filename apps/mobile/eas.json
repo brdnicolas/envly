@@ -7,15 +7,22 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://www.envly.fr" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://www.envly.fr"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://www.envly.fr" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://www.envly.fr"
+      }
     },
     "production": {
       "autoIncrement": true,
-      "env": { "EXPO_PUBLIC_API_URL": "https://www.envly.fr" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://www.envly.fr",
+        "ENVLY_PUSH": "1"
+      }
     }
   },
   "submit": {

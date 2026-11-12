@@ -1,6 +1,7 @@
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import Animated, { Easing, FadeInDown, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -80,14 +81,32 @@ function Point({ icon, label, gold }: { icon: IconName; label: string; gold?: bo
 }
 
 /**
- * Welcome screen. Sign-in and sign-up both happen on envly.fr (Google or email),
+ * Welcome screen. Sign in with Apple is native; Google and email happen on envly.fr,
  * in a secure browser sheet that hands the session back to the app.
  */
 export default function SignInScreen() {
   const insets = useSafeAreaInsets();
-  const { signInWithBrowser } = useAuth();
-  const [loading, setLoading] = useState<'signin' | 'signup' | null>(null);
+  const { signInWithBrowser, signInWithApple } = useAuth();
+  const [loading, setLoading] = useState<'signin' | 'signup' | 'apple' | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [appleAvailable, setAppleAvailable] = useState(false);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') void AppleAuthentication.isAvailableAsync().then(setAppleAvailable);
+  }, []);
+
+  async function apple() {
+    if (loading) return;
+    setLoading('apple');
+    setError(null);
+    try {
+      await signInWithApple();
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
+      setLoading(null);
+    }
+  }
 
   async function go(mode: 'signin' | 'signup') {
     setLoading(mode);
@@ -148,11 +167,26 @@ export default function SignInScreen() {
 
       {/* Actions */}
       <Animated.View entering={FadeInDown.delay(400).duration(700)} style={{ gap: Space.sm }}>
-        <Button title="Créer un compte" onPress={() => void go('signup')} loading={loading === 'signup'} disabled={!!loading} />
+        {appleAvailable && (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+            cornerRadius={Radius.md}
+            style={{ height: 50, opacity: loading && loading !== 'apple' ? 0.4 : 1 }}
+            onPress={() => void apple()}
+          />
+        )}
+        <Button
+          title="Créer un compte"
+          variant={appleAvailable ? 'secondary' : 'primary'}
+          onPress={() => void go('signup')}
+          loading={loading === 'signup'}
+          disabled={!!loading}
+        />
         <Button title="J’ai déjà un compte" variant="ghost" onPress={() => void go('signin')} loading={loading === 'signin'} disabled={!!loading} />
         <ErrorText message={error} />
         <Txt variant="micro" color="text3" center>
-          Google ou email · gratuit, sans publicité
+          {appleAvailable ? 'Apple, Google ou e-mail' : 'Google ou e-mail'} · gratuit, sans publicité
         </Txt>
       </Animated.View>
     </View>

@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Alert, Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -69,7 +70,7 @@ export default function AccountScreen() {
               onPress={() => void Share.share({ message: publicProfileUrl(user.slug!), url: publicProfileUrl(user.slug!) })}
             />
           )}
-          <Row icon={Icons.people} label="Trouver des amis" onPress={() => void openWeb('/friends')} />
+          <Row icon={Icons.people} label="Trouver des amis" onPress={() => router.push('/friends-search')} />
         </Section>
 
         <Section>
