@@ -40,5 +40,10 @@
   },
   "resolutions": {
     "eslint-config-next/eslint-plugin-react-hooks": "7.0.1"
+  },
+  "dependenciesMeta": {
+    "sharp": {
+      "built": false
+    }
   }
 }

@@ -50,7 +50,8 @@ yarn dlx eas-cli build --platform ios --profile production
 yarn dlx eas-cli submit --platform ios --latest
 ```
 
-- JS-only changes can ship instantly with `yarn dlx eas-cli update --channel production`.
+- The `production` profile builds with `ENVLY_PUSH=1` (push entitlement on): it needs the paid account.
+- Over-the-air JS updates (`eas update`) would need `expo-updates`, which is not installed yet: every change ships as a new build.
 - Before the first review: demo account for Apple, privacy URL (`https://www.envly.fr/privacy.html`), account deletion in-app (Profil → Supprimer mon compte, already there), App Privacy form.
 
 ## Brand assets
