@@ -4,11 +4,11 @@ import { invalidate } from '@/hooks/use-api';
 import { api, errorMessage, productLink, publicCollectionUrl } from '@/lib/api';
 import { haptic } from '@/lib/haptics';
 
-export function confirm(title: string, message: string, confirmLabel: string, destructive = true): Promise<boolean> {
+export function confirm(title: string, message: string, confirmLabel: string, destructive = true, cancelLabel = 'Annuler'): Promise<boolean> {
   return new Promise((resolve) => {
     haptic.warning();
     Alert.alert(title, message, [
-      { text: 'Annuler', style: 'cancel', onPress: () => resolve(false) },
+      { text: cancelLabel, style: 'cancel', onPress: () => resolve(false) },
       { text: confirmLabel, style: destructive ? 'destructive' : 'default', onPress: () => resolve(true) },
     ]);
   });

@@ -166,7 +166,7 @@ export default function SignInScreen() {
       </Animated.View>
 
       {/* Actions */}
-      <Animated.View entering={FadeInDown.delay(400).duration(700)} style={{ gap: Space.sm }}>
+      <Animated.View entering={FadeInDown.delay(400).duration(700)} style={{ gap: Space.md }}>
         {appleAvailable && (
           <AppleAuthentication.AppleAuthenticationButton
             buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}

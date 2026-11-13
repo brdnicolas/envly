@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { blockedIds } from "@/lib/blocks";
 
 const FEED_SIZE = 30;
 const FRESH_DAYS = 7;
@@ -18,10 +19,13 @@ export async function GET() {
   const me = session?.user?.id;
   if (!me) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const follows = await prisma.userFollow.findMany({
-    where: { followerId: me },
-    select: { following: { select: { id: true, name: true, image: true, slug: true } } },
-  });
+  const hidden = await blockedIds(me);
+  const follows = (
+    await prisma.userFollow.findMany({
+      where: { followerId: me },
+      select: { following: { select: { id: true, name: true, image: true, slug: true } } },
+    })
+  ).filter((f) => !hidden.has(f.following.id));
   const ids = follows.map((f) => f.following.id);
   if (ids.length === 0) return NextResponse.json({ people: [], feed: [] });
 

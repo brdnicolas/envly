@@ -227,6 +227,10 @@ export type UserWhereInput = {
   santaMemberships?: Prisma.SecretSantaMemberListRelationFilter
   santaGifts?: Prisma.SecretSantaMemberListRelationFilter
   pushTokens?: Prisma.PushTokenListRelationFilter
+  blocking?: Prisma.UserBlockListRelationFilter
+  blockedBy?: Prisma.UserBlockListRelationFilter
+  reportsMade?: Prisma.ReportListRelationFilter
+  reportsReceived?: Prisma.ReportListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -252,6 +256,10 @@ export type UserOrderByWithRelationInput = {
   santaMemberships?: Prisma.SecretSantaMemberOrderByRelationAggregateInput
   santaGifts?: Prisma.SecretSantaMemberOrderByRelationAggregateInput
   pushTokens?: Prisma.PushTokenOrderByRelationAggregateInput
+  blocking?: Prisma.UserBlockOrderByRelationAggregateInput
+  blockedBy?: Prisma.UserBlockOrderByRelationAggregateInput
+  reportsMade?: Prisma.ReportOrderByRelationAggregateInput
+  reportsReceived?: Prisma.ReportOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -280,6 +288,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   santaMemberships?: Prisma.SecretSantaMemberListRelationFilter
   santaGifts?: Prisma.SecretSantaMemberListRelationFilter
   pushTokens?: Prisma.PushTokenListRelationFilter
+  blocking?: Prisma.UserBlockListRelationFilter
+  blockedBy?: Prisma.UserBlockListRelationFilter
+  reportsMade?: Prisma.ReportListRelationFilter
+  reportsReceived?: Prisma.ReportListRelationFilter
 }, "id" | "email" | "slug">
 
 export type UserOrderByWithAggregationInput = {
@@ -335,6 +347,10 @@ export type UserCreateInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -360,6 +376,10 @@ export type UserUncheckedCreateInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUpdateInput = {
@@ -385,6 +405,10 @@ export type UserUpdateInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -410,6 +434,10 @@ export type UserUncheckedUpdateInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -684,6 +712,62 @@ export type UserUpdateOneRequiredWithoutPushTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPushTokensInput, Prisma.UserUpdateWithoutPushTokensInput>, Prisma.UserUncheckedUpdateWithoutPushTokensInput>
 }
 
+export type UserCreateNestedOneWithoutBlockingInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockingInput, Prisma.UserUncheckedCreateWithoutBlockingInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockingInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutBlockedByInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedByInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBlockingNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockingInput, Prisma.UserUncheckedCreateWithoutBlockingInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockingInput
+  upsert?: Prisma.UserUpsertWithoutBlockingInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlockingInput, Prisma.UserUpdateWithoutBlockingInput>, Prisma.UserUncheckedUpdateWithoutBlockingInput>
+}
+
+export type UserUpdateOneRequiredWithoutBlockedByNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedByInput
+  upsert?: Prisma.UserUpsertWithoutBlockedByInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlockedByInput, Prisma.UserUpdateWithoutBlockedByInput>, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
+}
+
+export type UserCreateNestedOneWithoutReportsMadeInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReportsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReportsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsMadeInput
+  upsert?: Prisma.UserUpsertWithoutReportsMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportsMadeInput, Prisma.UserUpdateWithoutReportsMadeInput>, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
+}
+
+export type UserUpdateOneRequiredWithoutReportsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutReportsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportsReceivedInput, Prisma.UserUpdateWithoutReportsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -706,6 +790,10 @@ export type UserCreateWithoutAccountsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -730,6 +818,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -770,6 +862,10 @@ export type UserUpdateWithoutAccountsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -794,6 +890,10 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -818,6 +918,10 @@ export type UserCreateWithoutSessionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -842,6 +946,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -882,6 +990,10 @@ export type UserUpdateWithoutSessionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -906,6 +1018,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutCollectionsInput = {
@@ -930,6 +1046,10 @@ export type UserCreateWithoutCollectionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutCollectionsInput = {
@@ -954,6 +1074,10 @@ export type UserUncheckedCreateWithoutCollectionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutCollectionsInput = {
@@ -994,6 +1118,10 @@ export type UserUpdateWithoutCollectionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCollectionsInput = {
@@ -1018,6 +1146,10 @@ export type UserUncheckedUpdateWithoutCollectionsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutCreatedWishesInput = {
@@ -1042,6 +1174,10 @@ export type UserCreateWithoutCreatedWishesInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedWishesInput = {
@@ -1066,6 +1202,10 @@ export type UserUncheckedCreateWithoutCreatedWishesInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedWishesInput = {
@@ -1106,6 +1246,10 @@ export type UserUpdateWithoutCreatedWishesInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedWishesInput = {
@@ -1130,6 +1274,10 @@ export type UserUncheckedUpdateWithoutCreatedWishesInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
@@ -1154,6 +1302,10 @@ export type UserCreateWithoutFollowingInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
@@ -1178,6 +1330,10 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -1207,6 +1363,10 @@ export type UserCreateWithoutFollowersInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
@@ -1231,6 +1391,10 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -1271,6 +1435,10 @@ export type UserUpdateWithoutFollowingInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -1295,6 +1463,10 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -1330,6 +1502,10 @@ export type UserUpdateWithoutFollowersInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -1354,6 +1530,10 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutCollectionFollowsInput = {
@@ -1378,6 +1558,10 @@ export type UserCreateWithoutCollectionFollowsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutCollectionFollowsInput = {
@@ -1402,6 +1586,10 @@ export type UserUncheckedCreateWithoutCollectionFollowsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutCollectionFollowsInput = {
@@ -1442,6 +1630,10 @@ export type UserUpdateWithoutCollectionFollowsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCollectionFollowsInput = {
@@ -1466,6 +1658,10 @@ export type UserUncheckedUpdateWithoutCollectionFollowsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutCollaborationsInput = {
@@ -1490,6 +1686,10 @@ export type UserCreateWithoutCollaborationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutCollaborationsInput = {
@@ -1514,6 +1714,10 @@ export type UserUncheckedCreateWithoutCollaborationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutCollaborationsInput = {
@@ -1554,6 +1758,10 @@ export type UserUpdateWithoutCollaborationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCollaborationsInput = {
@@ -1578,6 +1786,10 @@ export type UserUncheckedUpdateWithoutCollaborationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1602,6 +1814,10 @@ export type UserCreateWithoutNotificationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1626,6 +1842,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1666,6 +1886,10 @@ export type UserUpdateWithoutNotificationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1690,6 +1914,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutOrganizedSantasInput = {
@@ -1714,6 +1942,10 @@ export type UserCreateWithoutOrganizedSantasInput = {
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizedSantasInput = {
@@ -1738,6 +1970,10 @@ export type UserUncheckedCreateWithoutOrganizedSantasInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizedSantasInput = {
@@ -1778,6 +2014,10 @@ export type UserUpdateWithoutOrganizedSantasInput = {
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizedSantasInput = {
@@ -1802,6 +2042,10 @@ export type UserUncheckedUpdateWithoutOrganizedSantasInput = {
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutSantaMembershipsInput = {
@@ -1826,6 +2070,10 @@ export type UserCreateWithoutSantaMembershipsInput = {
   organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutSantaMembershipsInput = {
@@ -1850,6 +2098,10 @@ export type UserUncheckedCreateWithoutSantaMembershipsInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutSantaMembershipsInput = {
@@ -1879,6 +2131,10 @@ export type UserCreateWithoutSantaGiftsInput = {
   organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutSantaGiftsInput = {
@@ -1903,6 +2159,10 @@ export type UserUncheckedCreateWithoutSantaGiftsInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutSantaGiftsInput = {
@@ -1943,6 +2203,10 @@ export type UserUpdateWithoutSantaMembershipsInput = {
   organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSantaMembershipsInput = {
@@ -1967,6 +2231,10 @@ export type UserUncheckedUpdateWithoutSantaMembershipsInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUpsertWithoutSantaGiftsInput = {
@@ -2002,6 +2270,10 @@ export type UserUpdateWithoutSantaGiftsInput = {
   organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSantaGiftsInput = {
@@ -2026,6 +2298,10 @@ export type UserUncheckedUpdateWithoutSantaGiftsInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserCreateWithoutPushTokensInput = {
@@ -2050,6 +2326,10 @@ export type UserCreateWithoutPushTokensInput = {
   organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
   santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserUncheckedCreateWithoutPushTokensInput = {
@@ -2074,6 +2354,10 @@ export type UserUncheckedCreateWithoutPushTokensInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
   santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
 }
 
 export type UserCreateOrConnectWithoutPushTokensInput = {
@@ -2114,6 +2398,10 @@ export type UserUpdateWithoutPushTokensInput = {
   organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
   santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushTokensInput = {
@@ -2138,6 +2426,522 @@ export type UserUncheckedUpdateWithoutPushTokensInput = {
   organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
   santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
   santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserCreateWithoutBlockingInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserUncheckedCreateWithoutBlockingInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishUncheckedCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserCreateOrConnectWithoutBlockingInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlockingInput, Prisma.UserUncheckedCreateWithoutBlockingInput>
+}
+
+export type UserCreateWithoutBlockedByInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserUncheckedCreateWithoutBlockedByInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishUncheckedCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserCreateOrConnectWithoutBlockedByInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
+}
+
+export type UserUpsertWithoutBlockingInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBlockingInput, Prisma.UserUncheckedUpdateWithoutBlockingInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlockingInput, Prisma.UserUncheckedCreateWithoutBlockingInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBlockingInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBlockingInput, Prisma.UserUncheckedUpdateWithoutBlockingInput>
+}
+
+export type UserUpdateWithoutBlockingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBlockingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUncheckedUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserUpsertWithoutBlockedByInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBlockedByInput, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBlockedByInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBlockedByInput, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
+}
+
+export type UserUpdateWithoutBlockedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBlockedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUncheckedUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserCreateWithoutReportsMadeInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserUncheckedCreateWithoutReportsMadeInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishUncheckedCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+}
+
+export type UserCreateOrConnectWithoutReportsMadeInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
+}
+
+export type UserCreateWithoutReportsReceivedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+}
+
+export type UserUncheckedCreateWithoutReportsReceivedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  description?: string | null
+  password?: string | null
+  slug?: string | null
+  createdAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.UserFollowUncheckedCreateNestedManyWithoutFollowerInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedCreateNestedManyWithoutUserInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  createdWishes?: Prisma.WishUncheckedCreateNestedManyWithoutCreatorInput
+  organizedSantas?: Prisma.SecretSantaUncheckedCreateNestedManyWithoutOrganizerInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutUserInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutGiftToInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutUserInput
+  blocking?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+}
+
+export type UserCreateOrConnectWithoutReportsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
+}
+
+export type UserUpsertWithoutReportsMadeInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReportsMadeInput, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReportsMadeInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReportsMadeInput, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
+}
+
+export type UserUpdateWithoutReportsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReportsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUncheckedUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+}
+
+export type UserUpsertWithoutReportsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReportsReceivedInput, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReportsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReportsReceivedInput, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
+}
+
+export type UserUpdateWithoutReportsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReportsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.UserFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  collectionFollows?: Prisma.CollectionFollowUncheckedUpdateManyWithoutUserNestedInput
+  collaborations?: Prisma.CollectionCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  createdWishes?: Prisma.WishUncheckedUpdateManyWithoutCreatorNestedInput
+  organizedSantas?: Prisma.SecretSantaUncheckedUpdateManyWithoutOrganizerNestedInput
+  santaMemberships?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutUserNestedInput
+  santaGifts?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutGiftToNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutUserNestedInput
+  blocking?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 
@@ -2159,6 +2963,10 @@ export type UserCountOutputType = {
   santaMemberships: number
   santaGifts: number
   pushTokens: number
+  blocking: number
+  blockedBy: number
+  reportsMade: number
+  reportsReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2175,6 +2983,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   santaMemberships?: boolean | UserCountOutputTypeCountSantaMembershipsArgs
   santaGifts?: boolean | UserCountOutputTypeCountSantaGiftsArgs
   pushTokens?: boolean | UserCountOutputTypeCountPushTokensArgs
+  blocking?: boolean | UserCountOutputTypeCountBlockingArgs
+  blockedBy?: boolean | UserCountOutputTypeCountBlockedByArgs
+  reportsMade?: boolean | UserCountOutputTypeCountReportsMadeArgs
+  reportsReceived?: boolean | UserCountOutputTypeCountReportsReceivedArgs
 }
 
 /**
@@ -2278,6 +3090,34 @@ export type UserCountOutputTypeCountPushTokensArgs<ExtArgs extends runtime.Types
   where?: Prisma.PushTokenWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBlockingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserBlockWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBlockedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserBlockWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReportsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReportsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2302,6 +3142,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   santaMemberships?: boolean | Prisma.User$santaMembershipsArgs<ExtArgs>
   santaGifts?: boolean | Prisma.User$santaGiftsArgs<ExtArgs>
   pushTokens?: boolean | Prisma.User$pushTokensArgs<ExtArgs>
+  blocking?: boolean | Prisma.User$blockingArgs<ExtArgs>
+  blockedBy?: boolean | Prisma.User$blockedByArgs<ExtArgs>
+  reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
+  reportsReceived?: boolean | Prisma.User$reportsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2356,6 +3200,10 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   santaMemberships?: boolean | Prisma.User$santaMembershipsArgs<ExtArgs>
   santaGifts?: boolean | Prisma.User$santaGiftsArgs<ExtArgs>
   pushTokens?: boolean | Prisma.User$pushTokensArgs<ExtArgs>
+  blocking?: boolean | Prisma.User$blockingArgs<ExtArgs>
+  blockedBy?: boolean | Prisma.User$blockedByArgs<ExtArgs>
+  reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
+  reportsReceived?: boolean | Prisma.User$reportsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2377,6 +3225,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     santaMemberships: Prisma.$SecretSantaMemberPayload<ExtArgs>[]
     santaGifts: Prisma.$SecretSantaMemberPayload<ExtArgs>[]
     pushTokens: Prisma.$PushTokenPayload<ExtArgs>[]
+    blocking: Prisma.$UserBlockPayload<ExtArgs>[]
+    blockedBy: Prisma.$UserBlockPayload<ExtArgs>[]
+    reportsMade: Prisma.$ReportPayload<ExtArgs>[]
+    reportsReceived: Prisma.$ReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2795,6 +3647,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   santaMemberships<T extends Prisma.User$santaMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$santaMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretSantaMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   santaGifts<T extends Prisma.User$santaGiftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$santaGiftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretSantaMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pushTokens<T extends Prisma.User$pushTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blocking<T extends Prisma.User$blockingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blockingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blockedBy<T extends Prisma.User$blockedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportsMade<T extends Prisma.User$reportsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportsReceived<T extends Prisma.User$reportsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3530,6 +4386,102 @@ export type User$pushTokensArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.PushTokenScalarFieldEnum | Prisma.PushTokenScalarFieldEnum[]
+}
+
+/**
+ * User.blocking
+ */
+export type User$blockingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserBlock
+   */
+  select?: Prisma.UserBlockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserBlock
+   */
+  omit?: Prisma.UserBlockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserBlockInclude<ExtArgs> | null
+  where?: Prisma.UserBlockWhereInput
+  orderBy?: Prisma.UserBlockOrderByWithRelationInput | Prisma.UserBlockOrderByWithRelationInput[]
+  cursor?: Prisma.UserBlockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserBlockScalarFieldEnum | Prisma.UserBlockScalarFieldEnum[]
+}
+
+/**
+ * User.blockedBy
+ */
+export type User$blockedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserBlock
+   */
+  select?: Prisma.UserBlockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserBlock
+   */
+  omit?: Prisma.UserBlockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserBlockInclude<ExtArgs> | null
+  where?: Prisma.UserBlockWhereInput
+  orderBy?: Prisma.UserBlockOrderByWithRelationInput | Prisma.UserBlockOrderByWithRelationInput[]
+  cursor?: Prisma.UserBlockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserBlockScalarFieldEnum | Prisma.UserBlockScalarFieldEnum[]
+}
+
+/**
+ * User.reportsMade
+ */
+export type User$reportsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Report
+   */
+  select?: Prisma.ReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Report
+   */
+  omit?: Prisma.ReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportInclude<ExtArgs> | null
+  where?: Prisma.ReportWhereInput
+  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
+}
+
+/**
+ * User.reportsReceived
+ */
+export type User$reportsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Report
+   */
+  select?: Prisma.ReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Report
+   */
+  omit?: Prisma.ReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportInclude<ExtArgs> | null
+  where?: Prisma.ReportWhereInput
+  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**

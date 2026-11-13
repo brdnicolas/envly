@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendPush } from "@/lib/push";
+import { isBlockedBetween } from "@/lib/blocks";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -13,6 +14,10 @@ export async function POST(req: Request) {
   const { userId } = await req.json();
   if (!userId || userId === session.user.id) {
     return NextResponse.json({ error: "Invalid user" }, { status: 400 });
+  }
+
+  if (await isBlockedBetween(session.user.id, userId)) {
+    return NextResponse.json({ error: "Blocked" }, { status: 403 });
   }
 
   // Following twice is a no-op (and must not notify twice).

@@ -47,6 +47,8 @@ Everything runs from the repo root. The repo is a **Yarn 4 workspace** (`apps/we
 | `yarn dev:mobile` | Metro bundler for an already-installed dev build |
 | `yarn ios` | Build the iOS app and run it in the simulator |
 | `yarn ios:device` | Build a Release and install it on a plugged-in iPhone |
+| `yarn deploy:ios` | Build on EAS and send to App Store Connect / TestFlight (needs a clean, committed tree) |
+| `yarn deploy:android` | Build the Android bundle on EAS and send it to Google Play (internal testing) |
 | `yarn build` | Production build of the web app (runs `prisma generate`) |
 | `yarn check` | Type-check + lint web and mobile (run before every commit) |
 | `yarn typecheck` / `lint` | The two halves of `check`, also available per app (`:web`, `:mobile`) |

@@ -44,3 +44,8 @@ scripts/brand/preview-*.png
 yarn-debug.log*
 yarn-error.log*
 .p
+# Google Play service-account key (deploy:android) — secret
+apps/mobile/google-play-key.json
+
+# Demo account credentials (seed-demo.mjs)
+demo-account.local.txt

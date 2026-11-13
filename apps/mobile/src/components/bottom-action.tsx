@@ -58,7 +58,7 @@ export function BottomAction({ title, onPress, visible = true }: { title: string
         accessibilityLabel={title}
         style={({ pressed }) => [styles.shadow, pressed && !GLASS && { opacity: 0.8 }]}>
         {GLASS ? (
-          <GlassView glassEffectStyle="regular" isInteractive colorScheme="dark" style={styles.pill}>
+          <GlassView glassEffectStyle="regular" isInteractive colorScheme="dark" tintColor="rgba(10,10,10,0.55)" style={styles.pill}>
             {content}
           </GlassView>
         ) : (

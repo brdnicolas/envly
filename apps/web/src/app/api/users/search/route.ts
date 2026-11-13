@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { blockedIds } from "@/lib/blocks";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -16,10 +17,11 @@ export async function GET(req: Request) {
     return NextResponse.json([]);
   }
 
+  const hidden = [...(await blockedIds(session.user.id))];
   const users = await prisma.user.findMany({
     where: {
       AND: [
-        { id: { not: session.user.id } },
+        { id: { notIn: [session.user.id, ...hidden] } },
         {
           OR: [
             { name: { contains: q } },

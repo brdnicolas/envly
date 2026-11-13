@@ -136,6 +136,8 @@ await png("apps/mobile/assets/images/favicon.png", rounded, 48);
 await png("apps/mobile/assets/images/android-icon-foreground.png", svg({ background: false, pad: 190 }), 512);
 await png("apps/mobile/assets/images/android-icon-background.png", `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">${defs}<rect width="1024" height="1024" fill="url(#bg)"/></svg>`, 512);
 await png("apps/mobile/assets/images/android-icon-monochrome.png", svg({ background: false, pad: 190, mono: "#FFFFFF" }), 432);
+// Android status-bar notification icon: white silhouette on transparent (Android tints it).
+await png("apps/mobile/assets/images/notification-icon.png", svg({ background: false, pad: 80, mono: "#FFFFFF" }), 96);
 
 // ── Chrome extension ──
 for (const size of [16, 48, 128]) await png(`apps/extension/icons/icon-${size}.png`, rounded, size);

@@ -119,6 +119,8 @@ export type PublicProfile = {
   slug: string | null;
   description: string | null;
   isMe: boolean;
+  /** I blocked this user: their lists are hidden. */
+  isBlocked?: boolean;
   isFollowing: boolean;
   followsMe: boolean;
   followersCount: number;
@@ -128,3 +130,5 @@ export type PublicProfile = {
 };
 
 export type UserSearchResult = { id: string; name: string | null; image: string | null; slug: string | null; isFollowing: boolean };
+
+export type BlockedUser = { id: string; name: string | null; image: string | null };

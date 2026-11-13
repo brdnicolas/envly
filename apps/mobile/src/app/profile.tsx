@@ -75,6 +75,8 @@ export default function AccountScreen() {
 
         <Section>
           <Row icon={Icons.gear} label="Paramètres du compte" onPress={() => void openWeb('/settings')} />
+          <Row icon={Icons.hand} label="Utilisateurs bloqués" onPress={() => router.push('/blocked')} />
+          <Row icon={Icons.envelope} label="Aide et contact" onPress={() => void openWeb('/support')} />
           <Row icon={Icons.hand} label="Confidentialité" onPress={() => void openWeb('/privacy.html')} />
         </Section>
 

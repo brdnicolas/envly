@@ -7,6 +7,8 @@ import { Icon, Icons } from '@/components/icon';
 import { BOTTOM_ACTION_SPACE, BottomAction, useScrollReveal } from '@/components/bottom-action';
 import { CollectionMenu, collectionActions, editCollection } from '@/components/collection-menu';
 import { NavBar } from '@/components/nav-bar';
+import { blockUser, reportUser } from '@/lib/social';
+import { firstName } from '@/lib/format';
 import { Avatar, Badge, Button, EmptyState, Skeleton, Txt } from '@/components/primitives';
 import { useToast } from '@/components/toast';
 import { Masonry, WishCard, type CardAction } from '@/components/wish-card';
@@ -112,6 +114,8 @@ export default function CollectionScreen() {
 
   async function unreserve(w: Wish) {
     if (!data) return;
+    const ok = await confirm('Annuler votre réservation ?', `« ${w.title} » redeviendra disponible pour les autres.`, 'Annuler la réservation', true, 'Garder');
+    if (!ok) return;
     try {
       await cancelReservation(w.id);
       mutate({ ...data, wishes: data.wishes.map((x) => (x.id === w.id ? { ...x, reservation: null } : x)) });
@@ -156,13 +160,31 @@ export default function CollectionScreen() {
         right={
           data ? (
             <CollectionMenu
-              groups={collectionActions(data, isOwner, {
-                edit: () => editCollection(data),
-                share: () => void share(),
-                copyLink: () => void copyLink(),
-                togglePublic: () => void togglePublic(),
-                remove: () => void removeList(),
-              })}
+              groups={[
+                ...collectionActions(data, isOwner, {
+                  edit: () => editCollection(data),
+                  share: () => void share(),
+                  copyLink: () => void copyLink(),
+                  togglePublic: () => void togglePublic(),
+                  remove: () => void removeList(),
+                }),
+                // Someone else's list (App Store guideline 1.2: report + block).
+                isViewer
+                  ? [
+                      {
+                        label: 'Signaler cette liste',
+                        icon: 'flag',
+                        onPress: () => reportUser({ userId: data.user.id, name: data.user.name, collectionId: data.id }, () => router.back()),
+                      },
+                      {
+                        label: `Bloquer ${firstName(data.user.name) || 'cette personne'}`,
+                        icon: 'hand.raised',
+                        destructive: true,
+                        onPress: () => void blockUser({ userId: data.user.id, name: data.user.name }).then((ok) => ok && router.back()),
+                      },
+                    ]
+                  : [],
+              ]}
             />
           ) : undefined
         }
@@ -230,7 +252,16 @@ export default function CollectionScreen() {
                 href={{ pathname: '/wish/[id]', params: { id: w.id, collectionId: id } }}
                 onPress={w.url ? () => openProduct(w.url!) : undefined}
                 actions={cardActions(w)}
-                reserved={isViewer && !!w.reservation}
+                reserved={isViewer && !!w.reservation && !myReservations[w.id]}
+                reservation={
+                  isViewer
+                    ? {
+                        state: myReservations[w.id] ? 'mine' : w.reservation ? 'taken' : 'free',
+                        onReserve: () => void reserve(w),
+                        onCancel: () => void unreserve(w),
+                      }
+                    : undefined
+                }
               />
             )}
           />

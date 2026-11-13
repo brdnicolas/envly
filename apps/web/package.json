@@ -14,6 +14,7 @@
     "db:status": "prisma migrate status",
     "db:studio": "prisma studio",
     "db:backfill-images": "node --env-file=.env --no-warnings scripts/backfill-image-sizes.mjs",
+    "db:seed-demo": "node --env-file=.env --no-warnings scripts/seed-demo.mjs",
     "scrape:bench": "node --no-warnings scripts/scrape-bench.mjs"
   },
   "dependencies": {

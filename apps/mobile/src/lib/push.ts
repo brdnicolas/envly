@@ -31,6 +31,14 @@ function projectId(): string | undefined {
  */
 export async function registerForPush({ ask }: { ask: boolean }) {
   try {
+    // Android 13+: the permission prompt only appears once a notification channel exists.
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'Envly',
+        importance: AndroidImportance.DEFAULT,
+        lightColor: '#E8C872',
+      });
+    }
     let { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted' && ask) ({ status } = await Notifications.requestPermissionsAsync());
     // Simulators can show notifications (e.g. `xcrun simctl push`) but have no push token.
@@ -40,12 +48,6 @@ export async function registerForPush({ ask }: { ask: boolean }) {
     if (!id) {
       console.warn('[push] No EAS projectId yet (run `eas init`), skipping registration');
       return;
-    }
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'Envly',
-        importance: AndroidImportance.DEFAULT,
-      });
     }
     const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId: id });
     currentToken = token;

@@ -1,3 +1,4 @@
+import { DateTimePicker as MaterialDatePicker, Host as ComposeHost } from '@expo/ui/jetpack-compose';
 import { DatePicker, Host } from '@expo/ui/swift-ui';
 import { datePickerStyle, tint } from '@expo/ui/swift-ui/modifiers';
 import { router } from 'expo-router';
@@ -350,6 +351,23 @@ function DateStep({ date, setDate, noDate, setNoDate }: { date: Date; setDate: (
               modifiers={[datePickerStyle('graphical'), tint(GOLD)]}
             />
           </Host>
+        </View>
+      )}
+      {Platform.OS === 'android' && (
+        <View style={[styles.calendar, noDate && { opacity: 0.35 }]} pointerEvents={noDate ? 'none' : 'auto'}>
+          <ComposeHost colorScheme="dark" matchContents>
+            <MaterialDatePicker
+              initialDate={date.toISOString()}
+              onDateSelected={(d: Date | null) => d && setDate(d)}
+              selectableDates={{ start: new Date() }}
+              variant="picker"
+              showVariantToggle={false}
+              showTitle={false}
+              showHeadline={false}
+              color={GOLD}
+              elementColors={{ containerColor: Colors.card, selectedDayContainerColor: GOLD, selectedDayContentColor: Colors.bg, todayDateBorderColor: GOLD, todayContentColor: GOLD }}
+            />
+          </ComposeHost>
         </View>
       )}
       <Pressable

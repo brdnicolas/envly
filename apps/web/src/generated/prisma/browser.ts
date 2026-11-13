@@ -92,3 +92,13 @@ export type SecretSantaMember = Prisma.SecretSantaMemberModel
  * Expo push token of one device (a user can have several phones).
  */
 export type PushToken = Prisma.PushTokenModel
+/**
+ * Model UserBlock
+ * A blocks B: no follow either way, B can't see A in the app (profile, lists, search, feed).
+ */
+export type UserBlock = Prisma.UserBlockModel
+/**
+ * Model Report
+ * A user reported another user (optionally one of their lists). Also emailed to the team (REPORTS_EMAIL).
+ */
+export type Report = Prisma.ReportModel

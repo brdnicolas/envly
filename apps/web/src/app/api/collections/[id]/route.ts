@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCollectionAccess } from "@/lib/collection-access";
+import { isBlockedBetween } from "@/lib/blocks";
 import { isSantaOfCollection } from "@/lib/secret-santa";
 
 export async function GET(
@@ -24,6 +25,11 @@ export async function GET(
     const pub = await prisma.collection.findUnique({ where: { id }, select: { isPublic: true } });
     // Private lists stay readable by the owner's Secret Santa (the list they shared for it).
     if (!pub?.isPublic && !(await isSantaOfCollection(session.user.id, id))) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    // Blocked either way: the list doesn't exist for this viewer.
+    const owner = await prisma.collection.findUnique({ where: { id }, select: { userId: true } });
+    if (owner && (await isBlockedBetween(owner.userId, session.user.id))) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
   } else {

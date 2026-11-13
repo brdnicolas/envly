@@ -17,6 +17,8 @@
     "dev:mobile": "yarn workspace @envly/mobile start",
     "ios": "yarn workspace @envly/mobile ios",
     "ios:device": "sh apps/mobile/scripts/install-iphone.sh",
+    "deploy:ios": "sh apps/mobile/scripts/deploy-ios.sh",
+    "deploy:android": "sh apps/mobile/scripts/deploy-android.sh",
     "build": "yarn workspace @envly/web build",
     "start": "yarn workspace @envly/web start",
     "lint": "yarn lint:web && yarn lint:mobile",

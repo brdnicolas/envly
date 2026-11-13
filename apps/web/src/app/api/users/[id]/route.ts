@@ -43,6 +43,15 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  const [iBlocked, blockedMe] =
+    me && me !== user.id
+      ? await Promise.all([
+          prisma.userBlock.count({ where: { blockerId: me, blockedId: user.id } }),
+          prisma.userBlock.count({ where: { blockerId: user.id, blockedId: me } }),
+        ])
+      : [0, 0];
+  if (blockedMe) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
   const [isFollowing, followsMe] = me && me !== user.id
     ? await Promise.all([
         prisma.userFollow.count({ where: { followerId: me, followingId: user.id } }),
@@ -53,12 +62,13 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const { _count, collections, ...profile } = user;
   return NextResponse.json({
     ...profile,
+    isBlocked: iBlocked > 0,
     isMe: me === user.id,
     isFollowing: isFollowing > 0,
     followsMe: followsMe > 0,
     followersCount: _count.followers,
     followingCount: _count.following,
-    wishCount: collections.reduce((n, c) => n + c._count.wishes, 0),
-    collections,
+    wishCount: iBlocked ? 0 : collections.reduce((n, c) => n + c._count.wishes, 0),
+    collections: iBlocked ? [] : collections,
   });
 }

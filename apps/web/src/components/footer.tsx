@@ -20,8 +20,11 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     ],
   },
   {
-    title: "Légal",
-    links: [{ label: "Confidentialité", href: "/privacy.html" }],
+    title: "Aide",
+    links: [
+      { label: "Aide et contact", href: "/support" },
+      { label: "Confidentialité", href: "/privacy.html" },
+    ],
   },
 ];
 

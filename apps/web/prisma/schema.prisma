@@ -74,6 +74,10 @@ model User {
   santaGifts        SecretSantaMember[]      @relation("santaGiftTo")
   createdAt         DateTime                 @default(now())
   pushTokens        PushToken[]
+  blocking          UserBlock[]              @relation("blocker")
+  blockedBy         UserBlock[]              @relation("blocked")
+  reportsMade       Report[]                 @relation("reporter")
+  reportsReceived   Report[]                 @relation("reportedUser")
 }
 
 model Collection {
@@ -232,4 +236,32 @@ model PushToken {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+/// A blocks B: no follow either way, B can't see A in the app (profile, lists, search, feed).
+model UserBlock {
+  id        String   @id @default(cuid())
+  blockerId String
+  blockedId String
+  blocker   User     @relation("blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked   User     @relation("blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+/// A user reported another user (optionally one of their lists). Also emailed to the team (REPORTS_EMAIL).
+model Report {
+  id             String   @id @default(cuid())
+  reporterId     String
+  reportedUserId String
+  collectionId   String?
+  reason         String
+  details        String?
+  reporter       User     @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser   User     @relation("reportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  @@index([reportedUserId])
 }
