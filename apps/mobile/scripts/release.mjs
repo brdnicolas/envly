@@ -66,11 +66,17 @@ const pick = (re) => commits.filter((c) => re.test(c.subject)).map((c) => c.subj
 const features = pick(/^feat/);
 const fixes = pick(/^fix/);
 
-console.log(`\nEnvly iOS : ${lastTag ? lastTag.replace("mobile-v", "") : current} → ${next}  (${kind})`);
-if (lastTag) console.log(`${commits.length} commit(s) mobile depuis ${lastTag}`);
-if (features.length) console.log("\nNouveautés :\n" + features.map((f) => `  • ${f}`).join("\n"));
-if (fixes.length) console.log("\nCorrections :\n" + fixes.map((f) => `  • ${f}`).join("\n"));
-if (features.length || fixes.length) {
+if (!lastTag) {
+  // Nothing tagged yet: the first App Store version, released as is (only the build number goes up).
+  console.log(`\nEnvly iOS : première publication, version ${current} (pas de numéro de version à augmenter).`);
+  console.log("Le tag mobile-v" + current + " servira de point de départ pour calculer les prochaines versions.");
+} else {
+  console.log(`\nEnvly iOS : ${lastTag.replace("mobile-v", "")} → ${next}  (${kind})`);
+  console.log(`${commits.length} commit(s) mobile depuis ${lastTag}`);
+  if (features.length) console.log("\nNouveautés :\n" + features.map((f) => `  • ${f}`).join("\n"));
+  if (fixes.length) console.log("\nCorrections :\n" + fixes.map((f) => `  • ${f}`).join("\n"));
+}
+if (lastTag && (features.length || fixes.length)) {
   console.log("\nBrouillon « Nouveautés » pour l'App Store (à reformuler pour les utilisateurs) :");
   console.log([...features, ...fixes.map((f) => `Correction : ${f}`)].map((l) => `- ${l}`).join("\n"));
 }
