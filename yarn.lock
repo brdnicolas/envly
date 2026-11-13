@@ -1113,6 +1113,7 @@ __metadata:
     "@prisma/client": "npm:^7.4.2"
     "@tailwindcss/postcss": "npm:^4"
     "@types/bcryptjs": "npm:^2.4.6"
+    "@types/disposable-email-domains": "npm:^1"
     "@types/node": "npm:^20"
     "@types/nodemailer": "npm:^8.0.2"
     "@types/react": "npm:^19"
@@ -1121,6 +1122,7 @@ __metadata:
     cheerio: "npm:^1.2.0"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
+    disposable-email-domains: "npm:^1.0.62"
     eslint: "npm:^9"
     eslint-config-next: "npm:16.1.6"
     framer-motion: "npm:^12.35.0"
@@ -4680,6 +4682,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/disposable-email-domains@npm:^1":
+  version: 1.0.6
+  resolution: "@types/disposable-email-domains@npm:1.0.6"
+  checksum: 10c0/82ec3da2f7a1e0f263fb0c66989c53eb84f0c89f6d51c72d70cc39a6800e8ba180aa79acfe7b0b08b0a525c7b25037ff3f4dd8491433513007f9c2c793c8114d
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:^1.0.6":
   version: 1.0.10
   resolution: "@types/estree@npm:1.0.10"
@@ -6661,6 +6670,13 @@ __metadata:
   version: 8.0.4
   resolution: "diff@npm:8.0.4"
   checksum: 10c0/7ee5d03926db4039be7252ac3b0abaae1bd122a2ca971e5ca7270e444e36ff83dd906fad1a719740ca347e97ed5dc8f458a76a8391dbcd7aff363bdafb348a00
+  languageName: node
+  linkType: hard
+
+"disposable-email-domains@npm:^1.0.62":
+  version: 1.0.62
+  resolution: "disposable-email-domains@npm:1.0.62"
+  checksum: 10c0/556062c5bc93cb712e7b6d05323555d0940b2ffbcdd560a21e23cf56fccf7fd71e623091891b04616326974e7c0880357df8627e40f280edd92a7c513376e983
   languageName: node
   linkType: hard
 

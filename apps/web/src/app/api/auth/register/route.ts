@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { isDisposableEmail } from "@/lib/disposable-email";
 
 export async function POST(req: Request) {
   try {
@@ -9,6 +10,13 @@ export async function POST(req: Request) {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password required" },
+        { status: 400 }
+      );
+    }
+
+    if (isDisposableEmail(String(email))) {
+      return NextResponse.json(
+        { error: "Les adresses e-mail temporaires ne sont pas acceptées. Utilisez votre adresse habituelle." },
         { status: 400 }
       );
     }
