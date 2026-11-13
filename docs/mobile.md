@@ -56,6 +56,23 @@ It refuses to run with uncommitted changes (EAS builds the committed code) and w
 - Over-the-air JS updates (`eas update`) would need `expo-updates`, which is not installed yet: every change ships as a new build.
 - Before the first review: demo account for Apple, privacy URL (`https://www.envly.fr/privacy.html`), account deletion in-app (Profil → Supprimer mon compte, already there), App Privacy form.
 
+## Versioning
+
+Two numbers, both automatic:
+
+| | Example | Who sees it | Handled by |
+| --- | --- | --- | --- |
+| Build number | 4, 5, 6… | Apple / TestFlight | EAS, on every build (`eas.json → autoIncrement`, `appVersionSource: remote`) |
+| Version | 1.0.0 → 1.1.0 | App Store users | `yarn release:ios` |
+
+- `yarn deploy:ios`: new build, **same version** (TestFlight, fixes during a review).
+- `yarn release:ios`: **new version** for the App Store. From the commits touching `apps/mobile` since the last
+  `mobile-vX.Y.Z` tag: `feat!:`/`BREAKING CHANGE` → major, `feat:` → minor, otherwise patch. It shows the version and a
+  draft of the "What's new" text, asks for confirmation, updates `app.json`, commits `chore(release): mobile vX.Y.Z`,
+  tags, pushes, then builds and uploads. Force the bump with `yarn release:ios minor`; preview with `--dry-run`.
+- First run (no tag yet): releases the current `app.json` version as is and tags it.
+- Apple needs a higher version for every new App Store submission once a version is live.
+
 ## Publishing (Google Play)
 
 ```bash
