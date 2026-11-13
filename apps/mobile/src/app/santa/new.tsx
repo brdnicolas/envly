@@ -3,7 +3,8 @@ import { DatePicker, Host } from '@expo/ui/swift-ui';
 import { datePickerStyle, tint } from '@expo/ui/swift-ui/modifiers';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, PanResponder, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, PanResponder, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import Animated, {
   FadeIn,
   FadeInLeft,
@@ -118,7 +119,7 @@ export default function NewSantaFlow() {
           : 'Continuer';
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: Colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: Colors.bg }} behavior="padding">
       <View style={[styles.top, { paddingTop: insets.top + Space.xs }]}>
         <IconButton icon={step === 0 ? Icons.close : Icons.chevronLeft} label={step === 0 ? 'Fermer' : 'Retour'} onPress={back} />
         <View style={styles.progress}>

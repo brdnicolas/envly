@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Alert, FlatList, Pressable, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -196,8 +197,9 @@ function WishPage({
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView
+    <KeyboardAwareScrollView
+        bottomOffset={24}
+        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: Space.lg, paddingBottom: bottomInset + Space.x3, gap: Space.xl }}>
@@ -280,8 +282,7 @@ function WishPage({
             )}
           </View>
         )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }
 

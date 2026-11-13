@@ -11,6 +11,7 @@ import { Colors, Fonts } from '@/constants/theme';
 import { extractUrl } from '@/lib/api';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { registerForPush, usePushRouting } from '@/lib/push';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,11 +26,13 @@ export const unstable_settings = { anchor: 'index' };
 
 export default function RootLayout() {
   return (
-    <ShareIntentProvider options={{ resetOnBackground: true }}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </ShareIntentProvider>
+    <KeyboardProvider>
+      <ShareIntentProvider options={{ resetOnBackground: true }}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ShareIntentProvider>
+    </KeyboardProvider>
   );
 }
 

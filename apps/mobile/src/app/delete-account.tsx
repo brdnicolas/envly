@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, Icons } from '@/components/icon';
@@ -40,8 +41,7 @@ export default function DeleteAccountScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bg }}>
       <NavBar title="Supprimer mon compte" />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Space.xl }]}>
+      <KeyboardAwareScrollView bottomOffset={24} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Space.xl }]}>
           <View style={styles.warning}>
             <Icon name={Icons.trash} size={22} color={Colors.danger} />
           </View>
@@ -79,8 +79,7 @@ export default function DeleteAccountScreen() {
           />
           <Button title="Supprimer définitivement mon compte" variant={armed ? 'destructive' : 'outline'} disabled={!armed} loading={deleting} onPress={() => void remove()} />
           <Button title="Annuler" variant="ghost" onPress={() => router.back()} />
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

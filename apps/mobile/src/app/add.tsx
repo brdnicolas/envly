@@ -2,7 +2,8 @@ import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -179,8 +180,8 @@ export default function AddWishScreen() {
       </View>
       <Divider />
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 56 : 0}>
-        <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive" contentContainerStyle={styles.content}>
+      <View style={{ flex: 1 }}>
+        <KeyboardAwareScrollView bottomOffset={showForm ? 170 : 24} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive" contentContainerStyle={styles.content}>
           <Field
             label="Lien du produit"
             value={url}
@@ -298,14 +299,17 @@ export default function AddWishScreen() {
             </Animated.View>
           )}
           <ErrorText message={error} />
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         {showForm && !scraping && (
-          <View style={[styles.footer, { paddingBottom: insets.bottom + Space.sm }]}>
-            <Button title="Ajouter le souhait" onPress={save} loading={saving} />
-          </View>
+          // Rides on top of the keyboard; the home-indicator padding is dropped while it's open.
+          <KeyboardStickyView offset={{ closed: 0, opened: insets.bottom }}>
+            <View style={[styles.footer, { paddingBottom: insets.bottom + Space.sm }]}>
+              <Button title="Ajouter le souhait" onPress={save} loading={saving} />
+            </View>
+          </KeyboardStickyView>
         )}
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }
