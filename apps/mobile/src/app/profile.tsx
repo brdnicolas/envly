@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { Alert, Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, Icons, type IconName } from '@/components/icon';
@@ -10,7 +10,7 @@ import { Avatar, Divider, Txt } from '@/components/primitives';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
 import { confirm } from '@/lib/actions';
-import { api, API_URL, errorMessage, publicProfileUrl } from '@/lib/api';
+import { API_URL, publicProfileUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import type { User } from '@/lib/types';
 
@@ -29,21 +29,6 @@ export default function AccountScreen() {
 
   async function logout() {
     if (await confirm('Se déconnecter ?', 'Vous pourrez vous reconnecter à tout moment.', 'Se déconnecter', false)) await signOut();
-  }
-
-  async function deleteAccount() {
-    const ok = await confirm(
-      'Supprimer votre compte ?',
-      'Votre compte, vos collections et vos souhaits seront définitivement supprimés. Cette action est irréversible.',
-      'Supprimer définitivement',
-    );
-    if (!ok) return;
-    try {
-      await api('/api/account/delete', { method: 'DELETE' });
-      await signOut();
-    } catch (e) {
-      Alert.alert('Erreur', errorMessage(e));
-    }
   }
 
   return (
@@ -82,12 +67,19 @@ export default function AccountScreen() {
 
         <Section>
           <Row icon={Icons.logout} label="Se déconnecter" onPress={logout} chevron={false} />
-          <Row icon={Icons.trash} label="Supprimer mon compte" danger onPress={deleteAccount} chevron={false} />
         </Section>
 
-        <Txt variant="micro" color="text3" center>
-          Envly {Constants.expoConfig?.version}
-        </Txt>
+        <View style={{ alignItems: 'center', gap: Space.md, paddingTop: Space.x3 }}>
+          <Txt variant="micro" color="text3" center>
+            Envly {Constants.expoConfig?.version}
+          </Txt>
+          {/* Deliberately away from "Se déconnecter", and it opens a screen, not a one-tap confirm. */}
+          <Pressable onPress={() => router.push('/delete-account')} hitSlop={8} accessibilityRole="button">
+            <Txt variant="footnote" color="text3" style={{ textDecorationLine: 'underline' }}>
+              Supprimer mon compte
+            </Txt>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );

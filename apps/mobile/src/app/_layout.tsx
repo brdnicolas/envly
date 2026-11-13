@@ -75,6 +75,7 @@ function App() {
             <Stack.Screen name="user/[id]" />
             <Stack.Screen name="friends-search" options={SHEET} />
             <Stack.Screen name="blocked" options={SHEET} />
+            <Stack.Screen name="delete-account" />
             <Stack.Screen name="santa/[id]" />
             <Stack.Screen name="s/[code]" />
 

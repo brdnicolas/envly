@@ -1,9 +1,9 @@
 import { after, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { Resend } from "resend";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site";
+import { sendMail, TEAM_EMAIL } from "@/lib/email";
 
 const REASONS: Record<string, string> = {
   inappropriate: "Contenu inapproprié",
@@ -15,7 +15,7 @@ const REASONS: Record<string, string> = {
 
 /**
  * Report a user (optionally one of their lists). Stored, then emailed to the team so it can act
- * within 24 h (App Store guideline 1.2). Recipient: REPORTS_EMAIL, else contact@envly.fr.
+ * within 24 h (App Store guideline 1.2). Recipient: TEAM_EMAIL (see lib/email.ts).
  */
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -41,14 +41,11 @@ export async function POST(req: Request) {
     data: { reporterId: me, reportedUserId: userId, collectionId: collection?.id ?? null, reason, details },
   });
 
-  const to = process.env.REPORTS_EMAIL || "contact@envly.fr";
   const reporter = `${session.user?.name ?? "?"} (${session.user?.email ?? me})`;
   after(async () => {
-    if (!process.env.RESEND_API_KEY) return console.warn("[reports] RESEND_API_KEY missing, report", report.id, "not emailed");
     try {
-      await new Resend(process.env.RESEND_API_KEY).emails.send({
-        from: "Envly <noreply@envly.fr>",
-        to,
+      await sendMail({
+        to: TEAM_EMAIL,
         subject: `🚩 Signalement : ${REASONS[reason]} — ${reported.name ?? reported.id}`,
         html: `
           <div style="font-family:sans-serif;max-width:560px">

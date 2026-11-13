@@ -30,7 +30,7 @@ Set them in Vercel → Settings → Environment Variables. The full list, with c
 | `NEXTAUTH_SECRET` | yes | Also signs the mobile JWTs: rotating it signs everyone out |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | yes | Google sign-in |
 | `CLOUDINARY_*` | yes | Image uploads |
-| `RESEND_API_KEY` | yes | Password-reset emails |
+| `GMAIL_USER` / `GMAIL_APP_PASSWORD` | yes | Outgoing emails (password reset, reports) sent from envly.contact@gmail.com with a Google app password |
 | `DIRECT_DATABASE_URL` | no | Non-pooled URL for migrations (derived automatically otherwise) |
 | `AMAZON_AFFILIATE_TAG`, `AWIN_PUBLISHER_ID` | no | Affiliate links |
 | `WEBSHARE_PROXY_URL` | no | Proxy for shops that block the scraper |

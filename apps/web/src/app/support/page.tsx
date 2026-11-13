@@ -4,7 +4,7 @@ import { ChevronDown, Mail, ShieldCheck, Smartphone, Puzzle } from "lucide-react
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-const CONTACT = "contact@envly.fr";
+const CONTACT = "envly.contact@gmail.com";
 
 export const metadata: Metadata = {
   title: "Aide et contact",

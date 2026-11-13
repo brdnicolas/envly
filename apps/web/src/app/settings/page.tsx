@@ -368,7 +368,11 @@ export default function SettingsPage() {
                   disabled={deleteConfirm !== "SUPPRIMER" || deleting}
                   onClick={async () => {
                     setDeleting(true);
-                    const res = await fetch("/api/account/delete", { method: "DELETE" });
+                    const res = await fetch("/api/account/delete", {
+                      method: "DELETE",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ confirm: deleteConfirm }),
+                    });
                     if (res.ok) {
                       signOut({ callbackUrl: "/" });
                     } else {
