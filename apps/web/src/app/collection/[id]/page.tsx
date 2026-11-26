@@ -11,7 +11,7 @@ import { WishCard } from "@/components/wish-card";
 import { EditWishDialog } from "@/components/edit-wish-dialog";
 import { CollectionForm } from "@/components/collection-form";
 import { InviteCollaboratorsDialog } from "@/components/invite-collaborators-dialog";
-import { Plus, ArrowLeft, Copy, Pencil, LogOut, Globe, Lock } from "lucide-react";
+import { Plus, ArrowLeft, Copy, Pencil, LogOut, Globe, Lock, Image as ImageIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useCollection } from "@/hooks/use-data";
@@ -143,6 +143,27 @@ export default function CollectionPage() {
     if (res.ok) {
       mutateCollection({ ...collection, isPublic: !collection.isPublic }, { revalidate: false });
       toast.success(collection.isPublic ? "Collection maintenant privée" : "Collection maintenant publique");
+    }
+  };
+
+  const shareStory = async () => {
+    if (!collection) return;
+    const url = `/w/${collection.slug}/story`;
+    try {
+      const blob = await (await fetch(url)).blob();
+      const file = new File([blob], `envly-${collection.slug}.png`, { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: collection.name });
+        return;
+      }
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = file.name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast.success("Image téléchargée : publiez-la en story !");
+    } catch (e) {
+      if ((e as Error)?.name !== "AbortError") toast.error("Impossible de générer l'image");
     }
   };
 
@@ -356,6 +377,13 @@ export default function CollectionPage() {
                 title="Copier le lien de partage"
               >
                 <Copy className="h-3.5 w-3.5" />
+              </Button>
+            )}
+
+            {/* Story image (Instagram / WhatsApp) */}
+            {isOwner && collection.isPublic && (
+              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl" onClick={shareStory} title="Partager en story">
+                <ImageIcon className="h-3.5 w-3.5" />
               </Button>
             )}
 

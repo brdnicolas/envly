@@ -14,7 +14,7 @@ import { useToast } from '@/components/toast';
 import { Masonry, WishCard, type CardAction } from '@/components/wish-card';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { confirm, deleteCollection, deleteWish, openProduct, setCollectionPublic, shareCollection, updateWish } from '@/lib/actions';
+import { confirm, deleteCollection, deleteWish, openProduct, setCollectionPublic, shareCollection, updateWish, shareCollectionStory } from '@/lib/actions';
 import { errorMessage, publicCollectionUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { haptic } from '@/lib/haptics';
@@ -197,6 +197,7 @@ export default function CollectionScreen() {
                 ...collectionActions(data, isOwner, {
                   edit: () => editCollection(data),
                   share: () => void share(),
+                  story: () => void shareCollectionStory(data),
                   copyLink: () => void copyLink(),
                   togglePublic: () => void togglePublic(),
                   remove: () => void removeList(),

@@ -21,12 +21,13 @@ export type MenuItem = {
 export function collectionActions(
   c: { isPublic: boolean },
   isOwner: boolean,
-  h: { edit: () => void; share: () => void; copyLink?: () => void; togglePublic: () => void; remove: () => void }
+  h: { edit: () => void; share: () => void; story?: () => void; copyLink?: () => void; togglePublic: () => void; remove: () => void }
 ): MenuItem[][] {
   return [
     isOwner ? [{ label: 'Modifier', icon: 'pencil', onPress: h.edit }] : [],
     [
       { label: 'Partager', icon: 'square.and.arrow.up', onPress: h.share },
+      ...(h.story && c.isPublic ? [{ label: 'Partager en story', icon: 'photo.on.rectangle', onPress: h.story }] : []),
       ...(h.copyLink && c.isPublic ? [{ label: 'Copier le lien', icon: 'link', onPress: h.copyLink }] : []),
     ],
     isOwner

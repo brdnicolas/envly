@@ -1,7 +1,8 @@
+import { File, Paths } from 'expo-file-system';
 import { ActionSheetIOS, Alert, Linking, Platform, Share } from 'react-native';
 
 import { invalidate } from '@/hooks/use-api';
-import { api, errorMessage, productLink, publicCollectionUrl } from '@/lib/api';
+import { API_URL, api, errorMessage, productLink, publicCollectionUrl } from '@/lib/api';
 import { haptic } from '@/lib/haptics';
 
 export function confirm(title: string, message: string, confirmLabel: string, destructive = true, cancelLabel = 'Annuler'): Promise<boolean> {
@@ -90,4 +91,24 @@ export async function deleteWish(id: string) {
   await api(`/api/wishes/${id}`, { method: 'DELETE' });
   invalidate('/api/collections');
   haptic.success();
+}
+
+/**
+ * Story image of a public list (1080×1920, rendered by the website), shared as a file:
+ * the iOS share sheet offers Instagram / WhatsApp stories. Android shares the link instead.
+ */
+export async function shareCollectionStory(c: { name: string; slug: string; isPublic: boolean }) {
+  if (!c.isPublic) {
+    Alert.alert('Collection privée', 'Rendez-la publique pour la partager en story.');
+    return;
+  }
+  try {
+    const dest = new File(Paths.cache, `envly-story-${c.slug}.png`);
+    if (dest.exists) dest.delete();
+    const file = await File.downloadFileAsync(`${API_URL}/w/${c.slug}/story`, dest);
+    if (Platform.OS === 'ios') await Share.share({ url: file.uri });
+    else await Share.share({ message: `Ma liste « ${c.name} » sur Envly : ${publicCollectionUrl(c.slug)}` });
+  } catch (e) {
+    Alert.alert('Erreur', errorMessage(e));
+  }
 }

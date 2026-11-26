@@ -19,6 +19,9 @@ const PROTECTED = [
   /^\/add$/,
 ];
 
+/** Inside protected prefixes, but open to visitors of a public list (like /api/reserve). */
+const PUBLIC = [/^\/api\/wishes\/[^/]+\/contributions$/];
+
 const SESSION_COOKIES = ["next-auth.session-token", "__Secure-next-auth.session-token"];
 
 export async function middleware(req: NextRequest) {
@@ -36,7 +39,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next({ request: { headers } });
   }
 
-  if (!PROTECTED.some((re) => re.test(pathname))) {
+  if (!PROTECTED.some((re) => re.test(pathname)) || PUBLIC.some((re) => re.test(pathname))) {
     return NextResponse.next();
   }
 

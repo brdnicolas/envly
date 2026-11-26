@@ -1072,6 +1072,7 @@ __metadata:
     expo-clipboard: "npm:~58.0.4"
     expo-constants: "npm:~58.0.15"
     expo-device: "npm:~58.0.5"
+    expo-file-system: "npm:~58.0.13"
     expo-font: "npm:~58.0.11"
     expo-glass-effect: "npm:~58.0.5"
     expo-haptics: "npm:~58.0.7"
