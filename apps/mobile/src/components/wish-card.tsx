@@ -36,7 +36,7 @@ export function WishCard({
   /** The owner marked it as received. */
   received?: boolean;
   /** Friends' lists: a visible "Réserver" button (free) or "Réservé par vous" (mine). */
-  reservation?: { state: 'free' | 'mine' | 'taken' | 'pool'; onReserve: () => void; onCancel: () => void; onPool?: () => void };
+  reservation?: { state: 'free' | 'mine' | 'taken'; onReserve: () => void; onCancel: () => void };
 }) {
   // Known size → the card has its final height immediately; otherwise measure on load (older wishes).
   const clamp = (r: number) => Math.min(Math.max(r, 0.6), 1.6);
@@ -45,7 +45,6 @@ export function WishCard({
   const ratio = stored ?? measured ?? 1;
   const price = formatPrice(wish.price);
   const domain = domainOf(wish.url);
-  const pooled = (wish.contributions ?? []).reduce((n, c) => n + c.amount, 0);
 
   const card = (
     <Pressable style={StyleSheet.flatten([styles.card, reserved && { opacity: 0.55 }])}>
@@ -88,61 +87,19 @@ export function WishCard({
         )}
 
         {reservation?.state === 'free' && (
-          <View style={{ gap: 2 }}>
-            <Pressable
-              onPress={() => {
-                haptic.select();
-                reservation.onReserve();
-              }}
-              hitSlop={4}
-              accessibilityRole="button"
-              accessibilityLabel={`Réserver ${wish.title}`}
-              style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
-              <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
-              <Txt variant="caption" style={styles.offerLabel}>
-                Réserver
-              </Txt>
-            </Pressable>
-            {reservation.onPool && (
-              <Pressable
-                onPress={() => {
-                  haptic.select();
-                  reservation.onPool?.();
-                }}
-                hitSlop={6}
-                accessibilityRole="button"
-                accessibilityLabel={`Offrir ${wish.title} à plusieurs`}
-                style={({ pressed }) => [styles.poolLink, pressed && { opacity: 0.6 }]}>
-                <Txt variant="micro" color="text3">
-                  ou offrir à plusieurs
-                </Txt>
-              </Pressable>
-            )}
-          </View>
-        )}
-
-        {reservation?.state === 'pool' && (
           <Pressable
-            onPress={reservation.onReserve}
+            onPress={() => {
+              haptic.select();
+              reservation.onReserve();
+            }}
             hitSlop={4}
             accessibilityRole="button"
-            accessibilityLabel={`Cadeau à plusieurs : ${wish.title}`}
-            style={({ pressed }) => [styles.pool, pressed && { opacity: 0.75 }]}>
-            <View style={styles.poolHead}>
-              <Icon name={Icons.people} size={11} color={GOLD} />
-              <Txt variant="micro" style={{ color: GOLD, flex: 1 }} numberOfLines={1}>
-                À plusieurs
-              </Txt>
-              <Txt variant="micro" color="text2">
-                {formatPrice(pooled)}
-                {wish.price ? ` / ${formatPrice(wish.price)}` : ''}
-              </Txt>
-            </View>
-            {wish.price ? (
-              <View style={styles.track}>
-                <View style={[styles.fill, { width: `${Math.min(100, Math.round((pooled / wish.price) * 100))}%` }]} />
-              </View>
-            ) : null}
+            accessibilityLabel={`Réserver ${wish.title}`}
+            style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
+            <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
+            <Txt variant="caption" style={styles.offerLabel}>
+              Réserver
+            </Txt>
           </Pressable>
         )}
 
@@ -225,11 +182,6 @@ const styles = StyleSheet.create({
     backgroundColor: GOLD,
   },
   offerLabel: { color: Colors.bg, fontFamily: Fonts.semibold },
-  poolLink: { alignSelf: 'center', paddingVertical: 4 },
-  pool: { marginTop: 4, gap: 6, padding: 8, borderRadius: 10, backgroundColor: 'rgba(232,200,114,0.08)' },
-  poolHead: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  track: { height: 3, borderRadius: 2, backgroundColor: 'rgba(232,200,114,0.18)', overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 2, backgroundColor: GOLD },
   status: { marginTop: 2, flexDirection: 'row', alignItems: 'center', gap: 4 },
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.muted },

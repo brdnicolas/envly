@@ -392,7 +392,6 @@ export const ModelName = {
   Collection: 'Collection',
   Wish: 'Wish',
   Reservation: 'Reservation',
-  Contribution: 'Contribution',
   UserFollow: 'UserFollow',
   CollectionFollow: 'CollectionFollow',
   CollectionCollaborator: 'CollectionCollaborator',
@@ -418,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "passwordResetToken" | "user" | "collection" | "wish" | "reservation" | "contribution" | "userFollow" | "collectionFollow" | "collectionCollaborator" | "notification" | "secretSanta" | "secretSantaMessage" | "secretSantaMember" | "pushToken" | "userBlock" | "report"
+    modelProps: "account" | "session" | "verificationToken" | "passwordResetToken" | "user" | "collection" | "wish" | "reservation" | "userFollow" | "collectionFollow" | "collectionCollaborator" | "notification" | "secretSanta" | "secretSantaMessage" | "secretSantaMember" | "pushToken" | "userBlock" | "report"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1011,80 +1010,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ReservationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ReservationCountAggregateOutputType> | number
-        }
-      }
-    }
-    Contribution: {
-      payload: Prisma.$ContributionPayload<ExtArgs>
-      fields: Prisma.ContributionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ContributionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ContributionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        findFirst: {
-          args: Prisma.ContributionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ContributionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        findMany: {
-          args: Prisma.ContributionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>[]
-        }
-        create: {
-          args: Prisma.ContributionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        createMany: {
-          args: Prisma.ContributionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ContributionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>[]
-        }
-        delete: {
-          args: Prisma.ContributionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        update: {
-          args: Prisma.ContributionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        deleteMany: {
-          args: Prisma.ContributionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ContributionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ContributionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>[]
-        }
-        upsert: {
-          args: Prisma.ContributionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributionPayload>
-        }
-        aggregate: {
-          args: Prisma.ContributionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateContribution>
-        }
-        groupBy: {
-          args: Prisma.ContributionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContributionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ContributionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContributionCountAggregateOutputType> | number
         }
       }
     }
@@ -1984,19 +1909,6 @@ export const ReservationScalarFieldEnum = {
 export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
 
 
-export const ContributionScalarFieldEnum = {
-  id: 'id',
-  wishId: 'wishId',
-  name: 'name',
-  amount: 'amount',
-  token: 'token',
-  contributorId: 'contributorId',
-  createdAt: 'createdAt'
-} as const
-
-export type ContributionScalarFieldEnum = (typeof ContributionScalarFieldEnum)[keyof typeof ContributionScalarFieldEnum]
-
-
 export const UserFollowScalarFieldEnum = {
   id: 'id',
   followerId: 'followerId',
@@ -2398,7 +2310,6 @@ export type GlobalOmitConfig = {
   collection?: Prisma.CollectionOmit
   wish?: Prisma.WishOmit
   reservation?: Prisma.ReservationOmit
-  contribution?: Prisma.ContributionOmit
   userFollow?: Prisma.UserFollowOmit
   collectionFollow?: Prisma.CollectionFollowOmit
   collectionCollaborator?: Prisma.CollectionCollaboratorOmit

@@ -59,7 +59,6 @@ export const ModelName = {
   Collection: 'Collection',
   Wish: 'Wish',
   Reservation: 'Reservation',
-  Contribution: 'Contribution',
   UserFollow: 'UserFollow',
   CollectionFollow: 'CollectionFollow',
   CollectionCollaborator: 'CollectionCollaborator',
@@ -203,19 +202,6 @@ export const ReservationScalarFieldEnum = {
 } as const
 
 export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
-
-
-export const ContributionScalarFieldEnum = {
-  id: 'id',
-  wishId: 'wishId',
-  name: 'name',
-  amount: 'amount',
-  token: 'token',
-  contributorId: 'contributorId',
-  createdAt: 'createdAt'
-} as const
-
-export type ContributionScalarFieldEnum = (typeof ContributionScalarFieldEnum)[keyof typeof ContributionScalarFieldEnum]
 
 
 export const UserFollowScalarFieldEnum = {

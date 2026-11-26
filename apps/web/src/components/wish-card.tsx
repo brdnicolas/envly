@@ -4,7 +4,6 @@ import { thumb } from "@/lib/image";
 import { WishImage } from "@/components/wish-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { type Contribution, GroupGift } from "@/components/group-gift";
 import { CancelReservationButton, getReservationToken } from "@/components/reserve-dialog";
 import { Gift, Heart, Pencil, Trash2, Star } from "lucide-react";
 import { useState } from "react";
@@ -23,7 +22,6 @@ interface Wish {
   isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
   receivedAt?: string | null;
-  contributions?: Contribution[];
 }
 
 function getDomain(url: string | null) {
@@ -65,8 +63,6 @@ export function WishCard({
   manageReceived?: boolean;
 }) {
   const [received, setReceived] = useState(!!wish.receivedAt);
-  const [contributions, setContributions] = useState<Contribution[]>(wish.contributions ?? []);
-  const pooling = contributions.length > 0;
 
   const toggleReceived = async () => {
     const next = !received;
@@ -237,7 +233,7 @@ export function WishCard({
           </div>
         )}
 
-        {!isOwner && !hideReservation && !isReserved && !pooling && (
+        {!isOwner && !hideReservation && !isReserved && (
           <Button
             variant="default"
             size="sm"
@@ -246,9 +242,6 @@ export function WishCard({
           >
             Réserver
           </Button>
-        )}
-        {!isOwner && !hideReservation && !isReserved && onReserve && (
-          <GroupGift wish={wish} contributions={contributions} onChange={setContributions} />
         )}
         {!isOwner && !hideReservation && isReserved && getReservationToken(wish.id) && onCancelReservation && (
           <CancelReservationButton

@@ -29,7 +29,6 @@ interface Wish {
   isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
   receivedAt?: string | null;
-  contributions?: { id: string; name: string; amount: number }[];
 }
 
 /** "Aujourd'hui", "Demain", "Dans 12 jours", or null once past. */

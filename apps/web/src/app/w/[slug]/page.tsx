@@ -56,10 +56,7 @@ export default async function PublicWishlistPage({
     where: { slug },
     include: {
       wishes: {
-        include: {
-          reservation: true,
-          contributions: { select: { id: true, name: true, amount: true }, orderBy: { createdAt: "asc" } },
-        },
+        include: { reservation: true },
         orderBy: [{ isPriority: "desc" }, { createdAt: "desc" }],
       },
       user: { select: { id: true, name: true, slug: true } },
@@ -120,7 +117,6 @@ export default async function PublicWishlistPage({
     receivedAt: wish.receivedAt ? wish.receivedAt.toISOString() : null,
     // Only the display name: the token (which cancels the reservation) and the reserver stay server-side.
     reservation: isOwner || isCollaborator || !wish.reservation ? null : { reservedBy: wish.reservation.reservedBy },
-    contributions: isOwner || isCollaborator ? [] : wish.contributions,
   }));
 
   const recentFollowers = collection.followers.map((f) => f.user);

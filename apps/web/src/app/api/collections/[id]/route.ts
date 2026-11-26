@@ -50,10 +50,7 @@ export async function GET(
         include: {
           creator: { select: { id: true, name: true } },
           // Surprise preserved: owners and collaborators never see who reserved what.
-          ...(role === "viewer" && {
-            reservation: { select: { reservedBy: true } },
-            contributions: { select: { id: true, name: true, amount: true }, orderBy: { createdAt: "asc" as const } },
-          }),
+          ...(role === "viewer" && { reservation: { select: { reservedBy: true } } }),
         },
       },
       collaborators: {

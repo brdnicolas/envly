@@ -16,14 +16,11 @@ export async function POST(req: Request) {
 
   const [existing, wish] = await Promise.all([
     prisma.reservation.findUnique({ where: { wishId } }),
-    prisma.wish.findUnique({ where: { id: wishId }, select: { receivedAt: true, _count: { select: { contributions: true } } } }),
+    prisma.wish.findUnique({ where: { id: wishId }, select: { receivedAt: true } }),
   ]);
   if (!wish) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (wish.receivedAt) {
     return NextResponse.json({ error: "Ce cadeau a déjà été offert" }, { status: 400 });
-  }
-  if (wish._count.contributions) {
-    return NextResponse.json({ error: "Un cadeau à plusieurs est en cours : participez plutôt !" }, { status: 400 });
   }
 
   if (existing) {

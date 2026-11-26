@@ -82,12 +82,6 @@ export type Wish = Prisma.WishModel
  */
 export type Reservation = Prisma.ReservationModel
 /**
- * Model Contribution
- * Group gift: friends pledge an amount towards one wish (no payment, just coordination).
- * Like reservations, never shown to the wish's owner or collaborators.
- */
-export type Contribution = Prisma.ContributionModel
-/**
  * Model UserFollow
  * 
  */
