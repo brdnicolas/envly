@@ -13,11 +13,10 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, name: true, email: true, image: true, description: true, slug: true, birthdayDay: true, birthdayMonth: true },
+    select: { id: true, name: true, email: true, image: true, description: true, slug: true, birthdayDay: true, birthdayMonth: true, birthdayAskedAt: true },
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  const { birthdayDay, birthdayMonth, ...rest } = user;
-  return NextResponse.json({ ...rest, birthday: serializeBirthday({ birthdayDay, birthdayMonth }) });
+  return NextResponse.json(shapeProfile(user));
 }
 
 export async function PATCH(req: Request) {
@@ -81,21 +80,29 @@ export async function PATCH(req: Request) {
     return NextResponse.json(updated);
   }
 
-  const data: Record<string, string | number | null> = {};
+  const data: Record<string, string | number | Date | null> = {};
   if (body.name !== undefined) data.name = body.name || null;
   if (body.image !== undefined) data.image = body.image || null;
   if (body.description !== undefined) data.description = body.description || null;
   if (body.birthday !== undefined) {
     const b = parseBirthday(body.birthday);
     if (!b) return NextResponse.json({ error: "Date d'anniversaire invalide" }, { status: 400 });
-    Object.assign(data, b);
+    Object.assign(data, b, { birthdayAskedAt: new Date() });
   }
+  // The one-time birthday prompt was shown (answered or skipped): never ask again.
+  if (body.birthdayAsked === true) data.birthdayAskedAt = new Date();
 
   const updated = await prisma.user.update({
     where: { id: session.user.id },
     data,
-    select: { id: true, name: true, email: true, image: true, description: true, slug: true, birthdayDay: true, birthdayMonth: true },
+    select: { id: true, name: true, email: true, image: true, description: true, slug: true, birthdayDay: true, birthdayMonth: true, birthdayAskedAt: true },
   });
-  const { birthdayDay, birthdayMonth, ...rest } = updated;
-  return NextResponse.json({ ...rest, birthday: serializeBirthday({ birthdayDay, birthdayMonth }) });
+  return NextResponse.json(shapeProfile(updated));
+}
+
+/** Profile as sent to its owner: birthday as { day, month }, and whether to show the one-time birthday prompt. */
+function shapeProfile<T extends { birthdayDay: number | null; birthdayMonth: number | null; birthdayAskedAt: Date | null }>(u: T) {
+  const { birthdayDay, birthdayMonth, birthdayAskedAt, ...rest } = u;
+  const birthday = serializeBirthday({ birthdayDay, birthdayMonth });
+  return { ...rest, birthday, askBirthday: !birthday && !birthdayAskedAt };
 }

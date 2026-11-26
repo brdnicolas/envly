@@ -47,6 +47,7 @@ export type UserMinAggregateOutputType = {
   slug: string | null
   birthdayDay: number | null
   birthdayMonth: number | null
+  birthdayAskedAt: Date | null
   createdAt: Date | null
 }
 
@@ -61,6 +62,7 @@ export type UserMaxAggregateOutputType = {
   slug: string | null
   birthdayDay: number | null
   birthdayMonth: number | null
+  birthdayAskedAt: Date | null
   createdAt: Date | null
 }
 
@@ -75,6 +77,7 @@ export type UserCountAggregateOutputType = {
   slug: number
   birthdayDay: number
   birthdayMonth: number
+  birthdayAskedAt: number
   createdAt: number
   _all: number
 }
@@ -101,6 +104,7 @@ export type UserMinAggregateInputType = {
   slug?: true
   birthdayDay?: true
   birthdayMonth?: true
+  birthdayAskedAt?: true
   createdAt?: true
 }
 
@@ -115,6 +119,7 @@ export type UserMaxAggregateInputType = {
   slug?: true
   birthdayDay?: true
   birthdayMonth?: true
+  birthdayAskedAt?: true
   createdAt?: true
 }
 
@@ -129,6 +134,7 @@ export type UserCountAggregateInputType = {
   slug?: true
   birthdayDay?: true
   birthdayMonth?: true
+  birthdayAskedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -230,6 +236,7 @@ export type UserGroupByOutputType = {
   slug: string | null
   birthdayDay: number | null
   birthdayMonth: number | null
+  birthdayAskedAt: Date | null
   createdAt: Date
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -267,6 +274,7 @@ export type UserWhereInput = {
   slug?: Prisma.StringNullableFilter<"User"> | string | null
   birthdayDay?: Prisma.IntNullableFilter<"User"> | number | null
   birthdayMonth?: Prisma.IntNullableFilter<"User"> | number | null
+  birthdayAskedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
@@ -298,6 +306,7 @@ export type UserOrderByWithRelationInput = {
   slug?: Prisma.SortOrderInput | Prisma.SortOrder
   birthdayDay?: Prisma.SortOrderInput | Prisma.SortOrder
   birthdayMonth?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthdayAskedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -332,6 +341,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringNullableFilter<"User"> | string | null
   birthdayDay?: Prisma.IntNullableFilter<"User"> | number | null
   birthdayMonth?: Prisma.IntNullableFilter<"User"> | number | null
+  birthdayAskedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
@@ -363,6 +373,7 @@ export type UserOrderByWithAggregationInput = {
   slug?: Prisma.SortOrderInput | Prisma.SortOrder
   birthdayDay?: Prisma.SortOrderInput | Prisma.SortOrder
   birthdayMonth?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthdayAskedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -385,6 +396,7 @@ export type UserScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   birthdayDay?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   birthdayMonth?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  birthdayAskedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
@@ -399,6 +411,7 @@ export type UserCreateInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -430,6 +443,7 @@ export type UserUncheckedCreateInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -461,6 +475,7 @@ export type UserUpdateInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -492,6 +507,7 @@ export type UserUncheckedUpdateInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -523,6 +539,7 @@ export type UserCreateManyInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -537,6 +554,7 @@ export type UserUpdateManyMutationInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -551,6 +569,7 @@ export type UserUncheckedUpdateManyInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -570,6 +589,7 @@ export type UserCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   birthdayDay?: Prisma.SortOrder
   birthdayMonth?: Prisma.SortOrder
+  birthdayAskedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -589,6 +609,7 @@ export type UserMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   birthdayDay?: Prisma.SortOrder
   birthdayMonth?: Prisma.SortOrder
+  birthdayAskedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -603,6 +624,7 @@ export type UserMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   birthdayDay?: Prisma.SortOrder
   birthdayMonth?: Prisma.SortOrder
+  birthdayAskedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -873,6 +895,7 @@ export type UserCreateWithoutAccountsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
@@ -903,6 +926,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
@@ -949,6 +973,7 @@ export type UserUpdateWithoutAccountsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
@@ -979,6 +1004,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
@@ -1009,6 +1035,7 @@ export type UserCreateWithoutSessionsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   collections?: Prisma.CollectionCreateNestedManyWithoutUserInput
@@ -1039,6 +1066,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutUserInput
@@ -1085,6 +1113,7 @@ export type UserUpdateWithoutSessionsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutUserNestedInput
@@ -1115,6 +1144,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutUserNestedInput
@@ -1145,6 +1175,7 @@ export type UserCreateWithoutCollectionsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1175,6 +1206,7 @@ export type UserUncheckedCreateWithoutCollectionsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1221,6 +1253,7 @@ export type UserUpdateWithoutCollectionsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1251,6 +1284,7 @@ export type UserUncheckedUpdateWithoutCollectionsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1281,6 +1315,7 @@ export type UserCreateWithoutCreatedWishesInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1311,6 +1346,7 @@ export type UserUncheckedCreateWithoutCreatedWishesInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1357,6 +1393,7 @@ export type UserUpdateWithoutCreatedWishesInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1387,6 +1424,7 @@ export type UserUncheckedUpdateWithoutCreatedWishesInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1417,6 +1455,7 @@ export type UserCreateWithoutFollowingInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1447,6 +1486,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1482,6 +1522,7 @@ export type UserCreateWithoutFollowersInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1512,6 +1553,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1558,6 +1600,7 @@ export type UserUpdateWithoutFollowingInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1588,6 +1631,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1629,6 +1673,7 @@ export type UserUpdateWithoutFollowersInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1659,6 +1704,7 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1689,6 +1735,7 @@ export type UserCreateWithoutCollectionFollowsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1719,6 +1766,7 @@ export type UserUncheckedCreateWithoutCollectionFollowsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1765,6 +1813,7 @@ export type UserUpdateWithoutCollectionFollowsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1795,6 +1844,7 @@ export type UserUncheckedUpdateWithoutCollectionFollowsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1825,6 +1875,7 @@ export type UserCreateWithoutCollaborationsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1855,6 +1906,7 @@ export type UserUncheckedCreateWithoutCollaborationsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1901,6 +1953,7 @@ export type UserUpdateWithoutCollaborationsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1931,6 +1984,7 @@ export type UserUncheckedUpdateWithoutCollaborationsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1961,6 +2015,7 @@ export type UserCreateWithoutNotificationsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1991,6 +2046,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2037,6 +2093,7 @@ export type UserUpdateWithoutNotificationsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2067,6 +2124,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2097,6 +2155,7 @@ export type UserCreateWithoutOrganizedSantasInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2127,6 +2186,7 @@ export type UserUncheckedCreateWithoutOrganizedSantasInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2173,6 +2233,7 @@ export type UserUpdateWithoutOrganizedSantasInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2203,6 +2264,7 @@ export type UserUncheckedUpdateWithoutOrganizedSantasInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2233,6 +2295,7 @@ export type UserCreateWithoutSantaMembershipsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2263,6 +2326,7 @@ export type UserUncheckedCreateWithoutSantaMembershipsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2298,6 +2362,7 @@ export type UserCreateWithoutSantaGiftsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2328,6 +2393,7 @@ export type UserUncheckedCreateWithoutSantaGiftsInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2374,6 +2440,7 @@ export type UserUpdateWithoutSantaMembershipsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2404,6 +2471,7 @@ export type UserUncheckedUpdateWithoutSantaMembershipsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2445,6 +2513,7 @@ export type UserUpdateWithoutSantaGiftsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2475,6 +2544,7 @@ export type UserUncheckedUpdateWithoutSantaGiftsInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2505,6 +2575,7 @@ export type UserCreateWithoutPushTokensInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2535,6 +2606,7 @@ export type UserUncheckedCreateWithoutPushTokensInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2581,6 +2653,7 @@ export type UserUpdateWithoutPushTokensInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2611,6 +2684,7 @@ export type UserUncheckedUpdateWithoutPushTokensInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2641,6 +2715,7 @@ export type UserCreateWithoutBlockingInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2671,6 +2746,7 @@ export type UserUncheckedCreateWithoutBlockingInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2706,6 +2782,7 @@ export type UserCreateWithoutBlockedByInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2736,6 +2813,7 @@ export type UserUncheckedCreateWithoutBlockedByInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2782,6 +2860,7 @@ export type UserUpdateWithoutBlockingInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2812,6 +2891,7 @@ export type UserUncheckedUpdateWithoutBlockingInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2853,6 +2933,7 @@ export type UserUpdateWithoutBlockedByInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2883,6 +2964,7 @@ export type UserUncheckedUpdateWithoutBlockedByInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2913,6 +2995,7 @@ export type UserCreateWithoutReportsMadeInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2943,6 +3026,7 @@ export type UserUncheckedCreateWithoutReportsMadeInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2978,6 +3062,7 @@ export type UserCreateWithoutReportsReceivedInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -3008,6 +3093,7 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   slug?: string | null
   birthdayDay?: number | null
   birthdayMonth?: number | null
+  birthdayAskedAt?: Date | string | null
   createdAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -3054,6 +3140,7 @@ export type UserUpdateWithoutReportsMadeInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3084,6 +3171,7 @@ export type UserUncheckedUpdateWithoutReportsMadeInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3125,6 +3213,7 @@ export type UserUpdateWithoutReportsReceivedInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3155,6 +3244,7 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthdayDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthdayMonth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  birthdayAskedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3360,6 +3450,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   slug?: boolean
   birthdayDay?: boolean
   birthdayMonth?: boolean
+  birthdayAskedAt?: boolean
   createdAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -3392,6 +3483,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   birthdayDay?: boolean
   birthdayMonth?: boolean
+  birthdayAskedAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -3406,6 +3498,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   birthdayDay?: boolean
   birthdayMonth?: boolean
+  birthdayAskedAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -3420,10 +3513,11 @@ export type UserSelectScalar = {
   slug?: boolean
   birthdayDay?: boolean
   birthdayMonth?: boolean
+  birthdayAskedAt?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "description" | "password" | "slug" | "birthdayDay" | "birthdayMonth" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "description" | "password" | "slug" | "birthdayDay" | "birthdayMonth" | "birthdayAskedAt" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -3482,6 +3576,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
      */
     birthdayDay: number | null
     birthdayMonth: number | null
+    /**
+     * When we asked for the birthday (once, skippable): set even if the user declined.
+     */
+    birthdayAskedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -3933,6 +4031,7 @@ export interface UserFieldRefs {
   readonly slug: Prisma.FieldRef<"User", 'String'>
   readonly birthdayDay: Prisma.FieldRef<"User", 'Int'>
   readonly birthdayMonth: Prisma.FieldRef<"User", 'Int'>
+  readonly birthdayAskedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     

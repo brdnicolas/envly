@@ -147,6 +147,7 @@ export const UserScalarFieldEnum = {
   slug: 'slug',
   birthdayDay: 'birthdayDay',
   birthdayMonth: 'birthdayMonth',
+  birthdayAskedAt: 'birthdayAskedAt',
   createdAt: 'createdAt'
 } as const
 

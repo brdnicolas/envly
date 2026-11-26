@@ -299,6 +299,7 @@ export default function CollectionScreen() {
                     ? {
                         state: myReservations[w.id] ? 'mine' : w.reservation || w.receivedAt ? 'taken' : w.contributions?.length ? 'pool' : 'free',
                         onReserve: () => (w.contributions?.length ? openGroupGift(w) : void reserve(w)),
+                        onPool: () => openGroupGift(w),
                         onCancel: () => void unreserve(w),
                       }
                     : undefined

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, ErrorText, Field, Txt } from '@/components/primitives';
@@ -16,6 +17,15 @@ function BirthdayContent() {
   const toast = useToast();
   const { close } = useSheet();
   const { data } = useApi<User>('/api/profile');
+  // Opened automatically once (prompt=1): record that we asked, so it never shows again, even if skipped.
+  const { prompt } = useLocalSearchParams<{ prompt?: string }>();
+  const prompted = prompt === '1';
+  useEffect(() => {
+    if (!prompted) return;
+    void api('/api/profile', { method: 'PATCH', body: { birthdayAsked: true } })
+      .then(() => invalidate('/api/profile'))
+      .catch(() => {});
+  }, [prompted]);
   const current = data?.birthday;
   const [value, setValue] = useState(current ? `${String(current.day).padStart(2, '0')}/${String(current.month).padStart(2, '0')}` : '');
   const [saving, setSaving] = useState(false);
@@ -41,9 +51,10 @@ function BirthdayContent() {
   return (
     <View style={styles.container}>
       <View style={{ gap: Space.xs }}>
-        <Txt variant="title2">Mon anniversaire</Txt>
+        <Txt variant="title2">{prompted ? 'Quand est votre anniversaire ? 🎂' : 'Mon anniversaire'}</Txt>
         <Txt variant="subhead" color="text2">
-          Vos amis recevront un rappel deux semaines avant pour découvrir vos envies. L’année n’est jamais demandée.
+          Vos amis recevront un rappel deux semaines avant pour découvrir vos envies. Seuls le jour et le mois sont demandés, et c’est
+          facultatif.
         </Txt>
       </View>
       <Field
@@ -56,13 +67,14 @@ function BirthdayContent() {
         placeholder="JJ/MM"
         keyboardType="numbers-and-punctuation"
         maxLength={5}
-        autoFocus
+        autoFocus={!prompted}
         returnKeyType="done"
         onSubmitEditing={() => void save()}
       />
       <ErrorText message={error} />
       <Button title="Enregistrer" onPress={() => void save()} loading={saving} disabled={!value.trim()} />
       {!!current && <Button title="Retirer mon anniversaire" variant="ghost" onPress={() => void save(true)} />}
+      {prompted && !current && <Button title="Je préfère ne pas le dire" variant="ghost" onPress={() => close()} />}
     </View>
   );
 }

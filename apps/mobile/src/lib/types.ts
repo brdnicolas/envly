@@ -6,6 +6,8 @@ export type User = {
   slug: string | null;
   description?: string | null;
   birthday?: Birthday | null;
+  /** Show the one-time "when is your birthday?" prompt. */
+  askBirthday?: boolean;
 };
 
 /** Day + month only (no year, for privacy). */

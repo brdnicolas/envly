@@ -63,6 +63,8 @@ model User {
   /// Birthday without year (privacy): friends get a reminder two weeks before.
   birthdayDay       Int?
   birthdayMonth     Int?
+  /// When we asked for the birthday (once, skippable): set even if the user declined.
+  birthdayAskedAt   DateTime?
   accounts          Account[]
   sessions          Session[]
   collections       Collection[]

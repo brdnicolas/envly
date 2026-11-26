@@ -36,7 +36,7 @@ export function WishCard({
   /** The owner marked it as received. */
   received?: boolean;
   /** Friends' lists: a visible "Réserver" button (free) or "Réservé par vous" (mine). */
-  reservation?: { state: 'free' | 'mine' | 'taken' | 'pool'; onReserve: () => void; onCancel: () => void };
+  reservation?: { state: 'free' | 'mine' | 'taken' | 'pool'; onReserve: () => void; onCancel: () => void; onPool?: () => void };
 }) {
   // Known size → the card has its final height immediately; otherwise measure on load (older wishes).
   const clamp = (r: number) => Math.min(Math.max(r, 0.6), 1.6);
@@ -78,20 +78,35 @@ export function WishCard({
           {wish.title}
         </Txt>
         {reservation?.state === 'free' && (
-          <Pressable
-            onPress={() => {
-              haptic.select();
-              reservation.onReserve();
-            }}
-            hitSlop={4}
-            accessibilityRole="button"
-            accessibilityLabel={`Réserver ${wish.title}`}
-            style={({ pressed }) => [styles.reserveBtn, pressed && { opacity: 0.7 }]}>
-            <Icon name={Icons.gift} size={13} color={GOLD} />
-            <Txt variant="caption" style={{ color: GOLD }}>
-              Réserver
-            </Txt>
-          </Pressable>
+          <View style={styles.freeRow}>
+            <Pressable
+              onPress={() => {
+                haptic.select();
+                reservation.onReserve();
+              }}
+              hitSlop={4}
+              accessibilityRole="button"
+              accessibilityLabel={`Réserver ${wish.title}`}
+              style={({ pressed }) => [styles.reserveBtn, { flex: 1 }, pressed && { opacity: 0.7 }]}>
+              <Icon name={Icons.gift} size={13} color={GOLD} />
+              <Txt variant="caption" style={{ color: GOLD }}>
+                Réserver
+              </Txt>
+            </Pressable>
+            {reservation.onPool && (
+              <Pressable
+                onPress={() => {
+                  haptic.select();
+                  reservation.onPool?.();
+                }}
+                hitSlop={4}
+                accessibilityRole="button"
+                accessibilityLabel={`Offrir ${wish.title} à plusieurs`}
+                style={({ pressed }) => [styles.reserveBtn, styles.poolBtn, pressed && { opacity: 0.7 }]}>
+                <Icon name={Icons.people} size={14} color={GOLD} />
+              </Pressable>
+            )}
+          </View>
         )}
         {reservation?.state === 'pool' && (
           <Pressable
@@ -194,6 +209,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(232,200,114,0.45)',
     backgroundColor: 'rgba(232,200,114,0.08)',
   },
+  freeRow: { flexDirection: 'row', gap: 6 },
+  poolBtn: { width: 40, paddingHorizontal: 0 },
   mineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Space.sm },
   mine: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
