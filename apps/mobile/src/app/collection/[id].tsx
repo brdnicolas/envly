@@ -1,5 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,6 +28,10 @@ export default function CollectionScreen() {
   const toast = useToast();
   const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
   const { data, error, loading, refreshing, refresh, mutate } = useApi<CollectionDetail>(`/api/collections/${id}`);
+  // Opened from a /w/<slug> link: switch to the real id so every action below targets it.
+  useEffect(() => {
+    if (data && data.id !== id) router.setParams({ id: data.id, name: data.name });
+  }, [data, id]);
 
   const { user } = useAuth();
   const myReservations = useMyReservations();

@@ -56,6 +56,8 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true, "max-image-preview": "large" },
   formatDetection: { telephone: false },
+  // Smart App Banner on iOS Safari ("Ouvrir dans l'app" / "Obtenir"), once the App Store id is known.
+  ...(process.env.NEXT_PUBLIC_APP_STORE_ID && { itunes: { appId: process.env.NEXT_PUBLIC_APP_STORE_ID } }),
   other: {
     "apple-mobile-web-app-capable": "yes",
     "mobile-web-app-capable": "yes",
