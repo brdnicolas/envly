@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { DataTransfer } from "@/components/data-transfer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -347,6 +348,10 @@ export default function SettingsPage() {
             </Button>
           </div>
         </section>
+
+        <Separator className="my-8" />
+
+        <DataTransfer />
 
         <Separator className="my-8" />
 

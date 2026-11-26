@@ -5,6 +5,8 @@ export const API_URL = (__DEV__ ? (process.env.EXPO_PUBLIC_API_URL ?? PROD_API) 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
 
+export const authHeaders = (): Record<string, string> => (authToken ? { Authorization: `Bearer ${authToken}` } : {});
+
 export function setAuthToken(token: string | null) {
   authToken = token;
 }
