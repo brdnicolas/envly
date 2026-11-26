@@ -20,11 +20,16 @@ function BirthdayContent() {
   // Opened automatically once (prompt=1): record that we asked, so it never shows again, even if skipped.
   const { prompt } = useLocalSearchParams<{ prompt?: string }>();
   const prompted = prompt === '1';
+  // Whatever the outcome (saved, "je préfère ne pas le dire", swiped away), the prompt is answered
+  // when the sheet closes: record it then, so it never shows again. Not on open: if the app is
+  // killed while the sheet is up, it will simply be asked again next time.
   useEffect(() => {
     if (!prompted) return;
-    void api('/api/profile', { method: 'PATCH', body: { birthdayAsked: true } })
-      .then(() => invalidate('/api/profile'))
-      .catch(() => {});
+    return () => {
+      void api('/api/profile', { method: 'PATCH', body: { birthdayAsked: true } })
+        .then(() => invalidate('/api/profile'))
+        .catch(() => {});
+    };
   }, [prompted]);
   const current = data?.birthday;
   const [value, setValue] = useState(current ? `${String(current.day).padStart(2, '0')}/${String(current.month).padStart(2, '0')}` : '');

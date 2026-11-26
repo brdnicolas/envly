@@ -34,8 +34,13 @@ export default function HomeScreen() {
   // Ask once for the birthday (friends' reminders). Skippable; the server remembers it was asked.
   useEffect(() => {
     if (!profile?.askBirthday || birthdayPromptShown) return;
-    birthdayPromptShown = true;
-    const t = setTimeout(() => router.push({ pathname: '/birthday', params: { prompt: '1' } }), 1200);
+    // The flag is set when the sheet actually opens: an effect cleanup (re-render, dev double effects)
+    // cancelling the timer must not burn the prompt for this launch.
+    const t = setTimeout(() => {
+      if (birthdayPromptShown) return;
+      birthdayPromptShown = true;
+      router.push({ pathname: '/birthday', params: { prompt: '1' } });
+    }, 1200);
     return () => clearTimeout(t);
   }, [profile?.askBirthday]);
   const { data: stats } = useApi<{

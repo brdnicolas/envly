@@ -10,7 +10,7 @@ const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet"
 
 /**
  * One-time "when is your birthday?" dialog (day + month), skippable.
- * The server records that it was asked as soon as it shows, so it never comes back.
+ * Closing it (saved, skipped or dismissed) records on the server that it was asked: it never comes back.
  */
 export function BirthdayPrompt() {
   const [open, setOpen] = useState(false);
@@ -23,19 +23,24 @@ export function BirthdayPrompt() {
     fetch("/api/profile")
       .then((r) => (r.ok ? r.json() : null))
       .then((p) => {
-        if (!alive || !p?.askBirthday) return;
-        setOpen(true);
-        void fetch("/api/profile", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ birthdayAsked: true }),
-        });
+        if (alive && p?.askBirthday) setOpen(true);
       })
       .catch(() => {});
     return () => {
       alive = false;
     };
   }, []);
+
+  // Any close counts as an answer (saving a birthday also records it server-side).
+  function close(next: boolean) {
+    setOpen(next);
+    if (next) return;
+    void fetch("/api/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ birthdayAsked: true }),
+    });
+  }
 
   const maxDay = month ? new Date(2024, +month, 0).getDate() : 31;
 
@@ -58,7 +63,7 @@ export function BirthdayPrompt() {
   const select = "h-11 w-full rounded-xl border border-border bg-background px-3 text-sm";
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={close}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Quand est votre anniversaire ? 🎂</DialogTitle>
@@ -96,7 +101,7 @@ export function BirthdayPrompt() {
             <Button type="submit" className="rounded-xl sm:flex-1" disabled={saving || !day || !month}>
               Enregistrer
             </Button>
-            <Button type="button" variant="ghost" className="rounded-xl sm:flex-1" onClick={() => setOpen(false)}>
+            <Button type="button" variant="ghost" className="rounded-xl sm:flex-1" onClick={() => close(false)}>
               Je préfère ne pas le dire
             </Button>
           </div>
