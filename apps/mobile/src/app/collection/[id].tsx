@@ -84,6 +84,22 @@ export default function CollectionScreen() {
     }
   }
 
+  async function toggleReceived(w: Wish) {
+    if (!data) return;
+    const receivedAt = w.receivedAt ? null : new Date().toISOString();
+    mutate({ ...data, wishes: data.wishes.map((x) => (x.id === w.id ? { ...x, receivedAt } : x)) });
+    try {
+      await updateWish(w.id, { received: !!receivedAt });
+      if (receivedAt) {
+        haptic.success();
+        toast('Reçu 🎁 Vous pouvez dire merci');
+      }
+    } catch (e) {
+      mutate(data);
+      Alert.alert('Erreur', errorMessage(e));
+    }
+  }
+
   async function removeWish(w: Wish) {
     if (!data) return;
     const ok = await confirm('Supprimer ce souhait ?', w.title, 'Supprimer');
@@ -135,13 +151,25 @@ export default function CollectionScreen() {
         { title: 'Détails', icon: 'info.circle', onPress: () => detail(w) },
         ...(mine
           ? [{ title: 'Annuler ma réservation', icon: 'xmark.circle', onPress: () => void unreserve(w) }]
-          : !w.reservation
+          : !w.reservation && !w.receivedAt
             ? [{ title: 'Réserver ce cadeau', icon: 'gift', onPress: () => void reserve(w) }]
             : []),
       ];
     }
     return [
       { title: 'Modifier', icon: 'pencil', onPress: () => detail(w, true) },
+      ...(isOwner
+        ? [
+            {
+              title: w.receivedAt ? 'Pas encore reçu' : 'Marquer comme reçu',
+              icon: w.receivedAt ? 'arrow.uturn.backward' : 'shippingbox',
+              onPress: () => void toggleReceived(w),
+            },
+            ...(w.receivedAt
+              ? [{ title: 'Dire merci', icon: 'heart', onPress: () => router.push({ pathname: '/thanks', params: { wishId: w.id, title: w.title } }) }]
+              : []),
+          ]
+        : []),
       {
         title: w.isPriority ? 'Retirer des favoris' : 'Ajouter aux favoris',
         icon: w.isPriority ? 'star.slash' : 'star',
@@ -253,11 +281,12 @@ export default function CollectionScreen() {
                 href={{ pathname: '/wish/[id]', params: { id: w.id, collectionId: id } }}
                 onPress={w.url ? () => openProduct(w.url!) : undefined}
                 actions={cardActions(w)}
-                reserved={isViewer && !!w.reservation && !myReservations[w.id]}
+                reserved={isViewer && (!!w.reservation || !!w.receivedAt) && !myReservations[w.id]}
+                received={!!w.receivedAt}
                 reservation={
                   isViewer
                     ? {
-                        state: myReservations[w.id] ? 'mine' : w.reservation ? 'taken' : 'free',
+                        state: myReservations[w.id] ? 'mine' : w.reservation || w.receivedAt ? 'taken' : 'free',
                         onReserve: () => void reserve(w),
                         onCancel: () => void unreserve(w),
                       }

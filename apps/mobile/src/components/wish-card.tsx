@@ -24,6 +24,7 @@ export function WishCard({
   onPress,
   actions,
   reserved,
+  received,
   reservation,
 }: {
   wish: Wish;
@@ -32,6 +33,8 @@ export function WishCard({
   actions: CardAction[];
   /** Friends' lists: someone already offers this gift. */
   reserved?: boolean;
+  /** The owner marked it as received. */
+  received?: boolean;
   /** Friends' lists: a visible "Réserver" button (free) or "Réservé par vous" (mine). */
   reservation?: { state: 'free' | 'mine' | 'taken'; onReserve: () => void; onCancel: () => void };
 }) {
@@ -105,11 +108,11 @@ export function WishCard({
             </Pressable>
           </View>
         )}
-        {reserved && reservation?.state !== 'mine' && (
+        {(received || reserved) && reservation?.state !== 'mine' && (
           <View style={styles.reserved}>
-            <Icon name={Icons.check} size={11} color={Colors.text2} weight="semibold" />
+            <Icon name={received ? Icons.gift : Icons.check} size={11} color={Colors.text2} weight="semibold" />
             <Txt variant="micro" color="text2">
-              Réservé
+              {received ? (reservation ? 'Déjà offert' : 'Reçu') : 'Réservé'}
             </Txt>
           </View>
         )}

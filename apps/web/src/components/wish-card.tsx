@@ -5,7 +5,8 @@ import { WishImage } from "@/components/wish-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CancelReservationButton, getReservationToken } from "@/components/reserve-dialog";
-import { Pencil, Trash2, Star } from "lucide-react";
+import { Gift, Heart, Pencil, Trash2, Star } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface Wish {
@@ -20,6 +21,7 @@ interface Wish {
   price: number | null;
   isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
+  receivedAt?: string | null;
 }
 
 function getDomain(url: string | null) {
@@ -46,6 +48,7 @@ export function WishCard({
   onCancelReservation,
   creatorName,
   hideReservation = false,
+  manageReceived = false,
 }: {
   wish: Wish;
   isOwner: boolean;
@@ -56,7 +59,40 @@ export function WishCard({
   onCancelReservation?: (wishId: string) => void;
   creatorName?: string;
   hideReservation?: boolean;
+  /** The list owner can mark the gift as received, then thank the (anonymous) giver. */
+  manageReceived?: boolean;
 }) {
+  const [received, setReceived] = useState(!!wish.receivedAt);
+
+  const toggleReceived = async () => {
+    const next = !received;
+    setReceived(next);
+    const res = await fetch(`/api/wishes/${wish.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ received: next }),
+    });
+    if (!res.ok) {
+      setReceived(!next);
+      toast.error("Une erreur est survenue");
+    } else if (next) {
+      toast.success("Marqué comme reçu 🎁 Vous pouvez maintenant dire merci.");
+    }
+  };
+
+  const sendThanks = async () => {
+    const message = prompt("Votre message de remerciement (la personne restera anonyme pour vous) :");
+    if (!message?.trim()) return;
+    const res = await fetch(`/api/wishes/${wish.id}/thanks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) toast.success("Merci envoyé 💛");
+    else toast.error(data.error || "Une erreur est survenue");
+  };
+
   const handleDelete = () => {
     if (!confirm("Supprimer ce souhait ?")) return;
     onDeleted?.(wish.id);
@@ -66,7 +102,7 @@ export function WishCard({
     });
   };
 
-  const isReserved = !!wish.reservation;
+  const isReserved = !!wish.reservation || (!isOwner && received);
   const domain = getDomain(wish.url);
 
   return (
@@ -138,11 +174,11 @@ export function WishCard({
         </div>
       )}
 
-      {/* Reserved badge */}
+      {/* Reserved / received badge */}
       {!isOwner && isReserved && (
         <div className="absolute top-2 left-2">
           <Badge variant="secondary" className="text-[10px] shadow-sm px-2 py-0.5 rounded-lg backdrop-blur-sm">
-            Réservé par {wish.reservation?.reservedBy}
+            {received ? "Déjà offert" : `Réservé par ${wish.reservation?.reservedBy}`}
           </Badge>
         </div>
       )}
@@ -177,6 +213,25 @@ export function WishCard({
             </span>
           )}
         </div>
+
+        {manageReceived && (
+          <div className="mt-2 flex gap-1.5">
+            <Button
+              variant={received ? "secondary" : "outline"}
+              size="sm"
+              className="h-7 flex-1 rounded-xl text-[11px]"
+              onClick={toggleReceived}
+              title={received ? "Annuler « reçu »" : "Marquer comme reçu"}
+            >
+              <Gift className="h-3 w-3" /> {received ? "Reçu" : "Marquer reçu"}
+            </Button>
+            {received && (
+              <Button variant="outline" size="sm" className="h-7 rounded-xl text-[11px]" onClick={sendThanks}>
+                <Heart className="h-3 w-3" /> Merci
+              </Button>
+            )}
+          </div>
+        )}
 
         {!isOwner && !hideReservation && !isReserved && (
           <Button

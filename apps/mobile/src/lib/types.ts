@@ -39,6 +39,8 @@ export type Wish = {
   imageHeight?: number | null;
   price: number | null;
   isPriority: boolean;
+  /** Owner marked the gift as received ("Déjà offert" for friends). */
+  receivedAt?: string | null;
   collectionId: string;
   creator?: { id: string; name: string | null } | null;
   /** Only sent to viewers (friends), never to the owner. */

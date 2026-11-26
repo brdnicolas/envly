@@ -114,6 +114,8 @@ model Wish {
   price            Float?
   position         Int          @default(0)
   isPriority       Boolean      @default(false)
+  /// Set by the owner once the gift arrived: shown as "Déjà offert" and unlocks the thank-you note.
+  receivedAt       DateTime?
   collectionId     String
   creatorId        String?
   collection       Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
@@ -128,8 +130,15 @@ model Reservation {
   wishId     String   @unique
   reservedBy String
   token      String
+  /// Signed-in reserver, only used to deliver the owner's thank-you. Never sent to the owner.
+  reserverId String?
+  /// Owner's thank-you note, delivered to the reserver without revealing who they are.
+  thanks     String?
+  thankedAt  DateTime?
   wish       Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
+
+  @@index([reserverId])
 }
 
 model UserFollow {
@@ -163,6 +172,7 @@ enum CollaboratorStatus {
 enum NotificationType {
   COLLABORATION_INVITE
   NEW_FOLLOWER
+  THANKS
 }
 
 model CollectionCollaborator {

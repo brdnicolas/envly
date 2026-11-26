@@ -29,6 +29,7 @@ interface Wish {
   collectionId?: string;
   creatorId?: string | null;
   creator?: { id: string; name: string | null } | null;
+  receivedAt?: string | null;
 }
 
 interface CollaboratorUser {
@@ -271,6 +272,7 @@ export default function CollectionPage() {
           wish={wish}
           isOwner={isOwner || canEditWish(wish)}
           hideReservation
+          manageReceived={isOwner}
           onDeleted={handleWishDeleted}
           onEdit={(w) => setEditingWish(w)}
           onTogglePriority={handleTogglePriority}

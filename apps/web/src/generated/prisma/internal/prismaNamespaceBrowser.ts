@@ -179,6 +179,7 @@ export const WishScalarFieldEnum = {
   price: 'price',
   position: 'position',
   isPriority: 'isPriority',
+  receivedAt: 'receivedAt',
   collectionId: 'collectionId',
   creatorId: 'creatorId',
   createdAt: 'createdAt',
@@ -193,6 +194,9 @@ export const ReservationScalarFieldEnum = {
   wishId: 'wishId',
   reservedBy: 'reservedBy',
   token: 'token',
+  reserverId: 'reserverId',
+  thanks: 'thanks',
+  thankedAt: 'thankedAt',
   createdAt: 'createdAt'
 } as const
 

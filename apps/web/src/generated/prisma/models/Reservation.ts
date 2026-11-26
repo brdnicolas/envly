@@ -29,6 +29,9 @@ export type ReservationMinAggregateOutputType = {
   wishId: string | null
   reservedBy: string | null
   token: string | null
+  reserverId: string | null
+  thanks: string | null
+  thankedAt: Date | null
   createdAt: Date | null
 }
 
@@ -37,6 +40,9 @@ export type ReservationMaxAggregateOutputType = {
   wishId: string | null
   reservedBy: string | null
   token: string | null
+  reserverId: string | null
+  thanks: string | null
+  thankedAt: Date | null
   createdAt: Date | null
 }
 
@@ -45,6 +51,9 @@ export type ReservationCountAggregateOutputType = {
   wishId: number
   reservedBy: number
   token: number
+  reserverId: number
+  thanks: number
+  thankedAt: number
   createdAt: number
   _all: number
 }
@@ -55,6 +64,9 @@ export type ReservationMinAggregateInputType = {
   wishId?: true
   reservedBy?: true
   token?: true
+  reserverId?: true
+  thanks?: true
+  thankedAt?: true
   createdAt?: true
 }
 
@@ -63,6 +75,9 @@ export type ReservationMaxAggregateInputType = {
   wishId?: true
   reservedBy?: true
   token?: true
+  reserverId?: true
+  thanks?: true
+  thankedAt?: true
   createdAt?: true
 }
 
@@ -71,6 +86,9 @@ export type ReservationCountAggregateInputType = {
   wishId?: true
   reservedBy?: true
   token?: true
+  reserverId?: true
+  thanks?: true
+  thankedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -152,6 +170,9 @@ export type ReservationGroupByOutputType = {
   wishId: string
   reservedBy: string
   token: string
+  reserverId: string | null
+  thanks: string | null
+  thankedAt: Date | null
   createdAt: Date
   _count: ReservationCountAggregateOutputType | null
   _min: ReservationMinAggregateOutputType | null
@@ -181,6 +202,9 @@ export type ReservationWhereInput = {
   wishId?: Prisma.StringFilter<"Reservation"> | string
   reservedBy?: Prisma.StringFilter<"Reservation"> | string
   token?: Prisma.StringFilter<"Reservation"> | string
+  reserverId?: Prisma.StringNullableFilter<"Reservation"> | string | null
+  thanks?: Prisma.StringNullableFilter<"Reservation"> | string | null
+  thankedAt?: Prisma.DateTimeNullableFilter<"Reservation"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   wish?: Prisma.XOR<Prisma.WishScalarRelationFilter, Prisma.WishWhereInput>
 }
@@ -190,6 +214,9 @@ export type ReservationOrderByWithRelationInput = {
   wishId?: Prisma.SortOrder
   reservedBy?: Prisma.SortOrder
   token?: Prisma.SortOrder
+  reserverId?: Prisma.SortOrderInput | Prisma.SortOrder
+  thanks?: Prisma.SortOrderInput | Prisma.SortOrder
+  thankedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   wish?: Prisma.WishOrderByWithRelationInput
 }
@@ -202,6 +229,9 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReservationWhereInput | Prisma.ReservationWhereInput[]
   reservedBy?: Prisma.StringFilter<"Reservation"> | string
   token?: Prisma.StringFilter<"Reservation"> | string
+  reserverId?: Prisma.StringNullableFilter<"Reservation"> | string | null
+  thanks?: Prisma.StringNullableFilter<"Reservation"> | string | null
+  thankedAt?: Prisma.DateTimeNullableFilter<"Reservation"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   wish?: Prisma.XOR<Prisma.WishScalarRelationFilter, Prisma.WishWhereInput>
 }, "id" | "wishId">
@@ -211,6 +241,9 @@ export type ReservationOrderByWithAggregationInput = {
   wishId?: Prisma.SortOrder
   reservedBy?: Prisma.SortOrder
   token?: Prisma.SortOrder
+  reserverId?: Prisma.SortOrderInput | Prisma.SortOrder
+  thanks?: Prisma.SortOrderInput | Prisma.SortOrder
+  thankedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ReservationCountOrderByAggregateInput
   _max?: Prisma.ReservationMaxOrderByAggregateInput
@@ -225,6 +258,9 @@ export type ReservationScalarWhereWithAggregatesInput = {
   wishId?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   reservedBy?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   token?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
+  reserverId?: Prisma.StringNullableWithAggregatesFilter<"Reservation"> | string | null
+  thanks?: Prisma.StringNullableWithAggregatesFilter<"Reservation"> | string | null
+  thankedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Reservation"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
 }
 
@@ -232,6 +268,9 @@ export type ReservationCreateInput = {
   id?: string
   reservedBy: string
   token: string
+  reserverId?: string | null
+  thanks?: string | null
+  thankedAt?: Date | string | null
   createdAt?: Date | string
   wish: Prisma.WishCreateNestedOneWithoutReservationInput
 }
@@ -241,6 +280,9 @@ export type ReservationUncheckedCreateInput = {
   wishId: string
   reservedBy: string
   token: string
+  reserverId?: string | null
+  thanks?: string | null
+  thankedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -248,6 +290,9 @@ export type ReservationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wish?: Prisma.WishUpdateOneRequiredWithoutReservationNestedInput
 }
@@ -257,6 +302,9 @@ export type ReservationUncheckedUpdateInput = {
   wishId?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -265,6 +313,9 @@ export type ReservationCreateManyInput = {
   wishId: string
   reservedBy: string
   token: string
+  reserverId?: string | null
+  thanks?: string | null
+  thankedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -272,6 +323,9 @@ export type ReservationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -280,6 +334,9 @@ export type ReservationUncheckedUpdateManyInput = {
   wishId?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -293,6 +350,9 @@ export type ReservationCountOrderByAggregateInput = {
   wishId?: Prisma.SortOrder
   reservedBy?: Prisma.SortOrder
   token?: Prisma.SortOrder
+  reserverId?: Prisma.SortOrder
+  thanks?: Prisma.SortOrder
+  thankedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -301,6 +361,9 @@ export type ReservationMaxOrderByAggregateInput = {
   wishId?: Prisma.SortOrder
   reservedBy?: Prisma.SortOrder
   token?: Prisma.SortOrder
+  reserverId?: Prisma.SortOrder
+  thanks?: Prisma.SortOrder
+  thankedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -309,6 +372,9 @@ export type ReservationMinOrderByAggregateInput = {
   wishId?: Prisma.SortOrder
   reservedBy?: Prisma.SortOrder
   token?: Prisma.SortOrder
+  reserverId?: Prisma.SortOrder
+  thanks?: Prisma.SortOrder
+  thankedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -348,6 +414,9 @@ export type ReservationCreateWithoutWishInput = {
   id?: string
   reservedBy: string
   token: string
+  reserverId?: string | null
+  thanks?: string | null
+  thankedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -355,6 +424,9 @@ export type ReservationUncheckedCreateWithoutWishInput = {
   id?: string
   reservedBy: string
   token: string
+  reserverId?: string | null
+  thanks?: string | null
+  thankedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -378,6 +450,9 @@ export type ReservationUpdateWithoutWishInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -385,6 +460,9 @@ export type ReservationUncheckedUpdateWithoutWishInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservedBy?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
+  reserverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thankedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -395,6 +473,9 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   wishId?: boolean
   reservedBy?: boolean
   token?: boolean
+  reserverId?: boolean
+  thanks?: boolean
+  thankedAt?: boolean
   createdAt?: boolean
   wish?: boolean | Prisma.WishDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reservation"]>
@@ -404,6 +485,9 @@ export type ReservationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   wishId?: boolean
   reservedBy?: boolean
   token?: boolean
+  reserverId?: boolean
+  thanks?: boolean
+  thankedAt?: boolean
   createdAt?: boolean
   wish?: boolean | Prisma.WishDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reservation"]>
@@ -413,6 +497,9 @@ export type ReservationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   wishId?: boolean
   reservedBy?: boolean
   token?: boolean
+  reserverId?: boolean
+  thanks?: boolean
+  thankedAt?: boolean
   createdAt?: boolean
   wish?: boolean | Prisma.WishDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reservation"]>
@@ -422,10 +509,13 @@ export type ReservationSelectScalar = {
   wishId?: boolean
   reservedBy?: boolean
   token?: boolean
+  reserverId?: boolean
+  thanks?: boolean
+  thankedAt?: boolean
   createdAt?: boolean
 }
 
-export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wishId" | "reservedBy" | "token" | "createdAt", ExtArgs["result"]["reservation"]>
+export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wishId" | "reservedBy" | "token" | "reserverId" | "thanks" | "thankedAt" | "createdAt", ExtArgs["result"]["reservation"]>
 export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   wish?: boolean | Prisma.WishDefaultArgs<ExtArgs>
 }
@@ -446,6 +536,15 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     wishId: string
     reservedBy: string
     token: string
+    /**
+     * Signed-in reserver, only used to deliver the owner's thank-you. Never sent to the owner.
+     */
+    reserverId: string | null
+    /**
+     * Owner's thank-you note, delivered to the reserver without revealing who they are.
+     */
+    thanks: string | null
+    thankedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["reservation"]>
   composites: {}
@@ -875,6 +974,9 @@ export interface ReservationFieldRefs {
   readonly wishId: Prisma.FieldRef<"Reservation", 'String'>
   readonly reservedBy: Prisma.FieldRef<"Reservation", 'String'>
   readonly token: Prisma.FieldRef<"Reservation", 'String'>
+  readonly reserverId: Prisma.FieldRef<"Reservation", 'String'>
+  readonly thanks: Prisma.FieldRef<"Reservation", 'String'>
+  readonly thankedAt: Prisma.FieldRef<"Reservation", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Reservation", 'DateTime'>
 }
     

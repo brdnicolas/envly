@@ -54,6 +54,7 @@ export async function PATCH(
         ...(imageChanged && { imageWidth: size?.width ?? null, imageHeight: size?.height ?? null }),
         ...(body.price !== undefined && { price: body.price ? parseFloat(body.price) : null }),
         ...(body.isPriority !== undefined && { isPriority: body.isPriority }),
+        ...(body.received !== undefined && { receivedAt: body.received ? (wish.receivedAt ?? new Date()) : null }),
         ...(body.collectionId !== undefined && { collectionId: body.collectionId }),
       },
     }),

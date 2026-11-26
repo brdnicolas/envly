@@ -114,7 +114,9 @@ export default async function PublicWishlistPage({
     imageOriginalUrl: wish.imageOriginalUrl,
     price: wish.price,
     isPriority: wish.isPriority,
-    reservation: isOwner || isCollaborator ? null : wish.reservation,
+    receivedAt: wish.receivedAt ? wish.receivedAt.toISOString() : null,
+    // Only the display name: the token (which cancels the reservation) and the reserver stay server-side.
+    reservation: isOwner || isCollaborator || !wish.reservation ? null : { reservedBy: wish.reservation.reservedBy },
   }));
 
   const recentFollowers = collection.followers.map((f) => f.user);

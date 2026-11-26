@@ -52,6 +52,7 @@ export type WishMinAggregateOutputType = {
   price: number | null
   position: number | null
   isPriority: boolean | null
+  receivedAt: Date | null
   collectionId: string | null
   creatorId: string | null
   createdAt: Date | null
@@ -70,6 +71,7 @@ export type WishMaxAggregateOutputType = {
   price: number | null
   position: number | null
   isPriority: boolean | null
+  receivedAt: Date | null
   collectionId: string | null
   creatorId: string | null
   createdAt: Date | null
@@ -88,6 +90,7 @@ export type WishCountAggregateOutputType = {
   price: number
   position: number
   isPriority: number
+  receivedAt: number
   collectionId: number
   creatorId: number
   createdAt: number
@@ -122,6 +125,7 @@ export type WishMinAggregateInputType = {
   price?: true
   position?: true
   isPriority?: true
+  receivedAt?: true
   collectionId?: true
   creatorId?: true
   createdAt?: true
@@ -140,6 +144,7 @@ export type WishMaxAggregateInputType = {
   price?: true
   position?: true
   isPriority?: true
+  receivedAt?: true
   collectionId?: true
   creatorId?: true
   createdAt?: true
@@ -158,6 +163,7 @@ export type WishCountAggregateInputType = {
   price?: true
   position?: true
   isPriority?: true
+  receivedAt?: true
   collectionId?: true
   creatorId?: true
   createdAt?: true
@@ -263,6 +269,7 @@ export type WishGroupByOutputType = {
   price: number | null
   position: number
   isPriority: boolean
+  receivedAt: Date | null
   collectionId: string
   creatorId: string | null
   createdAt: Date
@@ -304,6 +311,7 @@ export type WishWhereInput = {
   price?: Prisma.FloatNullableFilter<"Wish"> | number | null
   position?: Prisma.IntFilter<"Wish"> | number
   isPriority?: Prisma.BoolFilter<"Wish"> | boolean
+  receivedAt?: Prisma.DateTimeNullableFilter<"Wish"> | Date | string | null
   collectionId?: Prisma.StringFilter<"Wish"> | string
   creatorId?: Prisma.StringNullableFilter<"Wish"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Wish"> | Date | string
@@ -325,6 +333,7 @@ export type WishOrderByWithRelationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   isPriority?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -349,6 +358,7 @@ export type WishWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.FloatNullableFilter<"Wish"> | number | null
   position?: Prisma.IntFilter<"Wish"> | number
   isPriority?: Prisma.BoolFilter<"Wish"> | boolean
+  receivedAt?: Prisma.DateTimeNullableFilter<"Wish"> | Date | string | null
   collectionId?: Prisma.StringFilter<"Wish"> | string
   creatorId?: Prisma.StringNullableFilter<"Wish"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Wish"> | Date | string
@@ -370,6 +380,7 @@ export type WishOrderByWithAggregationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   isPriority?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -396,6 +407,7 @@ export type WishScalarWhereWithAggregatesInput = {
   price?: Prisma.FloatNullableWithAggregatesFilter<"Wish"> | number | null
   position?: Prisma.IntWithAggregatesFilter<"Wish"> | number
   isPriority?: Prisma.BoolWithAggregatesFilter<"Wish"> | boolean
+  receivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Wish"> | Date | string | null
   collectionId?: Prisma.StringWithAggregatesFilter<"Wish"> | string
   creatorId?: Prisma.StringNullableWithAggregatesFilter<"Wish"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Wish"> | Date | string
@@ -414,6 +426,7 @@ export type WishCreateInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
@@ -433,6 +446,7 @@ export type WishUncheckedCreateInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   collectionId: string
   creatorId?: string | null
   createdAt?: Date | string
@@ -452,6 +466,7 @@ export type WishUpdateInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
@@ -471,6 +486,7 @@ export type WishUncheckedUpdateInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -490,6 +506,7 @@ export type WishCreateManyInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   collectionId: string
   creatorId?: string | null
   createdAt?: Date | string
@@ -508,6 +525,7 @@ export type WishUpdateManyMutationInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -524,6 +542,7 @@ export type WishUncheckedUpdateManyInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -552,6 +571,7 @@ export type WishCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   position?: Prisma.SortOrder
   isPriority?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -577,6 +597,7 @@ export type WishMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   position?: Prisma.SortOrder
   isPriority?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -595,6 +616,7 @@ export type WishMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   position?: Prisma.SortOrder
   isPriority?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -739,6 +761,7 @@ export type WishCreateWithoutCreatorInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
@@ -757,6 +780,7 @@ export type WishUncheckedCreateWithoutCreatorInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   collectionId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -804,6 +828,7 @@ export type WishScalarWhereInput = {
   price?: Prisma.FloatNullableFilter<"Wish"> | number | null
   position?: Prisma.IntFilter<"Wish"> | number
   isPriority?: Prisma.BoolFilter<"Wish"> | boolean
+  receivedAt?: Prisma.DateTimeNullableFilter<"Wish"> | Date | string | null
   collectionId?: Prisma.StringFilter<"Wish"> | string
   creatorId?: Prisma.StringNullableFilter<"Wish"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Wish"> | Date | string
@@ -822,6 +847,7 @@ export type WishCreateWithoutCollectionInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   creator?: Prisma.UserCreateNestedOneWithoutCreatedWishesInput
@@ -840,6 +866,7 @@ export type WishUncheckedCreateWithoutCollectionInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   creatorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -884,6 +911,7 @@ export type WishCreateWithoutReservationInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
@@ -902,6 +930,7 @@ export type WishUncheckedCreateWithoutReservationInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   collectionId: string
   creatorId?: string | null
   createdAt?: Date | string
@@ -936,6 +965,7 @@ export type WishUpdateWithoutReservationInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
@@ -954,6 +984,7 @@ export type WishUncheckedUpdateWithoutReservationInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -972,6 +1003,7 @@ export type WishCreateManyCreatorInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   collectionId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -989,6 +1021,7 @@ export type WishUpdateWithoutCreatorInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
@@ -1007,6 +1040,7 @@ export type WishUncheckedUpdateWithoutCreatorInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1025,6 +1059,7 @@ export type WishUncheckedUpdateManyWithoutCreatorInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1042,6 +1077,7 @@ export type WishCreateManyCollectionInput = {
   price?: number | null
   position?: number
   isPriority?: boolean
+  receivedAt?: Date | string | null
   creatorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1059,6 +1095,7 @@ export type WishUpdateWithoutCollectionInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneWithoutCreatedWishesNestedInput
@@ -1077,6 +1114,7 @@ export type WishUncheckedUpdateWithoutCollectionInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1095,6 +1133,7 @@ export type WishUncheckedUpdateManyWithoutCollectionInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1114,6 +1153,7 @@ export type WishSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   price?: boolean
   position?: boolean
   isPriority?: boolean
+  receivedAt?: boolean
   collectionId?: boolean
   creatorId?: boolean
   createdAt?: boolean
@@ -1135,6 +1175,7 @@ export type WishSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   price?: boolean
   position?: boolean
   isPriority?: boolean
+  receivedAt?: boolean
   collectionId?: boolean
   creatorId?: boolean
   createdAt?: boolean
@@ -1155,6 +1196,7 @@ export type WishSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   price?: boolean
   position?: boolean
   isPriority?: boolean
+  receivedAt?: boolean
   collectionId?: boolean
   creatorId?: boolean
   createdAt?: boolean
@@ -1175,13 +1217,14 @@ export type WishSelectScalar = {
   price?: boolean
   position?: boolean
   isPriority?: boolean
+  receivedAt?: boolean
   collectionId?: boolean
   creatorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WishOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "title" | "description" | "imageUrl" | "imageOriginalUrl" | "imageWidth" | "imageHeight" | "price" | "position" | "isPriority" | "collectionId" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["wish"]>
+export type WishOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "title" | "description" | "imageUrl" | "imageOriginalUrl" | "imageWidth" | "imageHeight" | "price" | "position" | "isPriority" | "receivedAt" | "collectionId" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["wish"]>
 export type WishInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   creator?: boolean | Prisma.Wish$creatorArgs<ExtArgs>
@@ -1218,6 +1261,10 @@ export type $WishPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     price: number | null
     position: number
     isPriority: boolean
+    /**
+     * Set by the owner once the gift arrived: shown as "Déjà offert" and unlocks the thank-you note.
+     */
+    receivedAt: Date | null
     collectionId: string
     creatorId: string | null
     createdAt: Date
@@ -1659,6 +1706,7 @@ export interface WishFieldRefs {
   readonly price: Prisma.FieldRef<"Wish", 'Float'>
   readonly position: Prisma.FieldRef<"Wish", 'Int'>
   readonly isPriority: Prisma.FieldRef<"Wish", 'Boolean'>
+  readonly receivedAt: Prisma.FieldRef<"Wish", 'DateTime'>
   readonly collectionId: Prisma.FieldRef<"Wish", 'String'>
   readonly creatorId: Prisma.FieldRef<"Wish", 'String'>
   readonly createdAt: Prisma.FieldRef<"Wish", 'DateTime'>
