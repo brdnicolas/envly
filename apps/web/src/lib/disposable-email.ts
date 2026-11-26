@@ -6,7 +6,10 @@ import wildcards from "disposable-email-domains/wildcard.json";
  * `disposable-email-domains` list (~120k domains + wildcard providers). Update with `yarn up disposable-email-domains`.
  * Apple's "Hide My Email" relay (privaterelay.appleid.com) is a real, persistent inbox: always allowed.
  */
-const BLOCKED = new Set<string>(domains);
+/** Our own additions: throwaway services the community list doesn't know (yet). Add the exact domain after "@". */
+const EXTRA_BLOCKED = ["emailkeep.com", "emailkeep.fr", "emailkeep.net", "emailkeep.org", "emailkeep.io", "emailkeep.email", "emailkeep.app"];
+
+const BLOCKED = new Set<string>([...domains, ...EXTRA_BLOCKED]);
 const ALLOWED = new Set(["privaterelay.appleid.com"]);
 
 export function isDisposableEmail(email: string): boolean {
