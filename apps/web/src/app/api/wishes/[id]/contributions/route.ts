@@ -47,7 +47,9 @@ export async function POST(req: Request, { params }: Ctx) {
 
   const body = await req.json().catch(() => ({}));
   const name = typeof body.name === "string" ? body.name.trim().slice(0, 60) : "";
-  const amount = Math.round(Number(body.amount) * 100) / 100;
+  // Accept 20, 20.5, "20,50" or "20 €".
+  const raw = typeof body.amount === "string" ? body.amount.replace(/[\s€]/g, "").replace(",", ".") : body.amount;
+  const amount = Math.round(Number(raw) * 100) / 100;
   if (!name) return NextResponse.json({ error: "Votre nom est requis" }, { status: 400 });
   if (!Number.isFinite(amount) || amount <= 0 || amount > 100_000) {
     return NextResponse.json({ error: "Montant invalide" }, { status: 400 });
