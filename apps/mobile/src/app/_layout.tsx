@@ -75,6 +75,7 @@ function App() {
             <Stack.Screen name="index" />
             <Stack.Screen name="collection/[id]" />
             <Stack.Screen name="friends" />
+            <Stack.Screen name="discover" />
             <Stack.Screen name="user/[id]" />
             <Stack.Screen name="friends-search" options={SHEET} />
             <Stack.Screen name="blocked" options={SHEET} />

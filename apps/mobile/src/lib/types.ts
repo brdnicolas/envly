@@ -122,7 +122,38 @@ export type FeedWish = {
   owner: { id: string; name: string | null; image: string | null };
 };
 
-export type FriendsHome = { people: Friend[]; feed: FeedWish[] };
+/** A friend's birthday or a dated public list coming up. */
+export type UpcomingEvent = {
+  kind: 'birthday' | 'event';
+  date: string;
+  days: number;
+  user: { id: string; name: string | null; image: string | null };
+  collection: { id: string; name: string } | null;
+};
+
+export type NewList = {
+  id: string;
+  name: string;
+  createdAt: string;
+  _count: { wishes: number };
+  wishes: { imageUrl: string | null }[];
+  owner: { id: string; name: string | null; image: string | null };
+};
+
+export type FriendsHome = { people: Friend[]; feed: FeedWish[]; upcoming?: UpcomingEvent[]; newLists?: NewList[] };
+
+/** Gift idea from the "Découvrir" feed: anonymous, no list nor owner. */
+export type DiscoverItem = {
+  id: string;
+  title: string;
+  url: string | null;
+  imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  price: number | null;
+  popularity: number;
+};
+export type DiscoverFeed = { budgets: { key: string; label: string }[]; items: DiscoverItem[] };
 
 export type PublicProfile = {
   id: string;

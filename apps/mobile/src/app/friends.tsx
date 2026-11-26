@@ -12,7 +12,7 @@ import { formatPrice } from '@/lib/api';
 import { firstName, timeAgo } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
 import { thumb } from '@/lib/image';
-import type { FeedWish, Friend, FriendsHome } from '@/lib/types';
+import type { FeedWish, Friend, FriendsHome, NewList, UpcomingEvent } from '@/lib/types';
 
 const GOLD = '#E8C872';
 const GAP = 10;
@@ -33,6 +33,8 @@ export default function FriendsScreen() {
   const { data, error, loading, refreshing, refresh } = useApi<FriendsHome>('/api/friends');
   const people = data?.people ?? [];
   const feed = data?.feed ?? [];
+  const upcoming = data?.upcoming ?? [];
+  const newLists = data?.newLists ?? [];
   const tileWidth = (width - Space.lg * 2 - GAP) / 2;
 
   return (
@@ -86,6 +88,54 @@ export default function FriendsScreen() {
               <Icon name={Icons.chevronRight} size={13} color={Colors.text3} />
             </Pressable>
 
+            {/* Gift ideas */}
+            <Pressable
+              onPress={() => router.push('/discover')}
+              accessibilityRole="button"
+              style={({ pressed }) => [styles.santa, styles.discover, pressed && { opacity: 0.8 }]}>
+              <View style={styles.santaIcon}>
+                <Icon name={Icons.sparkles} size={18} color={GOLD} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Txt variant="bodyMedium">Découvrir des idées cadeaux</Txt>
+                <Txt variant="footnote" color="text2">
+                  Les produits les plus ajoutés aux listes, par budget.
+                </Txt>
+              </View>
+              <Icon name={Icons.chevronRight} size={13} color={Colors.text3} />
+            </Pressable>
+
+            {/* Birthdays and events coming up */}
+            {upcoming.length > 0 && (
+              <>
+                <View style={styles.sectionHead}>
+                  <Txt variant="title2">À venir</Txt>
+                  <Txt variant="footnote" color="text3">
+                    Anniversaires et événements de vos amis
+                  </Txt>
+                </View>
+                <View style={{ paddingHorizontal: Space.lg, gap: Space.sm }}>
+                  {upcoming.map((e) => (
+                    <UpcomingRow key={`${e.kind}-${e.collection?.id ?? e.user.id}`} event={e} />
+                  ))}
+                </View>
+              </>
+            )}
+
+            {/* Lists created lately */}
+            {newLists.length > 0 && (
+              <>
+                <View style={styles.sectionHead}>
+                  <Txt variant="title2">Nouvelles listes</Txt>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: Space.lg, gap: Space.md }}>
+                  {newLists.map((l) => (
+                    <NewListCard key={l.id} list={l} />
+                  ))}
+                </ScrollView>
+              </>
+            )}
+
             {/* What they wished for lately */}
             <View style={styles.sectionHead}>
               <Txt variant="title2">Nouveautés</Txt>
@@ -104,6 +154,55 @@ export default function FriendsScreen() {
         )}
       </ScrollView>
     </View>
+  );
+}
+
+function UpcomingRow({ event: e }: { event: UpcomingEvent }) {
+  const when = e.days === 0 ? 'Aujourd’hui' : e.days === 1 ? 'Demain' : `Dans ${e.days} jours`;
+  const open = () =>
+    e.collection
+      ? router.push({ pathname: '/collection/[id]', params: { id: e.collection.id, name: e.collection.name } })
+      : openProfile(e.user);
+  return (
+    <Pressable onPress={open} style={({ pressed }) => [styles.upcoming, pressed && { opacity: 0.85 }]}>
+      <Avatar uri={e.user.image} name={e.user.name} size={40} />
+      <View style={{ flex: 1, gap: 2 }}>
+        <Txt variant="bodyMedium" numberOfLines={1}>
+          {e.kind === 'birthday' ? `🎂 Anniversaire de ${firstName(e.user.name) || 'votre ami'}` : `🎁 ${e.collection?.name}`}
+        </Txt>
+        <Txt variant="footnote" color="text2" numberOfLines={1}>
+          {e.kind === 'event' ? `${firstName(e.user.name) || 'Un ami'} · ` : ''}
+          {new Date(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+        </Txt>
+      </View>
+      <Txt variant="caption" style={{ color: e.days <= 14 ? GOLD : Colors.text2 }}>
+        {when}
+      </Txt>
+    </Pressable>
+  );
+}
+
+function NewListCard({ list: l }: { list: NewList }) {
+  return (
+    <Pressable
+      onPress={() => router.push({ pathname: '/collection/[id]', params: { id: l.id, name: l.name } })}
+      style={({ pressed }) => [styles.newList, pressed && { opacity: 0.85 }]}>
+      <View style={styles.newListThumbs}>
+        {[0, 1, 2, 3].map((i) => (
+          <View key={i} style={styles.newListThumb}>
+            {l.wishes[i]?.imageUrl ? (
+              <Image source={thumb(l.wishes[i].imageUrl!, 200)} style={StyleSheet.absoluteFill} contentFit="cover" alt="" />
+            ) : null}
+          </View>
+        ))}
+      </View>
+      <Txt variant="callout" numberOfLines={1}>
+        {l.name}
+      </Txt>
+      <Txt variant="micro" color="text3" numberOfLines={1}>
+        {firstName(l.owner.name) || 'Un ami'} · {l._count.wishes} envie{l._count.wishes > 1 ? 's' : ''}
+      </Txt>
+    </Pressable>
   );
 }
 
@@ -245,6 +344,20 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(232,200,114,0.25)',
   },
   santaIcon: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(232,200,114,0.12)' },
+  discover: { marginTop: Space.sm },
+  upcoming: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Space.md,
+    padding: Space.md,
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.card,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.border,
+  },
+  newList: { width: 140, gap: 4 },
+  newListThumbs: { width: 140, height: 140, flexDirection: 'row', flexWrap: 'wrap', gap: 2, borderRadius: Radius.lg, overflow: 'hidden' },
+  newListThumb: { width: 69, height: 69, backgroundColor: Colors.muted, overflow: 'hidden' },
   sectionHead: { paddingHorizontal: Space.lg, paddingTop: Space.x3, paddingBottom: Space.md, gap: 2 },
   masonry: { flexDirection: 'row', gap: GAP, paddingHorizontal: Space.lg },
   tile: { borderRadius: Radius.lg, overflow: 'hidden', backgroundColor: Colors.card, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.border },
