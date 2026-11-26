@@ -20,7 +20,10 @@ interface CollectionData {
   name: string;
   description: string | null;
   isPublic?: boolean;
+  eventDate?: string | Date | null;
 }
+
+const toDateValue = (d: string | Date | null | undefined) => (d ? new Date(d).toISOString().slice(0, 10) : "");
 
 export function CollectionForm({
   open,
@@ -36,6 +39,7 @@ export function CollectionForm({
   const [name, setName] = useState(collection?.name ?? "");
   const [description, setDescription] = useState(collection?.description || "");
   const [isPublic, setIsPublic] = useState(collection?.isPublic ?? false);
+  const [eventDate, setEventDate] = useState(toDateValue(collection?.eventDate));
   const [loading, setLoading] = useState(false);
 
   const isEdit = !!collection;
@@ -49,6 +53,7 @@ export function CollectionForm({
     setName(collection?.name ?? "");
     setDescription(collection?.description || "");
     setIsPublic(collection?.isPublic ?? false);
+    setEventDate(toDateValue(collection?.eventDate));
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,7 +66,7 @@ export function CollectionForm({
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description, isPublic }),
+      body: JSON.stringify({ name, description, isPublic, eventDate: eventDate || null }),
     });
 
     if (res.ok) {
@@ -105,6 +110,11 @@ export function CollectionForm({
               placeholder="Ce qui me ferait plaisir pour mon anniversaire"
               rows={3}
             />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="col-date">Date de l&apos;événement (optionnelle)</Label>
+            <Input id="col-date" type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+            <p className="text-xs text-muted-foreground">Compte à rebours sur la liste, et rappel à vos proches deux semaines avant.</p>
           </div>
           <div className="space-y-1.5">
             <Label>Visibilité</Label>

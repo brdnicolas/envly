@@ -24,6 +24,20 @@ interface Profile {
   image: string | null;
   description: string | null;
   slug: string | null;
+  birthday: { day: number; month: number } | null;
+}
+
+const fmtBirthday = (b: Profile["birthday"]) =>
+  b ? `${String(b.day).padStart(2, "0")}/${String(b.month).padStart(2, "0")}` : "";
+
+function parseBirthday(v: string): { day: number; month: number } | null | undefined {
+  if (!v.trim()) return null;
+  const m = v.trim().match(/^(\d{1,2})[/.\- ](\d{1,2})$/);
+  if (!m) return undefined;
+  const day = +m[1];
+  const month = +m[2];
+  if (month < 1 || month > 12 || day < 1 || day > new Date(2024, month, 0).getDate()) return undefined;
+  return { day, month };
 }
 
 const themes = [
@@ -39,6 +53,7 @@ export default function SettingsPage() {
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState("");
@@ -58,6 +73,7 @@ export default function SettingsPage() {
         setSlug(data.slug || "");
         setDescription(data.description || "");
         setImage(data.image || "");
+        setBirthday(fmtBirthday(data.birthday));
       });
   }, []);
 
@@ -125,7 +141,16 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    const body: Record<string, string | null> = { name, description, image };
+    const body: Record<string, unknown> = { name, description, image };
+    if (birthday !== fmtBirthday(profile?.birthday ?? null)) {
+      const b = parseBirthday(birthday);
+      if (b === undefined) {
+        toast.error("Anniversaire : format attendu JJ/MM");
+        setSaving(false);
+        return;
+      }
+      body.birthday = b;
+    }
     if (slug !== (profile?.slug || "")) {
       body.slug = slug;
     }
@@ -176,7 +201,8 @@ export default function SettingsPage() {
     name !== (profile.name || "") ||
     slugChanged ||
     description !== (profile.description || "") ||
-    image !== (profile.image || "");
+    image !== (profile.image || "") ||
+    birthday !== fmtBirthday(profile.birthday);
   const slugInvalid = slugChanged && (slug.length < 3 || slugAvailable === false);
 
   return (
@@ -300,6 +326,20 @@ export default function SettingsPage() {
                 placeholder="Une courte bio..."
                 rows={3}
               />
+            </div>
+
+            {/* Birthday */}
+            <div className="space-y-1.5">
+              <Label htmlFor="birthday">Anniversaire (jour et mois)</Label>
+              <Input
+                id="birthday"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                placeholder="JJ/MM"
+                maxLength={5}
+                className="max-w-[8rem]"
+              />
+              <p className="text-xs text-muted-foreground">Vos amis reçoivent un rappel deux semaines avant. L&apos;année n&apos;est pas demandée.</p>
             </div>
 
             <Button className="rounded-xl" onClick={handleSave} disabled={saving || !hasChanges || slugInvalid}>

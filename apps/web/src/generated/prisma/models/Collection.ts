@@ -30,6 +30,7 @@ export type CollectionMinAggregateOutputType = {
   description: string | null
   slug: string | null
   isPublic: boolean | null
+  eventDate: Date | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,6 +42,7 @@ export type CollectionMaxAggregateOutputType = {
   description: string | null
   slug: string | null
   isPublic: boolean | null
+  eventDate: Date | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,6 +54,7 @@ export type CollectionCountAggregateOutputType = {
   description: number
   slug: number
   isPublic: number
+  eventDate: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -65,6 +68,7 @@ export type CollectionMinAggregateInputType = {
   description?: true
   slug?: true
   isPublic?: true
+  eventDate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -76,6 +80,7 @@ export type CollectionMaxAggregateInputType = {
   description?: true
   slug?: true
   isPublic?: true
+  eventDate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +92,7 @@ export type CollectionCountAggregateInputType = {
   description?: true
   slug?: true
   isPublic?: true
+  eventDate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -171,6 +177,7 @@ export type CollectionGroupByOutputType = {
   description: string | null
   slug: string
   isPublic: boolean
+  eventDate: Date | null
   userId: string
   createdAt: Date
   updatedAt: Date
@@ -203,6 +210,7 @@ export type CollectionWhereInput = {
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   slug?: Prisma.StringFilter<"Collection"> | string
   isPublic?: Prisma.BoolFilter<"Collection"> | boolean
+  eventDate?: Prisma.DateTimeNullableFilter<"Collection"> | Date | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
@@ -219,6 +227,7 @@ export type CollectionOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  eventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -238,6 +247,7 @@ export type CollectionWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Collection"> | string
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   isPublic?: Prisma.BoolFilter<"Collection"> | boolean
+  eventDate?: Prisma.DateTimeNullableFilter<"Collection"> | Date | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
@@ -254,6 +264,7 @@ export type CollectionOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  eventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -271,6 +282,7 @@ export type CollectionScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Collection"> | string | null
   slug?: Prisma.StringWithAggregatesFilter<"Collection"> | string
   isPublic?: Prisma.BoolWithAggregatesFilter<"Collection"> | boolean
+  eventDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Collection"> | Date | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Collection"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Collection"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Collection"> | Date | string
@@ -282,6 +294,7 @@ export type CollectionCreateInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
@@ -297,6 +310,7 @@ export type CollectionUncheckedCreateInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -312,6 +326,7 @@ export type CollectionUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
@@ -327,6 +342,7 @@ export type CollectionUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -342,6 +358,7 @@ export type CollectionCreateManyInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -353,6 +370,7 @@ export type CollectionUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -363,6 +381,7 @@ export type CollectionUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +403,7 @@ export type CollectionCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  eventDate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -395,6 +415,7 @@ export type CollectionMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  eventDate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -406,6 +427,7 @@ export type CollectionMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  eventDate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -531,6 +553,7 @@ export type CollectionCreateWithoutUserInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   wishes?: Prisma.WishCreateNestedManyWithoutCollectionInput
@@ -545,6 +568,7 @@ export type CollectionUncheckedCreateWithoutUserInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   wishes?: Prisma.WishUncheckedCreateNestedManyWithoutCollectionInput
@@ -588,6 +612,7 @@ export type CollectionScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   slug?: Prisma.StringFilter<"Collection"> | string
   isPublic?: Prisma.BoolFilter<"Collection"> | boolean
+  eventDate?: Prisma.DateTimeNullableFilter<"Collection"> | Date | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
@@ -599,6 +624,7 @@ export type CollectionCreateWithoutWishesInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
@@ -613,6 +639,7 @@ export type CollectionUncheckedCreateWithoutWishesInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -643,6 +670,7 @@ export type CollectionUpdateWithoutWishesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
@@ -657,6 +685,7 @@ export type CollectionUncheckedUpdateWithoutWishesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -671,6 +700,7 @@ export type CollectionCreateWithoutFollowersInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
@@ -685,6 +715,7 @@ export type CollectionUncheckedCreateWithoutFollowersInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -715,6 +746,7 @@ export type CollectionUpdateWithoutFollowersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
@@ -729,6 +761,7 @@ export type CollectionUncheckedUpdateWithoutFollowersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -743,6 +776,7 @@ export type CollectionCreateWithoutCollaboratorsInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
@@ -757,6 +791,7 @@ export type CollectionUncheckedCreateWithoutCollaboratorsInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -787,6 +822,7 @@ export type CollectionUpdateWithoutCollaboratorsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
@@ -801,6 +837,7 @@ export type CollectionUncheckedUpdateWithoutCollaboratorsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -815,6 +852,7 @@ export type CollectionCreateWithoutSantaMembersInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
@@ -829,6 +867,7 @@ export type CollectionUncheckedCreateWithoutSantaMembersInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -859,6 +898,7 @@ export type CollectionUpdateWithoutSantaMembersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
@@ -873,6 +913,7 @@ export type CollectionUncheckedUpdateWithoutSantaMembersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -887,6 +928,7 @@ export type CollectionCreateManyUserInput = {
   description?: string | null
   slug: string
   isPublic?: boolean
+  eventDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -897,6 +939,7 @@ export type CollectionUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wishes?: Prisma.WishUpdateManyWithoutCollectionNestedInput
@@ -911,6 +954,7 @@ export type CollectionUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wishes?: Prisma.WishUncheckedUpdateManyWithoutCollectionNestedInput
@@ -925,6 +969,7 @@ export type CollectionUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -993,6 +1038,7 @@ export type CollectionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   description?: boolean
   slug?: boolean
   isPublic?: boolean
+  eventDate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1010,6 +1056,7 @@ export type CollectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   slug?: boolean
   isPublic?: boolean
+  eventDate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1022,6 +1069,7 @@ export type CollectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   slug?: boolean
   isPublic?: boolean
+  eventDate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1034,12 +1082,13 @@ export type CollectionSelectScalar = {
   description?: boolean
   slug?: boolean
   isPublic?: boolean
+  eventDate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "slug" | "isPublic" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["collection"]>
+export type CollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "slug" | "isPublic" | "eventDate" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["collection"]>
 export type CollectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   wishes?: boolean | Prisma.Collection$wishesArgs<ExtArgs>
@@ -1070,6 +1119,10 @@ export type $CollectionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     description: string | null
     slug: string
     isPublic: boolean
+    /**
+     * Optional occasion (birthday, Christmas, wedding…): countdown on the list and reminders to followers.
+     */
+    eventDate: Date | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1506,6 +1559,7 @@ export interface CollectionFieldRefs {
   readonly description: Prisma.FieldRef<"Collection", 'String'>
   readonly slug: Prisma.FieldRef<"Collection", 'String'>
   readonly isPublic: Prisma.FieldRef<"Collection", 'Boolean'>
+  readonly eventDate: Prisma.FieldRef<"Collection", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Collection", 'String'>
   readonly createdAt: Prisma.FieldRef<"Collection", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Collection", 'DateTime'>

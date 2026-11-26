@@ -7,6 +7,7 @@ import { Icons } from '@/components/icon';
 import { IconButton } from '@/components/primitives';
 import { Colors } from '@/constants/theme';
 import { actionSheet } from '@/lib/actions';
+import { toDateInput } from '@/lib/format';
 
 export type MenuItem = {
   label: string;
@@ -95,9 +96,9 @@ export function CollectionMenu({ groups, size = 36 }: { groups: MenuItem[][]; si
 }
 
 /** Open the edit sheet for a collection. */
-export function editCollection(c: { id: string; name: string; description: string | null; isPublic: boolean }) {
+export function editCollection(c: { id: string; name: string; description: string | null; isPublic: boolean; eventDate?: string | null }) {
   router.push({
     pathname: '/new-collection',
-    params: { id: c.id, name: c.name, description: c.description ?? '', isPublic: String(c.isPublic) },
+    params: { id: c.id, name: c.name, description: c.description ?? '', isPublic: String(c.isPublic), eventDate: toDateInput(c.eventDate) },
   });
 }

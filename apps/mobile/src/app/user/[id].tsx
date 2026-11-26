@@ -11,7 +11,7 @@ import { Avatar, Badge, Button, EmptyState, Skeleton, Txt } from '@/components/p
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
 import { errorMessage, publicProfileUrl } from '@/lib/api';
-import { firstName } from '@/lib/format';
+import { formatBirthday, firstName } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
 import { blockUser, reportUser, setFollowing, unblockUser } from '@/lib/social';
 import type { PublicProfile } from '@/lib/types';
@@ -101,6 +101,11 @@ export default function UserScreen() {
             <View style={{ marginTop: Space.sm }}>
               <Badge label="Vous suit" />
             </View>
+          )}
+          {!!data?.birthday && (
+            <Txt variant="footnote" color="text2" center style={{ marginTop: Space.sm }}>
+              🎂 {formatBirthday(data.birthday)}
+            </Txt>
           )}
           {!!data?.description && (
             <Txt variant="subhead" color="text2" center style={{ marginTop: Space.sm, maxWidth: 320 }}>

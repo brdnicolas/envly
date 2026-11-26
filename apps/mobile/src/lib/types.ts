@@ -5,7 +5,11 @@ export type User = {
   image: string | null;
   slug: string | null;
   description?: string | null;
+  birthday?: Birthday | null;
 };
+
+/** Day + month only (no year, for privacy). */
+export type Birthday = { day: number; month: number };
 
 export type CollectionSummary = {
   id: string;
@@ -13,6 +17,8 @@ export type CollectionSummary = {
   description: string | null;
   slug: string;
   isPublic: boolean;
+  /** Occasion date (ISO), shown as a countdown. */
+  eventDate?: string | null;
   _count: { wishes: number };
   wishes: { imageUrl: string | null }[];
   role?: 'owner' | 'collaborator';
@@ -120,6 +126,7 @@ export type PublicProfile = {
   image: string | null;
   slug: string | null;
   description: string | null;
+  birthday?: Birthday | null;
   isMe: boolean;
   /** I blocked this user: their lists are hidden. */
   isBlocked?: boolean;

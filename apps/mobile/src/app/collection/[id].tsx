@@ -8,7 +8,7 @@ import { BOTTOM_ACTION_SPACE, BottomAction, useScrollReveal } from '@/components
 import { CollectionMenu, collectionActions, editCollection } from '@/components/collection-menu';
 import { NavBar } from '@/components/nav-bar';
 import { blockUser, reportUser } from '@/lib/social';
-import { firstName } from '@/lib/format';
+import { countdown, firstName } from '@/lib/format';
 import { Avatar, Badge, Button, EmptyState, Skeleton, Txt } from '@/components/primitives';
 import { useToast } from '@/components/toast';
 import { Masonry, WishCard, type CardAction } from '@/components/wish-card';
@@ -237,6 +237,7 @@ export default function CollectionScreen() {
                 {isViewer ? `${data.user.name ?? 'Un ami'} · ` : ''}
                 {wishes.length} souhait{wishes.length > 1 ? 's' : ''}
               </Txt>
+              {!!countdown(data.eventDate) && <Badge label={countdown(data.eventDate)!} icon={Icons.calendar} />}
             </View>
           </View>
         ) : (

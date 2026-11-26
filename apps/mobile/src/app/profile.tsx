@@ -12,6 +12,7 @@ import { useApi } from '@/hooks/use-api';
 import { confirm } from '@/lib/actions';
 import { API_URL, publicProfileUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { formatBirthday } from '@/lib/format';
 import type { User } from '@/lib/types';
 
 const openWeb = (path: string) =>
@@ -56,6 +57,11 @@ export default function AccountScreen() {
             />
           )}
           <Row icon={Icons.people} label="Trouver des amis" onPress={() => router.push('/friends-search')} />
+          <Row
+            icon={Icons.calendar}
+            label={user?.birthday ? `Anniversaire · ${formatBirthday(user.birthday)}` : 'Ajouter mon anniversaire'}
+            onPress={() => router.push('/birthday')}
+          />
         </Section>
 
         <Section>

@@ -60,6 +60,9 @@ model User {
   description       String?
   password          String?
   slug              String?                  @unique
+  /// Birthday without year (privacy): friends get a reminder two weeks before.
+  birthdayDay       Int?
+  birthdayMonth     Int?
   accounts          Account[]
   sessions          Session[]
   collections       Collection[]
@@ -86,6 +89,8 @@ model Collection {
   description   String?
   slug          String                   @unique
   isPublic      Boolean                  @default(false)
+  /// Optional occasion (birthday, Christmas, wedding…): countdown on the list and reminders to followers.
+  eventDate     DateTime?
   userId        String
   user          User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   wishes        Wish[]

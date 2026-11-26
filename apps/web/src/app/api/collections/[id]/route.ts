@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { parseEventDate } from "@/lib/events";
 import { prisma } from "@/lib/prisma";
 import { getCollectionAccess } from "@/lib/collection-access";
 import { isBlockedBetween } from "@/lib/blocks";
@@ -91,6 +92,7 @@ export async function PATCH(
       ...(body.name !== undefined && { name: body.name }),
       ...(body.description !== undefined && { description: body.description }),
       ...(body.isPublic !== undefined && { isPublic: body.isPublic }),
+      ...(parseEventDate(body.eventDate) !== undefined && { eventDate: parseEventDate(body.eventDate) }),
     },
   });
 

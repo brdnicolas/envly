@@ -148,6 +148,7 @@ export default async function PublicWishlistPage({
         description: collection.description,
         ownerName: collection.user.name,
         ownerSlug: collection.user.slug,
+        eventDate: collection.eventDate ? collection.eventDate.toISOString() : null,
       }}
       wishes={wishes}
       isOwner={isOwner}

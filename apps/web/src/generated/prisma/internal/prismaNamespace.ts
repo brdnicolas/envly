@@ -1849,6 +1849,8 @@ export const UserScalarFieldEnum = {
   description: 'description',
   password: 'password',
   slug: 'slug',
+  birthdayDay: 'birthdayDay',
+  birthdayMonth: 'birthdayMonth',
   createdAt: 'createdAt'
 } as const
 
@@ -1861,6 +1863,7 @@ export const CollectionScalarFieldEnum = {
   description: 'description',
   slug: 'slug',
   isPublic: 'isPublic',
+  eventDate: 'eventDate',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
