@@ -319,6 +319,7 @@ export type WishWhereInput = {
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
   creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
+  contributions?: Prisma.ContributionListRelationFilter
 }
 
 export type WishOrderByWithRelationInput = {
@@ -341,6 +342,7 @@ export type WishOrderByWithRelationInput = {
   collection?: Prisma.CollectionOrderByWithRelationInput
   creator?: Prisma.UserOrderByWithRelationInput
   reservation?: Prisma.ReservationOrderByWithRelationInput
+  contributions?: Prisma.ContributionOrderByRelationAggregateInput
 }
 
 export type WishWhereUniqueInput = Prisma.AtLeast<{
@@ -366,6 +368,7 @@ export type WishWhereUniqueInput = Prisma.AtLeast<{
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
   creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
+  contributions?: Prisma.ContributionListRelationFilter
 }, "id">
 
 export type WishOrderByWithAggregationInput = {
@@ -432,6 +435,7 @@ export type WishCreateInput = {
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
   creator?: Prisma.UserCreateNestedOneWithoutCreatedWishesInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutWishInput
 }
 
 export type WishUncheckedCreateInput = {
@@ -452,6 +456,7 @@ export type WishUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reservation?: Prisma.ReservationUncheckedCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutWishInput
 }
 
 export type WishUpdateInput = {
@@ -472,6 +477,7 @@ export type WishUpdateInput = {
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
   creator?: Prisma.UserUpdateOneWithoutCreatedWishesNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateInput = {
@@ -492,6 +498,7 @@ export type WishUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reservation?: Prisma.ReservationUncheckedUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutWishNestedInput
 }
 
 export type WishCreateManyInput = {
@@ -749,6 +756,20 @@ export type WishUpdateOneRequiredWithoutReservationNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WishUpdateToOneWithWhereWithoutReservationInput, Prisma.WishUpdateWithoutReservationInput>, Prisma.WishUncheckedUpdateWithoutReservationInput>
 }
 
+export type WishCreateNestedOneWithoutContributionsInput = {
+  create?: Prisma.XOR<Prisma.WishCreateWithoutContributionsInput, Prisma.WishUncheckedCreateWithoutContributionsInput>
+  connectOrCreate?: Prisma.WishCreateOrConnectWithoutContributionsInput
+  connect?: Prisma.WishWhereUniqueInput
+}
+
+export type WishUpdateOneRequiredWithoutContributionsNestedInput = {
+  create?: Prisma.XOR<Prisma.WishCreateWithoutContributionsInput, Prisma.WishUncheckedCreateWithoutContributionsInput>
+  connectOrCreate?: Prisma.WishCreateOrConnectWithoutContributionsInput
+  upsert?: Prisma.WishUpsertWithoutContributionsInput
+  connect?: Prisma.WishWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WishUpdateToOneWithWhereWithoutContributionsInput, Prisma.WishUpdateWithoutContributionsInput>, Prisma.WishUncheckedUpdateWithoutContributionsInput>
+}
+
 export type WishCreateWithoutCreatorInput = {
   id?: string
   url?: string | null
@@ -766,6 +787,7 @@ export type WishCreateWithoutCreatorInput = {
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutWishInput
 }
 
 export type WishUncheckedCreateWithoutCreatorInput = {
@@ -785,6 +807,7 @@ export type WishUncheckedCreateWithoutCreatorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reservation?: Prisma.ReservationUncheckedCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutWishInput
 }
 
 export type WishCreateOrConnectWithoutCreatorInput = {
@@ -852,6 +875,7 @@ export type WishCreateWithoutCollectionInput = {
   updatedAt?: Date | string
   creator?: Prisma.UserCreateNestedOneWithoutCreatedWishesInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutWishInput
 }
 
 export type WishUncheckedCreateWithoutCollectionInput = {
@@ -871,6 +895,7 @@ export type WishUncheckedCreateWithoutCollectionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reservation?: Prisma.ReservationUncheckedCreateNestedOneWithoutWishInput
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutWishInput
 }
 
 export type WishCreateOrConnectWithoutCollectionInput = {
@@ -916,6 +941,7 @@ export type WishCreateWithoutReservationInput = {
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
   creator?: Prisma.UserCreateNestedOneWithoutCreatedWishesInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutWishInput
 }
 
 export type WishUncheckedCreateWithoutReservationInput = {
@@ -935,6 +961,7 @@ export type WishUncheckedCreateWithoutReservationInput = {
   creatorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutWishInput
 }
 
 export type WishCreateOrConnectWithoutReservationInput = {
@@ -970,6 +997,7 @@ export type WishUpdateWithoutReservationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
   creator?: Prisma.UserUpdateOneWithoutCreatedWishesNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateWithoutReservationInput = {
@@ -989,6 +1017,103 @@ export type WishUncheckedUpdateWithoutReservationInput = {
   creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutWishNestedInput
+}
+
+export type WishCreateWithoutContributionsInput = {
+  id?: string
+  url?: string | null
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  imageOriginalUrl?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
+  price?: number | null
+  position?: number
+  isPriority?: boolean
+  receivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  collection: Prisma.CollectionCreateNestedOneWithoutWishesInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedWishesInput
+  reservation?: Prisma.ReservationCreateNestedOneWithoutWishInput
+}
+
+export type WishUncheckedCreateWithoutContributionsInput = {
+  id?: string
+  url?: string | null
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  imageOriginalUrl?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
+  price?: number | null
+  position?: number
+  isPriority?: boolean
+  receivedAt?: Date | string | null
+  collectionId: string
+  creatorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reservation?: Prisma.ReservationUncheckedCreateNestedOneWithoutWishInput
+}
+
+export type WishCreateOrConnectWithoutContributionsInput = {
+  where: Prisma.WishWhereUniqueInput
+  create: Prisma.XOR<Prisma.WishCreateWithoutContributionsInput, Prisma.WishUncheckedCreateWithoutContributionsInput>
+}
+
+export type WishUpsertWithoutContributionsInput = {
+  update: Prisma.XOR<Prisma.WishUpdateWithoutContributionsInput, Prisma.WishUncheckedUpdateWithoutContributionsInput>
+  create: Prisma.XOR<Prisma.WishCreateWithoutContributionsInput, Prisma.WishUncheckedCreateWithoutContributionsInput>
+  where?: Prisma.WishWhereInput
+}
+
+export type WishUpdateToOneWithWhereWithoutContributionsInput = {
+  where?: Prisma.WishWhereInput
+  data: Prisma.XOR<Prisma.WishUpdateWithoutContributionsInput, Prisma.WishUncheckedUpdateWithoutContributionsInput>
+}
+
+export type WishUpdateWithoutContributionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageOriginalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedWishesNestedInput
+  reservation?: Prisma.ReservationUpdateOneWithoutWishNestedInput
+}
+
+export type WishUncheckedUpdateWithoutContributionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageOriginalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  creatorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reservation?: Prisma.ReservationUncheckedUpdateOneWithoutWishNestedInput
 }
 
 export type WishCreateManyCreatorInput = {
@@ -1026,6 +1151,7 @@ export type WishUpdateWithoutCreatorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutWishesNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateWithoutCreatorInput = {
@@ -1045,6 +1171,7 @@ export type WishUncheckedUpdateWithoutCreatorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reservation?: Prisma.ReservationUncheckedUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateManyWithoutCreatorInput = {
@@ -1100,6 +1227,7 @@ export type WishUpdateWithoutCollectionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneWithoutCreatedWishesNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateWithoutCollectionInput = {
@@ -1119,6 +1247,7 @@ export type WishUncheckedUpdateWithoutCollectionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reservation?: Prisma.ReservationUncheckedUpdateOneWithoutWishNestedInput
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutWishNestedInput
 }
 
 export type WishUncheckedUpdateManyWithoutCollectionInput = {
@@ -1139,6 +1268,35 @@ export type WishUncheckedUpdateManyWithoutCollectionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type WishCountOutputType
+ */
+
+export type WishCountOutputType = {
+  contributions: number
+}
+
+export type WishCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  contributions?: boolean | WishCountOutputTypeCountContributionsArgs
+}
+
+/**
+ * WishCountOutputType without action
+ */
+export type WishCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WishCountOutputType
+   */
+  select?: Prisma.WishCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * WishCountOutputType without action
+ */
+export type WishCountOutputTypeCountContributionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContributionWhereInput
+}
 
 
 export type WishSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1161,6 +1319,8 @@ export type WishSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   creator?: boolean | Prisma.Wish$creatorArgs<ExtArgs>
   reservation?: boolean | Prisma.Wish$reservationArgs<ExtArgs>
+  contributions?: boolean | Prisma.Wish$contributionsArgs<ExtArgs>
+  _count?: boolean | Prisma.WishCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["wish"]>
 
 export type WishSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1229,6 +1389,8 @@ export type WishInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   creator?: boolean | Prisma.Wish$creatorArgs<ExtArgs>
   reservation?: boolean | Prisma.Wish$reservationArgs<ExtArgs>
+  contributions?: boolean | Prisma.Wish$contributionsArgs<ExtArgs>
+  _count?: boolean | Prisma.WishCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WishIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
@@ -1245,6 +1407,7 @@ export type $WishPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     collection: Prisma.$CollectionPayload<ExtArgs>
     creator: Prisma.$UserPayload<ExtArgs> | null
     reservation: Prisma.$ReservationPayload<ExtArgs> | null
+    contributions: Prisma.$ContributionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1666,6 +1829,7 @@ export interface Prisma__WishClient<T, Null = never, ExtArgs extends runtime.Typ
   collection<T extends Prisma.CollectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CollectionDefaultArgs<ExtArgs>>): Prisma.Prisma__CollectionClient<runtime.Types.Result.GetResult<Prisma.$CollectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   creator<T extends Prisma.Wish$creatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Wish$creatorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reservation<T extends Prisma.Wish$reservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Wish$reservationArgs<ExtArgs>>): Prisma.Prisma__ReservationClient<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  contributions<T extends Prisma.Wish$contributionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Wish$contributionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2142,6 +2306,30 @@ export type Wish$reservationArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.ReservationInclude<ExtArgs> | null
   where?: Prisma.ReservationWhereInput
+}
+
+/**
+ * Wish.contributions
+ */
+export type Wish$contributionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contribution
+   */
+  select?: Prisma.ContributionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contribution
+   */
+  omit?: Prisma.ContributionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContributionInclude<ExtArgs> | null
+  where?: Prisma.ContributionWhereInput
+  orderBy?: Prisma.ContributionOrderByWithRelationInput | Prisma.ContributionOrderByWithRelationInput[]
+  cursor?: Prisma.ContributionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContributionScalarFieldEnum | Prisma.ContributionScalarFieldEnum[]
 }
 
 /**

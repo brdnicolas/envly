@@ -36,7 +36,7 @@ export function WishCard({
   /** The owner marked it as received. */
   received?: boolean;
   /** Friends' lists: a visible "Réserver" button (free) or "Réservé par vous" (mine). */
-  reservation?: { state: 'free' | 'mine' | 'taken'; onReserve: () => void; onCancel: () => void };
+  reservation?: { state: 'free' | 'mine' | 'taken' | 'pool'; onReserve: () => void; onCancel: () => void };
 }) {
   // Known size → the card has its final height immediately; otherwise measure on load (older wishes).
   const clamp = (r: number) => Math.min(Math.max(r, 0.6), 1.6);
@@ -90,6 +90,20 @@ export function WishCard({
             <Icon name={Icons.gift} size={13} color={GOLD} />
             <Txt variant="caption" style={{ color: GOLD }}>
               Réserver
+            </Txt>
+          </Pressable>
+        )}
+        {reservation?.state === 'pool' && (
+          <Pressable
+            onPress={reservation.onReserve}
+            hitSlop={4}
+            accessibilityRole="button"
+            accessibilityLabel={`Cadeau à plusieurs : ${wish.title}`}
+            style={({ pressed }) => [styles.reserveBtn, pressed && { opacity: 0.7 }]}>
+            <Icon name={Icons.people} size={13} color={GOLD} />
+            <Txt variant="caption" style={{ color: GOLD }}>
+              À plusieurs · {formatPrice((wish.contributions ?? []).reduce((n, c) => n + c.amount, 0))}
+              {wish.price ? ` / ${formatPrice(wish.price)}` : ''}
             </Txt>
           </Pressable>
         )}

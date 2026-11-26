@@ -121,6 +121,7 @@ model Wish {
   collection       Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   creator          User?        @relation("createdWishes", fields: [creatorId], references: [id], onDelete: SetNull)
   reservation      Reservation?
+  contributions    Contribution[]
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 }
@@ -139,6 +140,22 @@ model Reservation {
   createdAt  DateTime @default(now())
 
   @@index([reserverId])
+}
+
+/// Group gift: friends pledge an amount towards one wish (no payment, just coordination).
+/// Like reservations, never shown to the wish's owner or collaborators.
+model Contribution {
+  id            String   @id @default(cuid())
+  wishId        String
+  name          String
+  amount        Float
+  /// Secret that alone can withdraw the pledge (kept on the contributor's device).
+  token         String
+  contributorId String?
+  wish          Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+
+  @@index([wishId])
 }
 
 model UserFollow {

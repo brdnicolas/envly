@@ -41,6 +41,8 @@ export type Wish = {
   isPriority: boolean;
   /** Owner marked the gift as received ("Déjà offert" for friends). */
   receivedAt?: string | null;
+  /** Friends' lists only: group-gift pledges (never sent to the owner). */
+  contributions?: Contribution[];
   collectionId: string;
   creator?: { id: string; name: string | null } | null;
   /** Only sent to viewers (friends), never to the owner. */
@@ -147,3 +149,5 @@ export type BlockedUser = { id: string; name: string | null; image: string | nul
 /** One anonymous Secret Santa message: no author, only whether I wrote it. */
 export type SantaMessage = { id: string; body: string; createdAt: string; mine: boolean };
 export type SantaThreads = { recipient: SantaMessage[]; santa: SantaMessage[] };
+
+export type Contribution = { id: string; name: string; amount: number };

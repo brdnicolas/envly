@@ -141,6 +141,8 @@ export default function CollectionScreen() {
     }
   }
 
+  const openGroupGift = (w: Wish) => router.push({ pathname: '/contribute', params: { wishId: w.id, collectionId: id } });
+
   const detail = (w: Wish, edit?: boolean) => router.push({ pathname: '/wish/[id]', params: { id: w.id, collectionId: id, ...(edit && { edit: '1' }) } });
 
   function cardActions(w: Wish): CardAction[] {
@@ -152,7 +154,10 @@ export default function CollectionScreen() {
         ...(mine
           ? [{ title: 'Annuler ma réservation', icon: 'xmark.circle', onPress: () => void unreserve(w) }]
           : !w.reservation && !w.receivedAt
-            ? [{ title: 'Réserver ce cadeau', icon: 'gift', onPress: () => void reserve(w) }]
+            ? [
+                ...(!w.contributions?.length ? [{ title: 'Réserver ce cadeau', icon: 'gift', onPress: () => void reserve(w) }] : []),
+                { title: 'Offrir à plusieurs', icon: 'person.3', onPress: () => openGroupGift(w) },
+              ]
             : []),
       ];
     }
@@ -286,8 +291,8 @@ export default function CollectionScreen() {
                 reservation={
                   isViewer
                     ? {
-                        state: myReservations[w.id] ? 'mine' : w.reservation || w.receivedAt ? 'taken' : 'free',
-                        onReserve: () => void reserve(w),
+                        state: myReservations[w.id] ? 'mine' : w.reservation || w.receivedAt ? 'taken' : w.contributions?.length ? 'pool' : 'free',
+                        onReserve: () => (w.contributions?.length ? openGroupGift(w) : void reserve(w)),
                         onCancel: () => void unreserve(w),
                       }
                     : undefined
