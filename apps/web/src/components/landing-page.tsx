@@ -514,6 +514,16 @@ export function LandingPage() {
                   </li>
                 ))}
               </ul>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild className="rounded-xl">
+                  <Link href="/secret-santa/nouveau">
+                    Créer un Secret Santa <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" className="rounded-xl">
+                  <Link href="/secret-santa">Comment ça marche</Link>
+                </Button>
+              </div>
             </motion.div>
 
             {/* Reveal card */}

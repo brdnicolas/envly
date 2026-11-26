@@ -6,6 +6,8 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Produit",
     links: [
       { label: "Accueil", href: "/" },
+      { label: "Secret Santa en ligne", href: "/secret-santa" },
+      { label: "Idées cadeaux", href: "/idees-cadeaux" },
       { label: "Extension Chrome", href: "/extension" },
       { label: "Installer l'app", href: "/install" },
       { label: "Amis", href: "/friends" },
