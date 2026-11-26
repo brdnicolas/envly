@@ -6,7 +6,6 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, Icons } from '@/components/icon';
 import { Txt } from '@/components/primitives';
 import { Colors, Fonts, Radius, Space, Type } from '@/constants/theme';
-import { actionSheet } from '@/lib/actions';
 import { formatPrice } from '@/lib/api';
 import { domainOf } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
@@ -89,24 +88,37 @@ export function WishCard({
         )}
 
         {reservation?.state === 'free' && (
-          <Pressable
-            onPress={() => {
-              haptic.select();
-              if (!reservation.onPool) return reservation.onReserve();
-              actionSheet(wish.title, [
-                { label: 'Réserver ce cadeau', onPress: reservation.onReserve },
-                { label: 'Offrir à plusieurs', onPress: reservation.onPool },
-              ]);
-            }}
-            hitSlop={4}
-            accessibilityRole="button"
-            accessibilityLabel={`Offrir ${wish.title}`}
-            style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
-            <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
-            <Txt variant="caption" style={styles.offerLabel}>
-              Offrir
-            </Txt>
-          </Pressable>
+          <View style={{ gap: 2 }}>
+            <Pressable
+              onPress={() => {
+                haptic.select();
+                reservation.onReserve();
+              }}
+              hitSlop={4}
+              accessibilityRole="button"
+              accessibilityLabel={`Réserver ${wish.title}`}
+              style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
+              <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
+              <Txt variant="caption" style={styles.offerLabel}>
+                Réserver
+              </Txt>
+            </Pressable>
+            {reservation.onPool && (
+              <Pressable
+                onPress={() => {
+                  haptic.select();
+                  reservation.onPool?.();
+                }}
+                hitSlop={6}
+                accessibilityRole="button"
+                accessibilityLabel={`Offrir ${wish.title} à plusieurs`}
+                style={({ pressed }) => [styles.poolLink, pressed && { opacity: 0.6 }]}>
+                <Txt variant="micro" color="text3">
+                  ou offrir à plusieurs
+                </Txt>
+              </Pressable>
+            )}
+          </View>
         )}
 
         {reservation?.state === 'pool' && (
@@ -213,6 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: GOLD,
   },
   offerLabel: { color: Colors.bg, fontFamily: Fonts.semibold },
+  poolLink: { alignSelf: 'center', paddingVertical: 4 },
   pool: { marginTop: 4, gap: 6, padding: 8, borderRadius: 10, backgroundColor: 'rgba(232,200,114,0.08)' },
   poolHead: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   track: { height: 3, borderRadius: 2, backgroundColor: 'rgba(232,200,114,0.18)', overflow: 'hidden' },
