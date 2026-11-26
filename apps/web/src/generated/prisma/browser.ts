@@ -83,6 +83,11 @@ export type Notification = Prisma.NotificationModel
  */
 export type SecretSanta = Prisma.SecretSantaModel
 /**
+ * Model SecretSantaMessage
+ * Anonymous questions between a giver and the person they give to. The recipient never learns `giverId`.
+ */
+export type SecretSantaMessage = Prisma.SecretSantaMessageModel
+/**
  * Model SecretSantaMember
  * One participant. `giftToId` is set by the draw and only ever sent to this member.
  */

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SantaChat, SantaExclusions } from "@/components/santa-extras";
 import { Button } from "@/components/ui/button";
 import type { serializeSanta } from "@/lib/secret-santa";
 
@@ -131,6 +132,10 @@ export function SantaView({
         </section>
       )}
 
+      {santa.status === "DRAWN" && isMember && (
+        <SantaChat santaId={santa.id} recipientName={santa.assignment?.user.name ?? null} />
+      )}
+
       {/* List I share */}
       {(isOpen || isMember) && (
         <section className="space-y-2">
@@ -196,6 +201,15 @@ export function SantaView({
           ))}
         </ul>
       </section>
+
+      {santa.isOrganizer && isOpen && joined.length >= 2 && (
+        <SantaExclusions
+          people={joined.map((m) => ({ id: m.id, name: m.id === userId ? "Vous" : m.name }))}
+          exclusions={santa.exclusions}
+          busy={busy}
+          onChange={(exclusions) => void call(`/api/santas/${santa.id}`, "PATCH", { exclusions }, "Exclusions mises à jour")}
+        />
+      )}
 
       {/* Organizer */}
       {santa.isOrganizer && isOpen && (

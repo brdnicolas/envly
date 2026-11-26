@@ -64,6 +64,7 @@ export const ModelName = {
   CollectionCollaborator: 'CollectionCollaborator',
   Notification: 'Notification',
   SecretSanta: 'SecretSanta',
+  SecretSantaMessage: 'SecretSantaMessage',
   SecretSantaMember: 'SecretSantaMember',
   PushToken: 'PushToken',
   UserBlock: 'UserBlock',
@@ -247,10 +248,24 @@ export const SecretSantaScalarFieldEnum = {
   status: 'status',
   organizerId: 'organizerId',
   drawnAt: 'drawnAt',
+  exclusions: 'exclusions',
   createdAt: 'createdAt'
 } as const
 
 export type SecretSantaScalarFieldEnum = (typeof SecretSantaScalarFieldEnum)[keyof typeof SecretSantaScalarFieldEnum]
+
+
+export const SecretSantaMessageScalarFieldEnum = {
+  id: 'id',
+  santaId: 'santaId',
+  giverId: 'giverId',
+  recipientId: 'recipientId',
+  fromGiver: 'fromGiver',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type SecretSantaMessageScalarFieldEnum = (typeof SecretSantaMessageScalarFieldEnum)[keyof typeof SecretSantaMessageScalarFieldEnum]
 
 
 export const SecretSantaMemberScalarFieldEnum = {

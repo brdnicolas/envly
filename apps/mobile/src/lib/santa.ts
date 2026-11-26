@@ -2,7 +2,7 @@ import { Share } from 'react-native';
 
 import { invalidate } from '@/hooks/use-api';
 import { api, API_URL } from '@/lib/api';
-import type { Santa } from '@/lib/types';
+import type { Santa, SantaMessage } from '@/lib/types';
 
 export const santaLink = (code: string) => `${API_URL}/s/${code}`;
 
@@ -15,7 +15,7 @@ async function call(path: string, method: 'POST' | 'PATCH' | 'DELETE', body?: un
 
 export const createSanta = (input: { name: string; budget: number | null; date: string | null; collectionId: string | null; userIds?: string[] }) =>
   call('/api/santas', 'POST', input);
-export const updateSanta = (id: string, patch: { name?: string; budget?: number | null; date?: string | null }) =>
+export const updateSanta = (id: string, patch: { name?: string; budget?: number | null; date?: string | null; exclusions?: [string, string][] }) =>
   call(`/api/santas/${id}`, 'PATCH', patch);
 export const deleteSanta = (id: string) => call(`/api/santas/${id}`, 'DELETE');
 export const joinSanta = (id: string, collectionId: string | null) => call(`/api/santas/${id}/me`, 'PATCH', { collectionId });
@@ -52,5 +52,12 @@ export async function importWishes(collectionId: string, wishIds: string[]) {
     body: { wishIds },
   });
   invalidate('/api/collections');
+  return res;
+}
+
+/** Anonymous question to the person I give to (`recipient`) or answer to my own Secret Santa (`santa`). */
+export async function sendSantaMessage(id: string, thread: 'recipient' | 'santa', body: string) {
+  const res = await api<SantaMessage>(`/api/santas/${id}/messages`, { method: 'POST', body: { thread, body } });
+  invalidate(`/api/santas/${id}/messages`);
   return res;
 }

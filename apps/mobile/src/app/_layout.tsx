@@ -84,6 +84,7 @@ function App() {
 
             <Stack.Screen name="santa/new" options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="santa/import" options={SHEET} />
+            <Stack.Screen name="santa/chat" />
             <Stack.Screen
               name="santa/invite"
               options={SHEET}

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { currentUserId, loadSanta, serializeSanta } from "@/lib/secret-santa";
+import { currentUserId, loadSanta, parseExclusions, serializeSanta } from "@/lib/secret-santa";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -14,16 +14,24 @@ export async function GET(_req: Request, { params }: Ctx) {
   return NextResponse.json(serializeSanta(santa, userId));
 }
 
-/** Organizer: rename, change budget or date. */
+/** Organizer: rename, change budget, date or exclusions (pairs who must not draw each other). */
 export async function PATCH(req: Request, { params }: Ctx) {
   const userId = await currentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
-  const santa = await prisma.secretSanta.findUnique({ where: { id }, select: { organizerId: true } });
+  const santa = await prisma.secretSanta.findUnique({
+    where: { id },
+    select: { organizerId: true, status: true, members: { select: { userId: true } } },
+  });
   if (!santa || santa.organizerId !== userId) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const body = await req.json().catch(() => ({}));
-  const data: { name?: string; budget?: number | null; date?: Date | null } = {};
+  const data: { name?: string; budget?: number | null; date?: Date | null; exclusions?: [string, string][] } = {};
+  if (body.exclusions !== undefined) {
+    if (santa.status !== "OPEN") return NextResponse.json({ error: "Le tirage a déjà eu lieu" }, { status: 409 });
+    const memberIds = new Set(santa.members.map((m) => m.userId));
+    data.exclusions = parseExclusions(body.exclusions).filter(([a, b]) => memberIds.has(a) && memberIds.has(b));
+  }
   if (typeof body.name === "string" && body.name.trim()) data.name = body.name.trim().slice(0, 80);
   if (body.budget !== undefined) data.budget = Number.isFinite(body.budget) && body.budget > 0 ? Math.round(body.budget) : null;
   if (body.date !== undefined) {

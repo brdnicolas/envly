@@ -65,6 +65,8 @@ export type Santa = {
   inviteCode: string;
   isOrganizer: boolean;
   organizer: Person;
+  /** Organizer only: pairs of user ids who must not draw each other. */
+  exclusions: [string, string][];
   me: { status: 'INVITED' | 'JOINED'; collection: { id: string; name: string } | null } | null;
   members: (Person & { status: 'INVITED' | 'JOINED'; hasList: boolean })[];
   /** Only ever my own pairing. */
@@ -132,3 +134,7 @@ export type PublicProfile = {
 export type UserSearchResult = { id: string; name: string | null; image: string | null; slug: string | null; isFollowing: boolean };
 
 export type BlockedUser = { id: string; name: string | null; image: string | null };
+
+/** One anonymous Secret Santa message: no author, only whether I wrote it. */
+export type SantaMessage = { id: string; body: string; createdAt: string; mine: boolean };
+export type SantaThreads = { recipient: SantaMessage[]; santa: SantaMessage[] };

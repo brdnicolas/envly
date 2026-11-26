@@ -46,4 +46,8 @@ export const Icons = {
   bell: { ios: 'bell', android: 'notifications' },
   search: { ios: 'magnifyingglass', android: 'search' },
   personAdd: { ios: 'person.badge.plus', android: 'person_add' },
+  send: { ios: 'arrow.up.circle.fill', android: 'send' },
+  bubble: { ios: 'bubble.left.and.bubble.right', android: 'forum' },
+  calendar: { ios: 'calendar', android: 'event' },
+  download: { ios: 'square.and.arrow.down', android: 'download' },
 } satisfies Record<string, IconName>;

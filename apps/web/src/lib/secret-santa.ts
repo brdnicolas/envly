@@ -39,6 +39,8 @@ export function serializeSanta(santa: SantaWithMembers, userId: string) {
     inviteCode: santa.inviteCode,
     isOrganizer: santa.organizerId === userId,
     organizer: santa.organizer,
+    // Only the organizer manages (and sees) who must not draw whom.
+    exclusions: santa.organizerId === userId ? parseExclusions(santa.exclusions) : [],
     me: me
       ? { status: me.status, collection: me.collection ? { id: me.collection.id, name: me.collection.name } : null }
       : null,
@@ -81,19 +83,46 @@ export async function ownsCollection(userId: string, collectionId: string | null
   return c?.userId === userId;
 }
 
+export type Exclusion = [string, string];
+
+/** Exclusion pairs stored as JSON: keep only well-formed [a, b] pairs of distinct strings. */
+export function parseExclusions(v: unknown): Exclusion[] {
+  if (!Array.isArray(v)) return [];
+  const seen = new Set<string>();
+  const out: Exclusion[] = [];
+  for (const p of v) {
+    if (!Array.isArray(p) || p.length !== 2) continue;
+    const [a, b] = p;
+    if (typeof a !== "string" || typeof b !== "string" || a === b) continue;
+    const key = [a, b].sort().join("|");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push([a, b]);
+  }
+  return out.slice(0, 100);
+}
+
 /**
  * One single cycle over a random order (A→B→C→…→A): nobody draws themselves
- * and no two people simply swap gifts.
+ * and no two people simply swap gifts. Excluded pairs (either direction) are never
+ * neighbours in the cycle. Returns null when no valid cycle was found.
  */
-export function drawCycle(userIds: string[]): Map<string, string> {
+export function drawCycle(userIds: string[], exclusions: Exclusion[] = []): Map<string, string> | null {
+  const banned = new Set(exclusions.flatMap(([a, b]) => [`${a}>${b}`, `${b}>${a}`]));
   const order = [...userIds];
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = randomInt(i + 1);
-    [order[i], order[j]] = [order[j], order[i]];
+  // Rejection sampling: cheap for the group sizes we have (a few dozen people at most).
+  for (let attempt = 0; attempt < 5000; attempt++) {
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = randomInt(i + 1);
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    if (order.every((giver, i) => !banned.has(`${giver}>${order[(i + 1) % order.length]}`))) {
+      const pairs = new Map<string, string>();
+      order.forEach((giver, i) => pairs.set(giver, order[(i + 1) % order.length]));
+      return pairs;
+    }
   }
-  const pairs = new Map<string, string>();
-  order.forEach((giver, i) => pairs.set(giver, order[(i + 1) % order.length]));
-  return pairs;
+  return null;
 }
 
 /**

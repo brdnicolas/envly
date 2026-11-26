@@ -204,7 +204,26 @@ model SecretSanta {
   organizer   User                @relation("organizedSantas", fields: [organizerId], references: [id], onDelete: Cascade)
   members     SecretSantaMember[]
   drawnAt     DateTime?
+  /// Pairs of user ids that must not give to each other (either way), e.g. couples. Set by the organizer.
+  exclusions  Json                @default("[]")
+  messages    SecretSantaMessage[]
   createdAt   DateTime            @default(now())
+}
+
+/// Anonymous questions between a giver and the person they give to. The recipient never learns `giverId`.
+model SecretSantaMessage {
+  id          String      @id @default(cuid())
+  santaId     String
+  giverId     String
+  recipientId String
+  /// true: written by the giver (anonymous to the recipient); false: the recipient's answer.
+  fromGiver   Boolean
+  body        String
+  santa       SecretSanta @relation(fields: [santaId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+
+  @@index([santaId, giverId])
+  @@index([santaId, recipientId])
 }
 
 /// One participant. `giftToId` is set by the draw and only ever sent to this member.
