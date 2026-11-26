@@ -5,7 +5,8 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Icon, Icons } from '@/components/icon';
 import { Txt } from '@/components/primitives';
-import { Colors, Radius, Space, Type } from '@/constants/theme';
+import { Colors, Fonts, Radius, Space, Type } from '@/constants/theme';
+import { actionSheet } from '@/lib/actions';
 import { formatPrice } from '@/lib/api';
 import { domainOf } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
@@ -45,6 +46,7 @@ export function WishCard({
   const ratio = stored ?? measured ?? 1;
   const price = formatPrice(wish.price);
   const domain = domainOf(wish.url);
+  const pooled = (wish.contributions ?? []).reduce((n, c) => n + c.amount, 0);
 
   const card = (
     <Pressable style={StyleSheet.flatten([styles.card, reserved && { opacity: 0.55 }])}>
@@ -77,80 +79,81 @@ export function WishCard({
         <Txt variant="callout" numberOfLines={2} style={{ fontSize: 13, lineHeight: 17 }}>
           {wish.title}
         </Txt>
-        {reservation?.state === 'free' && (
-          <View style={styles.freeRow}>
-            <Pressable
-              onPress={() => {
-                haptic.select();
-                reservation.onReserve();
-              }}
-              hitSlop={4}
-              accessibilityRole="button"
-              accessibilityLabel={`Réserver ${wish.title}`}
-              style={({ pressed }) => [styles.reserveBtn, { flex: 1 }, pressed && { opacity: 0.7 }]}>
-              <Icon name={Icons.gift} size={13} color={GOLD} />
-              <Txt variant="caption" style={{ color: GOLD }}>
-                Réserver
-              </Txt>
-            </Pressable>
-            {reservation.onPool && (
-              <Pressable
-                onPress={() => {
-                  haptic.select();
-                  reservation.onPool?.();
-                }}
-                hitSlop={4}
-                accessibilityRole="button"
-                accessibilityLabel={`Offrir ${wish.title} à plusieurs`}
-                style={({ pressed }) => [styles.reserveBtn, styles.poolBtn, pressed && { opacity: 0.7 }]}>
-                <Icon name={Icons.people} size={14} color={GOLD} />
-              </Pressable>
-            )}
+        {(domain || price) && (
+          <View style={styles.meta}>
+            <Txt variant="micro" color="text3" numberOfLines={1} style={{ flex: 1 }}>
+              {domain ?? ''}
+            </Txt>
+            {price && <Txt style={[Type.price, { color: Colors.text }]}>{price}</Txt>}
           </View>
         )}
+
+        {reservation?.state === 'free' && (
+          <Pressable
+            onPress={() => {
+              haptic.select();
+              if (!reservation.onPool) return reservation.onReserve();
+              actionSheet(wish.title, [
+                { label: 'Réserver ce cadeau', onPress: reservation.onReserve },
+                { label: 'Offrir à plusieurs', onPress: reservation.onPool },
+              ]);
+            }}
+            hitSlop={4}
+            accessibilityRole="button"
+            accessibilityLabel={`Offrir ${wish.title}`}
+            style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
+            <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
+            <Txt variant="caption" style={styles.offerLabel}>
+              Offrir
+            </Txt>
+          </Pressable>
+        )}
+
         {reservation?.state === 'pool' && (
           <Pressable
             onPress={reservation.onReserve}
             hitSlop={4}
             accessibilityRole="button"
             accessibilityLabel={`Cadeau à plusieurs : ${wish.title}`}
-            style={({ pressed }) => [styles.reserveBtn, pressed && { opacity: 0.7 }]}>
-            <Icon name={Icons.people} size={13} color={GOLD} />
-            <Txt variant="caption" style={{ color: GOLD }}>
-              À plusieurs · {formatPrice((wish.contributions ?? []).reduce((n, c) => n + c.amount, 0))}
-              {wish.price ? ` / ${formatPrice(wish.price)}` : ''}
-            </Txt>
-          </Pressable>
-        )}
-        {reservation?.state === 'mine' && (
-          <View style={styles.mineRow}>
-            <View style={styles.mine}>
-              <Icon name={Icons.check} size={11} color={Colors.success} weight="semibold" />
-              <Txt variant="micro" style={{ color: Colors.success }}>
-                Réservé par vous
+            style={({ pressed }) => [styles.pool, pressed && { opacity: 0.75 }]}>
+            <View style={styles.poolHead}>
+              <Icon name={Icons.people} size={11} color={GOLD} />
+              <Txt variant="micro" style={{ color: GOLD, flex: 1 }} numberOfLines={1}>
+                À plusieurs
+              </Txt>
+              <Txt variant="micro" color="text2">
+                {formatPrice(pooled)}
+                {wish.price ? ` / ${formatPrice(wish.price)}` : ''}
               </Txt>
             </View>
+            {wish.price ? (
+              <View style={styles.track}>
+                <View style={[styles.fill, { width: `${Math.min(100, Math.round((pooled / wish.price) * 100))}%` }]} />
+              </View>
+            ) : null}
+          </Pressable>
+        )}
+
+        {reservation?.state === 'mine' && (
+          <View style={styles.status}>
+            <Icon name={Icons.check} size={11} color={Colors.success} weight="semibold" />
+            <Txt variant="micro" style={{ color: Colors.success, flex: 1 }}>
+              Réservé par vous
+            </Txt>
             <Pressable onPress={reservation.onCancel} hitSlop={8} accessibilityRole="button" accessibilityLabel="Annuler ma réservation">
-              <Txt variant="micro" color="text3" style={{ textDecorationLine: 'underline' }}>
+              <Txt variant="micro" color="text3">
                 Annuler
               </Txt>
             </Pressable>
           </View>
         )}
+
         {(received || reserved) && reservation?.state !== 'mine' && (
-          <View style={styles.reserved}>
-            <Icon name={received ? Icons.gift : Icons.check} size={11} color={Colors.text2} weight="semibold" />
-            <Txt variant="micro" color="text2">
-              {received ? (reservation ? 'Déjà offert' : 'Reçu') : 'Réservé'}
+          <View style={styles.status}>
+            <Icon name={received ? Icons.gift : Icons.check} size={11} color={Colors.text3} weight="semibold" />
+            <Txt variant="micro" color="text3">
+              {received ? (reservation ? 'Déjà offert' : 'Reçu') : 'Déjà réservé'}
             </Txt>
-          </View>
-        )}
-        {(domain || price) && (
-          <View style={styles.bottom}>
-            <Txt variant="micro" color="text3" numberOfLines={1} style={{ flex: 1 }}>
-              {domain ?? ''}
-            </Txt>
-            {price && <Txt style={[Type.price, { color: Colors.text }]}>{price}</Txt>}
           </View>
         )}
       </View>
@@ -198,21 +201,23 @@ export function Masonry<T extends { id: string }>({ items, render }: { items: T[
 const GOLD = '#E8C872';
 
 const styles = StyleSheet.create({
-  reserveBtn: {
+  meta: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
+  offer: {
+    marginTop: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    height: 32,
-    borderRadius: Radius.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(232,200,114,0.45)',
-    backgroundColor: 'rgba(232,200,114,0.08)',
+    gap: 5,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: GOLD,
   },
-  freeRow: { flexDirection: 'row', gap: 6 },
-  poolBtn: { width: 40, paddingHorizontal: 0 },
-  mineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Space.sm },
-  mine: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  offerLabel: { color: Colors.bg, fontFamily: Fonts.semibold },
+  pool: { marginTop: 4, gap: 6, padding: 8, borderRadius: 10, backgroundColor: 'rgba(232,200,114,0.08)' },
+  poolHead: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  track: { height: 3, borderRadius: 2, backgroundColor: 'rgba(232,200,114,0.18)', overflow: 'hidden' },
+  fill: { height: '100%', borderRadius: 2, backgroundColor: GOLD },
+  status: { marginTop: 2, flexDirection: 'row', alignItems: 'center', gap: 4 },
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.muted },
   star: {
@@ -227,8 +232,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   info: { padding: Space.md, gap: 6 },
-  reserved: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  bottom: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
   masonry: { flexDirection: 'row', gap: Space.md, alignItems: 'flex-start' },
   column: { flex: 1, gap: Space.md },
 });
