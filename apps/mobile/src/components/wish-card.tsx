@@ -96,7 +96,7 @@ export function WishCard({
             accessibilityRole="button"
             accessibilityLabel={`Réserver ${wish.title}`}
             style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
-            <Icon name={Icons.gift} size={12} color={Colors.bg} weight="semibold" />
+            <Icon name={Icons.gift} size={12} color={Colors.onPrimary} weight="semibold" />
             <Txt variant="caption" style={styles.offerLabel}>
               Réserver
             </Txt>
@@ -179,9 +179,9 @@ const styles = StyleSheet.create({
     gap: 5,
     height: 30,
     borderRadius: 10,
-    backgroundColor: GOLD,
+    backgroundColor: Colors.primary,
   },
-  offerLabel: { color: Colors.bg, fontFamily: Fonts.semibold },
+  offerLabel: { color: Colors.onPrimary, fontFamily: Fonts.semibold },
   status: { marginTop: 2, flexDirection: 'row', alignItems: 'center', gap: 4 },
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.muted },
