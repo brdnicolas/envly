@@ -9,7 +9,7 @@ import { NavBar } from '@/components/nav-bar';
 import { Avatar, Divider, Txt } from '@/components/primitives';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { actionSheet, confirm, exportMyData } from '@/lib/actions';
+import { confirm } from '@/lib/actions';
 import { API_URL, publicProfileUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { formatBirthday } from '@/lib/format';
@@ -70,12 +70,7 @@ export default function AccountScreen() {
           <Row
             icon={Icons.download}
             label="Exporter mes listes"
-            onPress={() =>
-              actionSheet('Exporter mes listes', [
-                { label: 'JSON (réimportable)', onPress: () => void exportMyData('json') },
-                { label: 'CSV (Excel)', onPress: () => void exportMyData('csv') },
-              ])
-            }
+            onPress={() => router.push('/export')}
           />
           <Row icon={Icons.envelope} label="Aide et contact" onPress={() => void openWeb('/support')} />
           <Row icon={Icons.hand} label="Confidentialité" onPress={() => void openWeb('/privacy.html')} />

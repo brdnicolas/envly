@@ -1,53 +1,39 @@
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icons } from '@/components/icon';
 import { NavBar } from '@/components/nav-bar';
 import { Chip, EmptyState, Skeleton, Txt } from '@/components/primitives';
-import { useToast } from '@/components/toast';
 import { Colors, Radius, Space } from '@/constants/theme';
-import { invalidate, useApi } from '@/hooks/use-api';
-import { actionSheet, openProduct } from '@/lib/actions';
-import { api, errorMessage, formatPrice } from '@/lib/api';
+import { useApi } from '@/hooks/use-api';
+import { formatPrice } from '@/lib/api';
 import { domainOf } from '@/lib/format';
-import { haptic } from '@/lib/haptics';
 import { thumb } from '@/lib/image';
-import type { CollectionSummary, DiscoverFeed, DiscoverItem } from '@/lib/types';
+import type { DiscoverFeed, DiscoverItem } from '@/lib/types';
 
 const GAP = 10;
 
 /** "Découvrir": products most added to public lists lately, by budget. One tap adds one to my lists. */
 export default function DiscoverScreen() {
   const insets = useSafeAreaInsets();
-  const toast = useToast();
   const { width } = useWindowDimensions();
   const [budget, setBudget] = useState<string | null>(null);
   const { data, error, refreshing, refresh } = useApi<DiscoverFeed>(`/api/discover${budget ? `?budget=${budget}` : ''}`);
-  const { data: collections } = useApi<CollectionSummary[]>('/api/collections');
   const tileWidth = (width - Space.lg * 2 - GAP) / 2;
-  const mine = (collections ?? []).filter((c) => c.role !== 'collaborator');
-
-  async function addTo(item: DiscoverItem, collectionId: string) {
-    try {
-      await api('/api/wishes', {
-        method: 'POST',
-        body: { title: item.title, url: item.url, imageUrl: item.imageUrl, price: item.price, collectionId },
-      });
-      invalidate('/api/collections');
-      haptic.success();
-      toast('Ajouté à votre liste');
-    } catch (e) {
-      Alert.alert('Erreur', errorMessage(e));
-    }
-  }
 
   function open(item: DiscoverItem) {
-    actionSheet(item.title, [
-      ...(item.url ? [{ label: 'Voir le produit', onPress: () => openProduct(item.url!) }] : []),
-      ...mine.slice(0, 8).map((c) => ({ label: `Ajouter à « ${c.name} »`, onPress: () => void addTo(item, c.id) })),
-    ]);
+    router.push({
+      pathname: '/discover-add',
+      params: {
+        title: item.title,
+        ...(item.url && { url: item.url }),
+        ...(item.imageUrl && { imageUrl: item.imageUrl }),
+        ...(item.price != null && { price: String(item.price) }),
+      },
+    });
   }
 
   const items = data?.items ?? [];

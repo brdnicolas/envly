@@ -93,6 +93,9 @@ function App() {
             <Stack.Screen name="profile" />
             <Stack.Screen name="birthday" options={SHEET} />
             <Stack.Screen name="thanks" options={SHEET} />
+            <Stack.Screen name="discover-add" options={SHEET} />
+            <Stack.Screen name="export" options={SHEET} />
+            <Stack.Screen name="santa/exclusion" options={SHEET} />
             <Stack.Screen name="wish/[id]" options={{ headerShown: false, presentation: 'modal' }} />
             <Stack.Screen name="add" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen

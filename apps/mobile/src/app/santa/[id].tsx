@@ -14,7 +14,7 @@ import { AvatarStack, Reveal, SantaEyebrow } from '@/components/santa';
 import { useToast } from '@/components/toast';
 import { Colors, Fonts, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { actionSheet, confirm } from '@/lib/actions';
+import { confirm } from '@/lib/actions';
 import { errorMessage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { haptic } from '@/lib/haptics';
@@ -79,29 +79,7 @@ export default function SantaScreen() {
 
   const nameOf = (uid: string) => (uid === user?.id ? 'Vous' : (s.members.find((m) => m.id === uid)?.name ?? 'Participant'));
 
-  // Two quick pickers: first person, then who they must not draw.
-  function addExclusion() {
-    actionSheet(
-      'Qui ne doit pas tirer…',
-      joined.map((a) => ({
-        label: nameOf(a.id),
-        onPress: () =>
-          setTimeout(
-            () =>
-              actionSheet(
-                `${nameOf(a.id)} ne tire pas…`,
-                joined
-                  .filter((b) => b.id !== a.id)
-                  .map((b) => ({
-                    label: nameOf(b.id),
-                    onPress: () => void run(() => updateSanta(s.id, { exclusions: [...s.exclusions, [a.id, b.id]] }), 'Exclusion ajoutée'),
-                  }))
-              ),
-            350
-          ),
-      }))
-    );
-  }
+  const addExclusion = () => router.push({ pathname: '/santa/exclusion', params: { id: s.id } });
 
   const openImport = (listId: string) => router.push({ pathname: '/santa/import', params: { id: s.id, listId } });
 
