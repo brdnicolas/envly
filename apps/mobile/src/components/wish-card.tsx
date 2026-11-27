@@ -167,7 +167,6 @@ export function Masonry<T extends { id: string }>({ items, render }: { items: T[
   );
 }
 
-const GOLD = '#E8C872';
 
 const styles = StyleSheet.create({
   meta: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
