@@ -21,12 +21,28 @@ import { leaveSanta } from '@/lib/santa';
 import type { CollectionSummary, Santa, User } from '@/lib/types';
 import appIcon from '../../assets/images/logo-mark.png';
 
+/** The birthday prompt is shown at most once per app launch. */
+let birthdayPromptShown = false;
+
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const reveal = useScrollReveal();
   const toast = useToast();
   const { user: cached } = useAuth();
   const { data: profile } = useApi<User>('/api/profile');
+
+  // Ask once for the birthday (friends' reminders). Skippable; the server remembers it was asked.
+  useEffect(() => {
+    if (!profile?.askBirthday || birthdayPromptShown) return;
+    // The flag is set when the sheet actually opens: an effect cleanup (re-render, dev double effects)
+    // cancelling the timer must not burn the prompt for this launch.
+    const t = setTimeout(() => {
+      if (birthdayPromptShown) return;
+      birthdayPromptShown = true;
+      router.push({ pathname: '/birthday', params: { prompt: '1' } });
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [profile?.askBirthday]);
   const { data: stats } = useApi<{
     followersCount: number;
     followingCount: number;
@@ -91,6 +107,7 @@ export default function HomeScreen() {
           <Txt variant="title2">Envly</Txt>
         </View>
         <View style={styles.topActions}>
+          <IconButton icon={Icons.sparkles} label="Idées cadeaux" size={40} onPress={() => router.push('/discover')} />
           <IconButton icon={Icons.people} label="Amis" size={40} onPress={() => router.push('/friends')} />
           <IconButton icon={Icons.gear} label="Réglages" size={40} onPress={() => router.push('/profile')} />
         </View>

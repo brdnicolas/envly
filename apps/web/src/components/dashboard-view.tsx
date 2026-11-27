@@ -8,6 +8,7 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CollectionCard, ImageMosaic } from "@/components/collection-card";
+import { BirthdayPrompt } from "@/components/birthday-prompt";
 import { CollectionForm } from "@/components/collection-form";
 import { Plus, Puzzle, X, Copy, Check, Settings, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -431,6 +432,7 @@ export function DashboardView() {
           />
         )}
 
+        <BirthdayPrompt />
         <CollectionForm
           open={showForm}
           onOpenChange={setShowForm}

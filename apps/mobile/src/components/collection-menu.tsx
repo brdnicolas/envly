@@ -7,6 +7,7 @@ import { Icons } from '@/components/icon';
 import { IconButton } from '@/components/primitives';
 import { Colors } from '@/constants/theme';
 import { actionSheet } from '@/lib/actions';
+import { toDateInput } from '@/lib/format';
 
 export type MenuItem = {
   label: string;
@@ -20,12 +21,13 @@ export type MenuItem = {
 export function collectionActions(
   c: { isPublic: boolean },
   isOwner: boolean,
-  h: { edit: () => void; share: () => void; copyLink?: () => void; togglePublic: () => void; remove: () => void }
+  h: { edit: () => void; share: () => void; story?: () => void; copyLink?: () => void; togglePublic: () => void; remove: () => void }
 ): MenuItem[][] {
   return [
     isOwner ? [{ label: 'Modifier', icon: 'pencil', onPress: h.edit }] : [],
     [
       { label: 'Partager', icon: 'square.and.arrow.up', onPress: h.share },
+      ...(h.story && c.isPublic ? [{ label: 'Partager en story', icon: 'photo.on.rectangle', onPress: h.story }] : []),
       ...(h.copyLink && c.isPublic ? [{ label: 'Copier le lien', icon: 'link', onPress: h.copyLink }] : []),
     ],
     isOwner
@@ -95,9 +97,9 @@ export function CollectionMenu({ groups, size = 36 }: { groups: MenuItem[][]; si
 }
 
 /** Open the edit sheet for a collection. */
-export function editCollection(c: { id: string; name: string; description: string | null; isPublic: boolean }) {
+export function editCollection(c: { id: string; name: string; description: string | null; isPublic: boolean; eventDate?: string | null }) {
   router.push({
     pathname: '/new-collection',
-    params: { id: c.id, name: c.name, description: c.description ?? '', isPublic: String(c.isPublic) },
+    params: { id: c.id, name: c.name, description: c.description ?? '', isPublic: String(c.isPublic), eventDate: toDateInput(c.eventDate) },
   });
 }

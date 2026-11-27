@@ -9,9 +9,10 @@ import { NavBar } from '@/components/nav-bar';
 import { Avatar, Divider, Txt } from '@/components/primitives';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { confirm } from '@/lib/actions';
+import { actionSheet, confirm, exportMyData } from '@/lib/actions';
 import { API_URL, publicProfileUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { formatBirthday } from '@/lib/format';
 import type { User } from '@/lib/types';
 
 const openWeb = (path: string) =>
@@ -56,11 +57,26 @@ export default function AccountScreen() {
             />
           )}
           <Row icon={Icons.people} label="Trouver des amis" onPress={() => router.push('/friends-search')} />
+          <Row
+            icon={Icons.calendar}
+            label={user?.birthday ? `Anniversaire · ${formatBirthday(user.birthday)}` : 'Ajouter mon anniversaire'}
+            onPress={() => router.push('/birthday')}
+          />
         </Section>
 
         <Section>
           <Row icon={Icons.gear} label="Paramètres du compte" onPress={() => void openWeb('/settings')} />
           <Row icon={Icons.hand} label="Utilisateurs bloqués" onPress={() => router.push('/blocked')} />
+          <Row
+            icon={Icons.download}
+            label="Exporter mes listes"
+            onPress={() =>
+              actionSheet('Exporter mes listes', [
+                { label: 'JSON (réimportable)', onPress: () => void exportMyData('json') },
+                { label: 'CSV (Excel)', onPress: () => void exportMyData('csv') },
+              ])
+            }
+          />
           <Row icon={Icons.envelope} label="Aide et contact" onPress={() => void openWeb('/support')} />
           <Row icon={Icons.hand} label="Confidentialité" onPress={() => void openWeb('/privacy.html')} />
         </Section>

@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Icon, Icons } from '@/components/icon';
 import { Txt } from '@/components/primitives';
-import { Colors, Radius, Space, Type } from '@/constants/theme';
+import { Colors, Fonts, Radius, Space, Type } from '@/constants/theme';
 import { formatPrice } from '@/lib/api';
 import { domainOf } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
@@ -24,6 +24,7 @@ export function WishCard({
   onPress,
   actions,
   reserved,
+  received,
   reservation,
 }: {
   wish: Wish;
@@ -32,6 +33,8 @@ export function WishCard({
   actions: CardAction[];
   /** Friends' lists: someone already offers this gift. */
   reserved?: boolean;
+  /** The owner marked it as received. */
+  received?: boolean;
   /** Friends' lists: a visible "Réserver" button (free) or "Réservé par vous" (mine). */
   reservation?: { state: 'free' | 'mine' | 'taken'; onReserve: () => void; onCancel: () => void };
 }) {
@@ -74,6 +77,15 @@ export function WishCard({
         <Txt variant="callout" numberOfLines={2} style={{ fontSize: 13, lineHeight: 17 }}>
           {wish.title}
         </Txt>
+        {(domain || price) && (
+          <View style={styles.meta}>
+            <Txt variant="micro" color="text3" numberOfLines={1} style={{ flex: 1 }}>
+              {domain ?? ''}
+            </Txt>
+            {price && <Txt style={[Type.price, { color: Colors.text }]}>{price}</Txt>}
+          </View>
+        )}
+
         {reservation?.state === 'free' && (
           <Pressable
             onPress={() => {
@@ -83,42 +95,34 @@ export function WishCard({
             hitSlop={4}
             accessibilityRole="button"
             accessibilityLabel={`Réserver ${wish.title}`}
-            style={({ pressed }) => [styles.reserveBtn, pressed && { opacity: 0.7 }]}>
-            <Icon name={Icons.gift} size={13} color={GOLD} />
-            <Txt variant="caption" style={{ color: GOLD }}>
+            style={({ pressed }) => [styles.offer, pressed && { opacity: 0.75 }]}>
+            <Icon name={Icons.gift} size={12} color={Colors.onPrimary} weight="semibold" />
+            <Txt variant="caption" style={styles.offerLabel}>
               Réserver
             </Txt>
           </Pressable>
         )}
+
         {reservation?.state === 'mine' && (
-          <View style={styles.mineRow}>
-            <View style={styles.mine}>
-              <Icon name={Icons.check} size={11} color={Colors.success} weight="semibold" />
-              <Txt variant="micro" style={{ color: Colors.success }}>
-                Réservé par vous
-              </Txt>
-            </View>
+          <View style={styles.status}>
+            <Icon name={Icons.check} size={11} color={Colors.success} weight="semibold" />
+            <Txt variant="micro" style={{ color: Colors.success, flex: 1 }}>
+              Réservé par vous
+            </Txt>
             <Pressable onPress={reservation.onCancel} hitSlop={8} accessibilityRole="button" accessibilityLabel="Annuler ma réservation">
-              <Txt variant="micro" color="text3" style={{ textDecorationLine: 'underline' }}>
+              <Txt variant="micro" color="text3">
                 Annuler
               </Txt>
             </Pressable>
           </View>
         )}
-        {reserved && reservation?.state !== 'mine' && (
-          <View style={styles.reserved}>
-            <Icon name={Icons.check} size={11} color={Colors.text2} weight="semibold" />
-            <Txt variant="micro" color="text2">
-              Réservé
+
+        {(received || reserved) && reservation?.state !== 'mine' && (
+          <View style={styles.status}>
+            <Icon name={received ? Icons.gift : Icons.check} size={11} color={Colors.text3} weight="semibold" />
+            <Txt variant="micro" color="text3">
+              {received ? (reservation ? 'Déjà offert' : 'Reçu') : 'Déjà réservé'}
             </Txt>
-          </View>
-        )}
-        {(domain || price) && (
-          <View style={styles.bottom}>
-            <Txt variant="micro" color="text3" numberOfLines={1} style={{ flex: 1 }}>
-              {domain ?? ''}
-            </Txt>
-            {price && <Txt style={[Type.price, { color: Colors.text }]}>{price}</Txt>}
           </View>
         )}
       </View>
@@ -163,22 +167,21 @@ export function Masonry<T extends { id: string }>({ items, render }: { items: T[
   );
 }
 
-const GOLD = '#E8C872';
 
 const styles = StyleSheet.create({
-  reserveBtn: {
+  meta: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
+  offer: {
+    marginTop: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    height: 32,
-    borderRadius: Radius.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(232,200,114,0.45)',
-    backgroundColor: 'rgba(232,200,114,0.08)',
+    gap: 5,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: Colors.primary,
   },
-  mineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Space.sm },
-  mine: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  offerLabel: { color: Colors.onPrimary, fontFamily: Fonts.semibold },
+  status: { marginTop: 2, flexDirection: 'row', alignItems: 'center', gap: 4 },
   card: { backgroundColor: Colors.card, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   placeholder: { aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.muted },
   star: {
@@ -193,8 +196,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   info: { padding: Space.md, gap: 6 },
-  reserved: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  bottom: { flexDirection: 'row', alignItems: 'center', gap: Space.sm },
   masonry: { flexDirection: 'row', gap: Space.md, alignItems: 'flex-start' },
   column: { flex: 1, gap: Space.md },
 });

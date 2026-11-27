@@ -60,6 +60,11 @@ model User {
   description       String?
   password          String?
   slug              String?                  @unique
+  /// Birthday without year (privacy): friends get a reminder two weeks before.
+  birthdayDay       Int?
+  birthdayMonth     Int?
+  /// When we asked for the birthday (once, skippable): set even if the user declined.
+  birthdayAskedAt   DateTime?
   accounts          Account[]
   sessions          Session[]
   collections       Collection[]
@@ -86,6 +91,8 @@ model Collection {
   description   String?
   slug          String                   @unique
   isPublic      Boolean                  @default(false)
+  /// Optional occasion (birthday, Christmas, wedding…): countdown on the list and reminders to followers.
+  eventDate     DateTime?
   userId        String
   user          User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   wishes        Wish[]
@@ -109,6 +116,8 @@ model Wish {
   price            Float?
   position         Int          @default(0)
   isPriority       Boolean      @default(false)
+  /// Set by the owner once the gift arrived: shown as "Déjà offert" and unlocks the thank-you note.
+  receivedAt       DateTime?
   collectionId     String
   creatorId        String?
   collection       Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
@@ -123,8 +132,15 @@ model Reservation {
   wishId     String   @unique
   reservedBy String
   token      String
+  /// Signed-in reserver, only used to deliver the owner's thank-you. Never sent to the owner.
+  reserverId String?
+  /// Owner's thank-you note, delivered to the reserver without revealing who they are.
+  thanks     String?
+  thankedAt  DateTime?
   wish       Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
+
+  @@index([reserverId])
 }
 
 model UserFollow {
@@ -158,6 +174,7 @@ enum CollaboratorStatus {
 enum NotificationType {
   COLLABORATION_INVITE
   NEW_FOLLOWER
+  THANKS
 }
 
 model CollectionCollaborator {
@@ -204,7 +221,26 @@ model SecretSanta {
   organizer   User                @relation("organizedSantas", fields: [organizerId], references: [id], onDelete: Cascade)
   members     SecretSantaMember[]
   drawnAt     DateTime?
+  /// Pairs of user ids that must not give to each other (either way), e.g. couples. Set by the organizer.
+  exclusions  Json                @default("[]")
+  messages    SecretSantaMessage[]
   createdAt   DateTime            @default(now())
+}
+
+/// Anonymous questions between a giver and the person they give to. The recipient never learns `giverId`.
+model SecretSantaMessage {
+  id          String      @id @default(cuid())
+  santaId     String
+  giverId     String
+  recipientId String
+  /// true: written by the giver (anonymous to the recipient); false: the recipient's answer.
+  fromGiver   Boolean
+  body        String
+  santa       SecretSanta @relation(fields: [santaId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+
+  @@index([santaId, giverId])
+  @@index([santaId, recipientId])
 }
 
 /// One participant. `giftToId` is set by the draw and only ever sent to this member.

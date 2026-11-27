@@ -17,6 +17,9 @@ interface Notification {
     collaboratorId?: string;
     followerId?: string;
     followerName?: string;
+    fromName?: string;
+    wishTitle?: string;
+    message?: string;
   };
   read: boolean;
   createdAt: string;
@@ -184,6 +187,19 @@ function NotificationItem({
             </Button>
           </div>
         )}
+        {timestamp}
+      </div>
+    );
+  }
+
+  if (notification.type === "THANKS") {
+    const { fromName, wishTitle, message } = notification.data;
+    return (
+      <div className={`px-4 py-3 border-b border-border/40 last:border-0 ${!notification.read ? "bg-accent/30" : ""}`}>
+        <p className="text-sm">
+          <span className="font-medium">{fromName}</span> vous remercie pour <span className="font-medium">{wishTitle}</span> 💛
+        </p>
+        {message && <p className="mt-1 text-sm italic text-muted-foreground">« {message} »</p>}
         {timestamp}
       </div>
     );

@@ -6,9 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/w/", "/u/"],
+        allow: ["/", "/w/", "/u/", "/secret-santa", "/idees-cadeaux"],
         // Private or app-only areas: nothing to index there.
-        disallow: ["/api/", "/add", "/collection/", "/settings", "/friends", "/dashboard", "/s/", "/reset-password", "/forgot-password"],
+        disallow: ["/api/", "/add", "/collection/", "/settings", "/friends", "/dashboard", "/s/", "/reset-password", "/forgot-password", "/secret-santa/nouveau"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

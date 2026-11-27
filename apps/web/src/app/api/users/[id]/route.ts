@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { serializeBirthday } from "@/lib/events";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -20,6 +21,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       image: true,
       slug: true,
       description: true,
+      birthdayDay: true,
+      birthdayMonth: true,
       _count: { select: { followers: true, following: true } },
       collections: {
         where: { isPublic: true },
@@ -30,6 +33,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
           description: true,
           slug: true,
           isPublic: true,
+          eventDate: true,
           _count: { select: { wishes: true } },
           wishes: {
             where: { imageUrl: { not: null } },
@@ -59,9 +63,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       ])
     : [0, 0];
 
-  const { _count, collections, ...profile } = user;
+  const { _count, collections, birthdayDay, birthdayMonth, ...profile } = user;
+  // Birthday (day + month) only for connected people, so friends can plan ahead.
+  const connected = me === user.id || isFollowing > 0 || followsMe > 0;
   return NextResponse.json({
     ...profile,
+    birthday: connected && !iBlocked ? serializeBirthday({ birthdayDay, birthdayMonth }) : null,
     isBlocked: iBlocked > 0,
     isMe: me === user.id,
     isFollowing: isFollowing > 0,

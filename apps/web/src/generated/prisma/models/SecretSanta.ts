@@ -67,6 +67,7 @@ export type SecretSantaCountAggregateOutputType = {
   status: number
   organizerId: number
   drawnAt: number
+  exclusions: number
   createdAt: number
   _all: number
 }
@@ -113,6 +114,7 @@ export type SecretSantaCountAggregateInputType = {
   status?: true
   organizerId?: true
   drawnAt?: true
+  exclusions?: true
   createdAt?: true
   _all?: true
 }
@@ -212,6 +214,7 @@ export type SecretSantaGroupByOutputType = {
   status: $Enums.SecretSantaStatus
   organizerId: string
   drawnAt: Date | null
+  exclusions: runtime.JsonValue
   createdAt: Date
   _count: SecretSantaCountAggregateOutputType | null
   _avg: SecretSantaAvgAggregateOutputType | null
@@ -247,9 +250,11 @@ export type SecretSantaWhereInput = {
   status?: Prisma.EnumSecretSantaStatusFilter<"SecretSanta"> | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFilter<"SecretSanta"> | string
   drawnAt?: Prisma.DateTimeNullableFilter<"SecretSanta"> | Date | string | null
+  exclusions?: Prisma.JsonFilter<"SecretSanta">
   createdAt?: Prisma.DateTimeFilter<"SecretSanta"> | Date | string
   organizer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.SecretSantaMemberListRelationFilter
+  messages?: Prisma.SecretSantaMessageListRelationFilter
 }
 
 export type SecretSantaOrderByWithRelationInput = {
@@ -261,9 +266,11 @@ export type SecretSantaOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   organizerId?: Prisma.SortOrder
   drawnAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   organizer?: Prisma.UserOrderByWithRelationInput
   members?: Prisma.SecretSantaMemberOrderByRelationAggregateInput
+  messages?: Prisma.SecretSantaMessageOrderByRelationAggregateInput
 }
 
 export type SecretSantaWhereUniqueInput = Prisma.AtLeast<{
@@ -278,9 +285,11 @@ export type SecretSantaWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumSecretSantaStatusFilter<"SecretSanta"> | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFilter<"SecretSanta"> | string
   drawnAt?: Prisma.DateTimeNullableFilter<"SecretSanta"> | Date | string | null
+  exclusions?: Prisma.JsonFilter<"SecretSanta">
   createdAt?: Prisma.DateTimeFilter<"SecretSanta"> | Date | string
   organizer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.SecretSantaMemberListRelationFilter
+  messages?: Prisma.SecretSantaMessageListRelationFilter
 }, "id" | "inviteCode">
 
 export type SecretSantaOrderByWithAggregationInput = {
@@ -292,6 +301,7 @@ export type SecretSantaOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   organizerId?: Prisma.SortOrder
   drawnAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SecretSantaCountOrderByAggregateInput
   _avg?: Prisma.SecretSantaAvgOrderByAggregateInput
@@ -312,6 +322,7 @@ export type SecretSantaScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumSecretSantaStatusWithAggregatesFilter<"SecretSanta"> | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringWithAggregatesFilter<"SecretSanta"> | string
   drawnAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SecretSanta"> | Date | string | null
+  exclusions?: Prisma.JsonWithAggregatesFilter<"SecretSanta">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SecretSanta"> | Date | string
 }
 
@@ -323,9 +334,11 @@ export type SecretSantaCreateInput = {
   inviteCode: string
   status?: $Enums.SecretSantaStatus
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   organizer: Prisma.UserCreateNestedOneWithoutOrganizedSantasInput
   members?: Prisma.SecretSantaMemberCreateNestedManyWithoutSantaInput
+  messages?: Prisma.SecretSantaMessageCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaUncheckedCreateInput = {
@@ -337,8 +350,10 @@ export type SecretSantaUncheckedCreateInput = {
   status?: $Enums.SecretSantaStatus
   organizerId: string
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   members?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutSantaInput
+  messages?: Prisma.SecretSantaMessageUncheckedCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaUpdateInput = {
@@ -349,9 +364,11 @@ export type SecretSantaUpdateInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organizer?: Prisma.UserUpdateOneRequiredWithoutOrganizedSantasNestedInput
   members?: Prisma.SecretSantaMemberUpdateManyWithoutSantaNestedInput
+  messages?: Prisma.SecretSantaMessageUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaUncheckedUpdateInput = {
@@ -363,8 +380,10 @@ export type SecretSantaUncheckedUpdateInput = {
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFieldUpdateOperationsInput | string
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutSantaNestedInput
+  messages?: Prisma.SecretSantaMessageUncheckedUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaCreateManyInput = {
@@ -376,6 +395,7 @@ export type SecretSantaCreateManyInput = {
   status?: $Enums.SecretSantaStatus
   organizerId: string
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -387,6 +407,7 @@ export type SecretSantaUpdateManyMutationInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -399,6 +420,7 @@ export type SecretSantaUncheckedUpdateManyInput = {
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFieldUpdateOperationsInput | string
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -421,6 +443,7 @@ export type SecretSantaCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   organizerId?: Prisma.SortOrder
   drawnAt?: Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -507,6 +530,20 @@ export type EnumSecretSantaStatusFieldUpdateOperationsInput = {
   set?: $Enums.SecretSantaStatus
 }
 
+export type SecretSantaCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.SecretSantaCreateWithoutMessagesInput, Prisma.SecretSantaUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.SecretSantaCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.SecretSantaWhereUniqueInput
+}
+
+export type SecretSantaUpdateOneRequiredWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.SecretSantaCreateWithoutMessagesInput, Prisma.SecretSantaUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.SecretSantaCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.SecretSantaUpsertWithoutMessagesInput
+  connect?: Prisma.SecretSantaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SecretSantaUpdateToOneWithWhereWithoutMessagesInput, Prisma.SecretSantaUpdateWithoutMessagesInput>, Prisma.SecretSantaUncheckedUpdateWithoutMessagesInput>
+}
+
 export type SecretSantaCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.SecretSantaCreateWithoutMembersInput, Prisma.SecretSantaUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.SecretSantaCreateOrConnectWithoutMembersInput
@@ -529,8 +566,10 @@ export type SecretSantaCreateWithoutOrganizerInput = {
   inviteCode: string
   status?: $Enums.SecretSantaStatus
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   members?: Prisma.SecretSantaMemberCreateNestedManyWithoutSantaInput
+  messages?: Prisma.SecretSantaMessageCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaUncheckedCreateWithoutOrganizerInput = {
@@ -541,8 +580,10 @@ export type SecretSantaUncheckedCreateWithoutOrganizerInput = {
   inviteCode: string
   status?: $Enums.SecretSantaStatus
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   members?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutSantaInput
+  messages?: Prisma.SecretSantaMessageUncheckedCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaCreateOrConnectWithoutOrganizerInput = {
@@ -583,7 +624,80 @@ export type SecretSantaScalarWhereInput = {
   status?: Prisma.EnumSecretSantaStatusFilter<"SecretSanta"> | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFilter<"SecretSanta"> | string
   drawnAt?: Prisma.DateTimeNullableFilter<"SecretSanta"> | Date | string | null
+  exclusions?: Prisma.JsonFilter<"SecretSanta">
   createdAt?: Prisma.DateTimeFilter<"SecretSanta"> | Date | string
+}
+
+export type SecretSantaCreateWithoutMessagesInput = {
+  id?: string
+  name: string
+  budget?: number | null
+  date?: Date | string | null
+  inviteCode: string
+  status?: $Enums.SecretSantaStatus
+  drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  organizer: Prisma.UserCreateNestedOneWithoutOrganizedSantasInput
+  members?: Prisma.SecretSantaMemberCreateNestedManyWithoutSantaInput
+}
+
+export type SecretSantaUncheckedCreateWithoutMessagesInput = {
+  id?: string
+  name: string
+  budget?: number | null
+  date?: Date | string | null
+  inviteCode: string
+  status?: $Enums.SecretSantaStatus
+  organizerId: string
+  drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  members?: Prisma.SecretSantaMemberUncheckedCreateNestedManyWithoutSantaInput
+}
+
+export type SecretSantaCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.SecretSantaWhereUniqueInput
+  create: Prisma.XOR<Prisma.SecretSantaCreateWithoutMessagesInput, Prisma.SecretSantaUncheckedCreateWithoutMessagesInput>
+}
+
+export type SecretSantaUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.SecretSantaUpdateWithoutMessagesInput, Prisma.SecretSantaUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.SecretSantaCreateWithoutMessagesInput, Prisma.SecretSantaUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.SecretSantaWhereInput
+}
+
+export type SecretSantaUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.SecretSantaWhereInput
+  data: Prisma.XOR<Prisma.SecretSantaUpdateWithoutMessagesInput, Prisma.SecretSantaUncheckedUpdateWithoutMessagesInput>
+}
+
+export type SecretSantaUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
+  drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizer?: Prisma.UserUpdateOneRequiredWithoutOrganizedSantasNestedInput
+  members?: Prisma.SecretSantaMemberUpdateManyWithoutSantaNestedInput
+}
+
+export type SecretSantaUncheckedUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
+  organizerId?: Prisma.StringFieldUpdateOperationsInput | string
+  drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaCreateWithoutMembersInput = {
@@ -594,8 +708,10 @@ export type SecretSantaCreateWithoutMembersInput = {
   inviteCode: string
   status?: $Enums.SecretSantaStatus
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   organizer: Prisma.UserCreateNestedOneWithoutOrganizedSantasInput
+  messages?: Prisma.SecretSantaMessageCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaUncheckedCreateWithoutMembersInput = {
@@ -607,7 +723,9 @@ export type SecretSantaUncheckedCreateWithoutMembersInput = {
   status?: $Enums.SecretSantaStatus
   organizerId: string
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  messages?: Prisma.SecretSantaMessageUncheckedCreateNestedManyWithoutSantaInput
 }
 
 export type SecretSantaCreateOrConnectWithoutMembersInput = {
@@ -634,8 +752,10 @@ export type SecretSantaUpdateWithoutMembersInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organizer?: Prisma.UserUpdateOneRequiredWithoutOrganizedSantasNestedInput
+  messages?: Prisma.SecretSantaMessageUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaUncheckedUpdateWithoutMembersInput = {
@@ -647,7 +767,9 @@ export type SecretSantaUncheckedUpdateWithoutMembersInput = {
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   organizerId?: Prisma.StringFieldUpdateOperationsInput | string
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.SecretSantaMessageUncheckedUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaCreateManyOrganizerInput = {
@@ -658,6 +780,7 @@ export type SecretSantaCreateManyOrganizerInput = {
   inviteCode: string
   status?: $Enums.SecretSantaStatus
   drawnAt?: Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -669,8 +792,10 @@ export type SecretSantaUpdateWithoutOrganizerInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.SecretSantaMemberUpdateManyWithoutSantaNestedInput
+  messages?: Prisma.SecretSantaMessageUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaUncheckedUpdateWithoutOrganizerInput = {
@@ -681,8 +806,10 @@ export type SecretSantaUncheckedUpdateWithoutOrganizerInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.SecretSantaMemberUncheckedUpdateManyWithoutSantaNestedInput
+  messages?: Prisma.SecretSantaMessageUncheckedUpdateManyWithoutSantaNestedInput
 }
 
 export type SecretSantaUncheckedUpdateManyWithoutOrganizerInput = {
@@ -693,6 +820,7 @@ export type SecretSantaUncheckedUpdateManyWithoutOrganizerInput = {
   inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSecretSantaStatusFieldUpdateOperationsInput | $Enums.SecretSantaStatus
   drawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exclusions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -703,10 +831,12 @@ export type SecretSantaUncheckedUpdateManyWithoutOrganizerInput = {
 
 export type SecretSantaCountOutputType = {
   members: number
+  messages: number
 }
 
 export type SecretSantaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | SecretSantaCountOutputTypeCountMembersArgs
+  messages?: boolean | SecretSantaCountOutputTypeCountMessagesArgs
 }
 
 /**
@@ -726,6 +856,13 @@ export type SecretSantaCountOutputTypeCountMembersArgs<ExtArgs extends runtime.T
   where?: Prisma.SecretSantaMemberWhereInput
 }
 
+/**
+ * SecretSantaCountOutputType without action
+ */
+export type SecretSantaCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SecretSantaMessageWhereInput
+}
+
 
 export type SecretSantaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -736,9 +873,11 @@ export type SecretSantaSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   status?: boolean
   organizerId?: boolean
   drawnAt?: boolean
+  exclusions?: boolean
   createdAt?: boolean
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.SecretSanta$membersArgs<ExtArgs>
+  messages?: boolean | Prisma.SecretSanta$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.SecretSantaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["secretSanta"]>
 
@@ -751,6 +890,7 @@ export type SecretSantaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   status?: boolean
   organizerId?: boolean
   drawnAt?: boolean
+  exclusions?: boolean
   createdAt?: boolean
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["secretSanta"]>
@@ -764,6 +904,7 @@ export type SecretSantaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   status?: boolean
   organizerId?: boolean
   drawnAt?: boolean
+  exclusions?: boolean
   createdAt?: boolean
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["secretSanta"]>
@@ -777,13 +918,15 @@ export type SecretSantaSelectScalar = {
   status?: boolean
   organizerId?: boolean
   drawnAt?: boolean
+  exclusions?: boolean
   createdAt?: boolean
 }
 
-export type SecretSantaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "budget" | "date" | "inviteCode" | "status" | "organizerId" | "drawnAt" | "createdAt", ExtArgs["result"]["secretSanta"]>
+export type SecretSantaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "budget" | "date" | "inviteCode" | "status" | "organizerId" | "drawnAt" | "exclusions" | "createdAt", ExtArgs["result"]["secretSanta"]>
 export type SecretSantaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.SecretSanta$membersArgs<ExtArgs>
+  messages?: boolean | Prisma.SecretSanta$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.SecretSantaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SecretSantaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -798,6 +941,7 @@ export type $SecretSantaPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     organizer: Prisma.$UserPayload<ExtArgs>
     members: Prisma.$SecretSantaMemberPayload<ExtArgs>[]
+    messages: Prisma.$SecretSantaMessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -808,6 +952,10 @@ export type $SecretSantaPayload<ExtArgs extends runtime.Types.Extensions.Interna
     status: $Enums.SecretSantaStatus
     organizerId: string
     drawnAt: Date | null
+    /**
+     * Pairs of user ids that must not give to each other (either way), e.g. couples. Set by the organizer.
+     */
+    exclusions: runtime.JsonValue
     createdAt: Date
   }, ExtArgs["result"]["secretSanta"]>
   composites: {}
@@ -1205,6 +1353,7 @@ export interface Prisma__SecretSantaClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organizer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.SecretSanta$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecretSanta$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretSantaMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messages<T extends Prisma.SecretSanta$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecretSanta$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretSantaMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1242,6 +1391,7 @@ export interface SecretSantaFieldRefs {
   readonly status: Prisma.FieldRef<"SecretSanta", 'SecretSantaStatus'>
   readonly organizerId: Prisma.FieldRef<"SecretSanta", 'String'>
   readonly drawnAt: Prisma.FieldRef<"SecretSanta", 'DateTime'>
+  readonly exclusions: Prisma.FieldRef<"SecretSanta", 'Json'>
   readonly createdAt: Prisma.FieldRef<"SecretSanta", 'DateTime'>
 }
     
@@ -1660,6 +1810,30 @@ export type SecretSanta$membersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SecretSantaMemberScalarFieldEnum | Prisma.SecretSantaMemberScalarFieldEnum[]
+}
+
+/**
+ * SecretSanta.messages
+ */
+export type SecretSanta$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SecretSantaMessage
+   */
+  select?: Prisma.SecretSantaMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SecretSantaMessage
+   */
+  omit?: Prisma.SecretSantaMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SecretSantaMessageInclude<ExtArgs> | null
+  where?: Prisma.SecretSantaMessageWhereInput
+  orderBy?: Prisma.SecretSantaMessageOrderByWithRelationInput | Prisma.SecretSantaMessageOrderByWithRelationInput[]
+  cursor?: Prisma.SecretSantaMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SecretSantaMessageScalarFieldEnum | Prisma.SecretSantaMessageScalarFieldEnum[]
 }
 
 /**

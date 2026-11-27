@@ -1,6 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["fra1"],
+  "regions": [
+    "fra1"
+  ],
   "installCommand": "sh scripts/vercel-yarn.sh workspaces focus @envly/web",
-  "buildCommand": "sh scripts/vercel-yarn.sh build"
+  "buildCommand": "sh scripts/vercel-yarn.sh build",
+  "crons": [
+    {
+      "path": "/api/cron/reminders",
+      "schedule": "17 8 * * *"
+    }
+  ]
 }

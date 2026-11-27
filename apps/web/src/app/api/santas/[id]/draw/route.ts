@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { currentUserId, drawCycle, loadSanta, notifyDrawn, serializeSanta } from "@/lib/secret-santa";
+import { currentUserId, drawCycle, loadSanta, notifyDrawn, parseExclusions, serializeSanta } from "@/lib/secret-santa";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -20,7 +20,16 @@ export async function POST(_req: Request, { params }: Ctx) {
     return NextResponse.json({ error: "Il faut au moins 3 participants" }, { status: 400 });
   }
 
-  const pairs = drawCycle(santa.members.map((m) => m.userId));
+  const pairs = drawCycle(
+    santa.members.map((m) => m.userId),
+    parseExclusions(santa.exclusions)
+  );
+  if (!pairs) {
+    return NextResponse.json(
+      { error: "Impossible de faire un tirage avec ces exclusions. Retirez-en une ou ajoutez des participants." },
+      { status: 400 }
+    );
+  }
   const drawn = await prisma.$transaction(async (tx) => {
     // Flip the status first: a concurrent second draw finds nothing to flip and stops.
     const { count } = await tx.secretSanta.updateMany({

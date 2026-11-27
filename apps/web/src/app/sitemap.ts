@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
+import { BUDGETS } from "@/lib/discover";
+import { GUIDES } from "@/lib/santa-guides";
 import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +15,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/support`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/install`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/signin`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/secret-santa`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    ...GUIDES.map((g) => ({ url: `${SITE_URL}/secret-santa/${g.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 })),
+    { url: `${SITE_URL}/idees-cadeaux`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    ...Object.keys(BUDGETS).map((b) => ({ url: `${SITE_URL}/idees-cadeaux/${b}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.7 })),
   ];
 
   // Public lists (with something in them) and the profiles that own them.

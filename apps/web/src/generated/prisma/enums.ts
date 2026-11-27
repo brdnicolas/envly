@@ -20,7 +20,8 @@ export type CollaboratorStatus = (typeof CollaboratorStatus)[keyof typeof Collab
 
 export const NotificationType = {
   COLLABORATION_INVITE: 'COLLABORATION_INVITE',
-  NEW_FOLLOWER: 'NEW_FOLLOWER'
+  NEW_FOLLOWER: 'NEW_FOLLOWER',
+  THANKS: 'THANKS'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

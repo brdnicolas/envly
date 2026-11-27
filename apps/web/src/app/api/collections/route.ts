@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { parseEventDate } from "@/lib/events";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "@/lib/utils";
 
@@ -54,7 +55,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { name, description, isPublic } = await req.json();
+  const { name, description, isPublic, eventDate } = await req.json();
 
   if (!name) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
       description,
       slug,
       isPublic: isPublic === true,
+      eventDate: parseEventDate(eventDate) ?? null,
       userId: session.user.id,
     },
   });

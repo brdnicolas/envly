@@ -5,7 +5,13 @@ export type User = {
   image: string | null;
   slug: string | null;
   description?: string | null;
+  birthday?: Birthday | null;
+  /** Show the one-time "when is your birthday?" prompt. */
+  askBirthday?: boolean;
 };
+
+/** Day + month only (no year, for privacy). */
+export type Birthday = { day: number; month: number };
 
 export type CollectionSummary = {
   id: string;
@@ -13,6 +19,8 @@ export type CollectionSummary = {
   description: string | null;
   slug: string;
   isPublic: boolean;
+  /** Occasion date (ISO), shown as a countdown. */
+  eventDate?: string | null;
   _count: { wishes: number };
   wishes: { imageUrl: string | null }[];
   role?: 'owner' | 'collaborator';
@@ -33,6 +41,8 @@ export type Wish = {
   imageHeight?: number | null;
   price: number | null;
   isPriority: boolean;
+  /** Owner marked the gift as received ("Déjà offert" for friends). */
+  receivedAt?: string | null;
   collectionId: string;
   creator?: { id: string; name: string | null } | null;
   /** Only sent to viewers (friends), never to the owner. */
@@ -65,6 +75,8 @@ export type Santa = {
   inviteCode: string;
   isOrganizer: boolean;
   organizer: Person;
+  /** Organizer only: pairs of user ids who must not draw each other. */
+  exclusions: [string, string][];
   me: { status: 'INVITED' | 'JOINED'; collection: { id: string; name: string } | null } | null;
   members: (Person & { status: 'INVITED' | 'JOINED'; hasList: boolean })[];
   /** Only ever my own pairing. */
@@ -110,7 +122,38 @@ export type FeedWish = {
   owner: { id: string; name: string | null; image: string | null };
 };
 
-export type FriendsHome = { people: Friend[]; feed: FeedWish[] };
+/** A friend's birthday or a dated public list coming up. */
+export type UpcomingEvent = {
+  kind: 'birthday' | 'event';
+  date: string;
+  days: number;
+  user: { id: string; name: string | null; image: string | null };
+  collection: { id: string; name: string } | null;
+};
+
+export type NewList = {
+  id: string;
+  name: string;
+  createdAt: string;
+  _count: { wishes: number };
+  wishes: { imageUrl: string | null }[];
+  owner: { id: string; name: string | null; image: string | null };
+};
+
+export type FriendsHome = { people: Friend[]; feed: FeedWish[]; upcoming?: UpcomingEvent[]; newLists?: NewList[] };
+
+/** Gift idea from the "Découvrir" feed: anonymous, no list nor owner. */
+export type DiscoverItem = {
+  id: string;
+  title: string;
+  url: string | null;
+  imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  price: number | null;
+  popularity: number;
+};
+export type DiscoverFeed = { budgets: { key: string; label: string }[]; items: DiscoverItem[] };
 
 export type PublicProfile = {
   id: string;
@@ -118,6 +161,7 @@ export type PublicProfile = {
   image: string | null;
   slug: string | null;
   description: string | null;
+  birthday?: Birthday | null;
   isMe: boolean;
   /** I blocked this user: their lists are hidden. */
   isBlocked?: boolean;
@@ -132,3 +176,7 @@ export type PublicProfile = {
 export type UserSearchResult = { id: string; name: string | null; image: string | null; slug: string | null; isFollowing: boolean };
 
 export type BlockedUser = { id: string; name: string | null; image: string | null };
+
+/** One anonymous Secret Santa message: no author, only whether I wrote it. */
+export type SantaMessage = { id: string; body: string; createdAt: string; mine: boolean };
+export type SantaThreads = { recipient: SantaMessage[]; santa: SantaMessage[] };

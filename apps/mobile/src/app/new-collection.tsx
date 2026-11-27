@@ -8,26 +8,30 @@ import { Sheet, useSheet } from '@/components/sheet';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { invalidate } from '@/hooks/use-api';
 import { api, errorMessage } from '@/lib/api';
+import { parseDateInput } from '@/lib/format';
 import { haptic } from '@/lib/haptics';
 
 /** Create a collection, or edit one when opened with `id` (+ current values). */
 function CollectionFormScreenContent() {
   const toast = useToast();
   const { close } = useSheet();
-  const params = useLocalSearchParams<{ id?: string; name?: string; description?: string; isPublic?: string }>();
+  const params = useLocalSearchParams<{ id?: string; name?: string; description?: string; isPublic?: string; eventDate?: string }>();
   const editing = !!params.id;
   const [name, setName] = useState(params.name ?? '');
   const [description, setDescription] = useState(params.description ?? '');
   const [isPublic, setIsPublic] = useState(params.isPublic !== 'false');
+  const [eventDate, setEventDate] = useState(params.eventDate ?? '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function create() {
     if (!name.trim()) return setError('Le nom est requis.');
+    const date = parseDateInput(eventDate);
+    if (date === undefined) return setError('Date invalide (format JJ/MM/AAAA).');
     setSaving(true);
     setError(null);
     try {
-      const body = { name: name.trim(), isPublic, ...(editing && { description: description.trim() || null }) };
+      const body = { name: name.trim(), isPublic, eventDate: date, ...(editing && { description: description.trim() || null }) };
       if (editing) await api(`/api/collections/${params.id}`, { method: 'PATCH', body });
       else await api('/api/collections', { method: 'POST', body });
       invalidate('/api/collections');
@@ -59,6 +63,17 @@ function CollectionFormScreenContent() {
       {editing && (
         <Field label="Description" value={description} onChangeText={setDescription} placeholder="Une note pour vos proches (facultatif)" multiline />
       )}
+      <Field
+        label="Date de l’événement (facultatif)"
+        value={eventDate}
+        onChangeText={(v) => {
+          setEventDate(v);
+          setError(null);
+        }}
+        placeholder="JJ/MM/AAAA"
+        keyboardType="numbers-and-punctuation"
+        maxLength={10}
+      />
       <View style={styles.row}>
         <View style={{ flex: 1, gap: 2 }}>
           <Txt variant="bodyMedium">Collection publique</Txt>

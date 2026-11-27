@@ -28,6 +28,19 @@ interface Wish {
   price: number | null;
   isPriority?: boolean;
   reservation?: { reservedBy: string } | null;
+  receivedAt?: string | null;
+}
+
+/** "Aujourd'hui", "Demain", "Dans 12 jours", or null once past. */
+function countdown(iso: string | null | undefined) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  const now = new Date();
+  const n = Math.round(
+    (Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())) / 86_400_000
+  );
+  if (n < 0) return null;
+  return n === 0 ? "Aujourd'hui" : n === 1 ? "Demain" : `Dans ${n} jours`;
 }
 
 export function PublicCollectionView({
@@ -42,6 +55,7 @@ export function PublicCollectionView({
     description: string | null;
     ownerName: string | null;
     ownerSlug?: string | null;
+    eventDate?: string | null;
   };
   wishes: Wish[];
   isOwner: boolean;
@@ -77,6 +91,11 @@ export function PublicCollectionView({
             {isOwner && (
               <Badge variant="outline" className="text-xs rounded-lg">
                 Votre liste
+              </Badge>
+            )}
+            {countdown(collection.eventDate) && (
+              <Badge variant="secondary" className="text-xs rounded-lg">
+                {countdown(collection.eventDate)}
               </Badge>
             )}
           </div>

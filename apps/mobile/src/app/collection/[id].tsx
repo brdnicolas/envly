@@ -1,5 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,13 +9,13 @@ import { BOTTOM_ACTION_SPACE, BottomAction, useScrollReveal } from '@/components
 import { CollectionMenu, collectionActions, editCollection } from '@/components/collection-menu';
 import { NavBar } from '@/components/nav-bar';
 import { blockUser, reportUser } from '@/lib/social';
-import { firstName } from '@/lib/format';
+import { countdown, firstName } from '@/lib/format';
 import { Avatar, Badge, Button, EmptyState, Skeleton, Txt } from '@/components/primitives';
 import { useToast } from '@/components/toast';
 import { Masonry, WishCard, type CardAction } from '@/components/wish-card';
 import { Colors, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { confirm, deleteCollection, deleteWish, openProduct, setCollectionPublic, shareCollection, updateWish } from '@/lib/actions';
+import { confirm, deleteCollection, deleteWish, openProduct, setCollectionPublic, shareCollection, updateWish, shareCollectionStory } from '@/lib/actions';
 import { errorMessage, publicCollectionUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { haptic } from '@/lib/haptics';
@@ -27,6 +28,10 @@ export default function CollectionScreen() {
   const toast = useToast();
   const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
   const { data, error, loading, refreshing, refresh, mutate } = useApi<CollectionDetail>(`/api/collections/${id}`);
+  // Opened from a /w/<slug> link: switch to the real id so every action below targets it.
+  useEffect(() => {
+    if (data && data.id !== id) router.setParams({ id: data.id, name: data.name });
+  }, [data, id]);
 
   const { user } = useAuth();
   const myReservations = useMyReservations();
@@ -84,6 +89,22 @@ export default function CollectionScreen() {
     }
   }
 
+  async function toggleReceived(w: Wish) {
+    if (!data) return;
+    const receivedAt = w.receivedAt ? null : new Date().toISOString();
+    mutate({ ...data, wishes: data.wishes.map((x) => (x.id === w.id ? { ...x, receivedAt } : x)) });
+    try {
+      await updateWish(w.id, { received: !!receivedAt });
+      if (receivedAt) {
+        haptic.success();
+        toast('Reçu 🎁 Vous pouvez dire merci');
+      }
+    } catch (e) {
+      mutate(data);
+      Alert.alert('Erreur', errorMessage(e));
+    }
+  }
+
   async function removeWish(w: Wish) {
     if (!data) return;
     const ok = await confirm('Supprimer ce souhait ?', w.title, 'Supprimer');
@@ -135,13 +156,25 @@ export default function CollectionScreen() {
         { title: 'Détails', icon: 'info.circle', onPress: () => detail(w) },
         ...(mine
           ? [{ title: 'Annuler ma réservation', icon: 'xmark.circle', onPress: () => void unreserve(w) }]
-          : !w.reservation
+          : !w.reservation && !w.receivedAt
             ? [{ title: 'Réserver ce cadeau', icon: 'gift', onPress: () => void reserve(w) }]
             : []),
       ];
     }
     return [
       { title: 'Modifier', icon: 'pencil', onPress: () => detail(w, true) },
+      ...(isOwner
+        ? [
+            {
+              title: w.receivedAt ? 'Pas encore reçu' : 'Marquer comme reçu',
+              icon: w.receivedAt ? 'arrow.uturn.backward' : 'shippingbox',
+              onPress: () => void toggleReceived(w),
+            },
+            ...(w.receivedAt
+              ? [{ title: 'Dire merci', icon: 'heart', onPress: () => router.push({ pathname: '/thanks', params: { wishId: w.id, title: w.title } }) }]
+              : []),
+          ]
+        : []),
       {
         title: w.isPriority ? 'Retirer des favoris' : 'Ajouter aux favoris',
         icon: w.isPriority ? 'star.slash' : 'star',
@@ -164,6 +197,7 @@ export default function CollectionScreen() {
                 ...collectionActions(data, isOwner, {
                   edit: () => editCollection(data),
                   share: () => void share(),
+                  story: () => void shareCollectionStory(data),
                   copyLink: () => void copyLink(),
                   togglePublic: () => void togglePublic(),
                   remove: () => void removeList(),
@@ -237,6 +271,7 @@ export default function CollectionScreen() {
                 {isViewer ? `${data.user.name ?? 'Un ami'} · ` : ''}
                 {wishes.length} souhait{wishes.length > 1 ? 's' : ''}
               </Txt>
+              {!!countdown(data.eventDate) && <Badge label={countdown(data.eventDate)!} icon={Icons.calendar} />}
             </View>
           </View>
         ) : (
@@ -252,11 +287,12 @@ export default function CollectionScreen() {
                 href={{ pathname: '/wish/[id]', params: { id: w.id, collectionId: id } }}
                 onPress={w.url ? () => openProduct(w.url!) : undefined}
                 actions={cardActions(w)}
-                reserved={isViewer && !!w.reservation && !myReservations[w.id]}
+                reserved={isViewer && (!!w.reservation || !!w.receivedAt) && !myReservations[w.id]}
+                received={!!w.receivedAt}
                 reservation={
                   isViewer
                     ? {
-                        state: myReservations[w.id] ? 'mine' : w.reservation ? 'taken' : 'free',
+                        state: myReservations[w.id] ? 'mine' : w.reservation || w.receivedAt ? 'taken' : 'free',
                         onReserve: () => void reserve(w),
                         onCancel: () => void unreserve(w),
                       }

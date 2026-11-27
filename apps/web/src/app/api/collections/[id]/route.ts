@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { parseEventDate } from "@/lib/events";
 import { prisma } from "@/lib/prisma";
 import { getCollectionAccess } from "@/lib/collection-access";
 import { isBlockedBetween } from "@/lib/blocks";
@@ -15,7 +16,11 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await params;
+  // The app opens /w/<slug> links here: accept a slug as well as an id.
+  const { id: idOrSlug } = await params;
+  const resolved = await prisma.collection.findFirst({ where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] }, select: { id: true } });
+  if (!resolved) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const id = resolved.id;
   const access = await getCollectionAccess(id, session.user.id);
 
   // Anyone signed in may read a public collection (friends' lists in the app),
@@ -91,6 +96,7 @@ export async function PATCH(
       ...(body.name !== undefined && { name: body.name }),
       ...(body.description !== undefined && { description: body.description }),
       ...(body.isPublic !== undefined && { isPublic: body.isPublic }),
+      ...(parseEventDate(body.eventDate) !== undefined && { eventDate: parseEventDate(body.eventDate) }),
     },
   });
 

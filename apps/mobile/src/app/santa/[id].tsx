@@ -14,14 +14,14 @@ import { AvatarStack, Reveal, SantaEyebrow } from '@/components/santa';
 import { useToast } from '@/components/toast';
 import { Colors, Fonts, Radius, Space } from '@/constants/theme';
 import { useApi } from '@/hooks/use-api';
-import { confirm } from '@/lib/actions';
+import { actionSheet, confirm } from '@/lib/actions';
 import { errorMessage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { haptic } from '@/lib/haptics';
 import { thumb } from '@/lib/image';
 import { registerForPush } from '@/lib/push';
-import { createSantaList, deleteSanta, drawSanta, joinSanta, leaveSanta, removeFromSanta, shareSantaLink } from '@/lib/santa';
-import type { CollectionSummary, Santa } from '@/lib/types';
+import { createSantaList, deleteSanta, drawSanta, joinSanta, leaveSanta, removeFromSanta, shareSantaLink, updateSanta } from '@/lib/santa';
+import type { CollectionSummary, Santa, SantaThreads } from '@/lib/types';
 
 const GOLD = '#E8C872';
 const GOLD_SOFT = 'rgba(232,200,114,0.12)';
@@ -34,6 +34,7 @@ export default function SantaScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: santa, error, refreshing, refresh, mutate } = useApi<Santa>(`/api/santas/${id}`);
   const { data: collections } = useApi<CollectionSummary[]>('/api/collections');
+  const { data: threads } = useApi<SantaThreads>(santa?.status === 'DRAWN' && santa.me?.status === 'JOINED' ? `/api/santas/${id}/messages` : null);
   const [now] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
 
@@ -75,6 +76,32 @@ export default function SantaScreen() {
   const myList = collections?.find((c) => c.id === s.me?.collection?.id);
   const daysLeft = s.date ? Math.ceil((new Date(s.date).getTime() - now) / DAY) : null;
   const stage = isOpen ? 0 : daysLeft !== null && daysLeft <= 0 ? 2 : 1;
+
+  const nameOf = (uid: string) => (uid === user?.id ? 'Vous' : (s.members.find((m) => m.id === uid)?.name ?? 'Participant'));
+
+  // Two quick pickers: first person, then who they must not draw.
+  function addExclusion() {
+    actionSheet(
+      'Qui ne doit pas tirer…',
+      joined.map((a) => ({
+        label: nameOf(a.id),
+        onPress: () =>
+          setTimeout(
+            () =>
+              actionSheet(
+                `${nameOf(a.id)} ne tire pas…`,
+                joined
+                  .filter((b) => b.id !== a.id)
+                  .map((b) => ({
+                    label: nameOf(b.id),
+                    onPress: () => void run(() => updateSanta(s.id, { exclusions: [...s.exclusions, [a.id, b.id]] }), 'Exclusion ajoutée'),
+                  }))
+              ),
+            350
+          ),
+      }))
+    );
+  }
 
   const openImport = (listId: string) => router.push({ pathname: '/santa/import', params: { id: s.id, listId } });
 
@@ -200,6 +227,27 @@ export default function SantaScreen() {
               </Txt>
             )}
           </Animated.View>
+        )}
+
+        {/* Anonymous questions */}
+        {s.status === 'DRAWN' && s.me?.status === 'JOINED' && (
+          <View style={{ gap: Space.sm }}>
+            {s.assignment && (
+              <ChatRow
+                title={`Poser une question à ${s.assignment.user.name?.split(' ')[0] ?? 'votre cible'}`}
+                subtitle={threads?.recipient.length ? threads.recipient[threads.recipient.length - 1].body : 'Anonymement : taille, couleur préférée…'}
+                onPress={() => router.push({ pathname: '/santa/chat', params: { id: s.id, thread: 'recipient' } })}
+              />
+            )}
+            {!!threads?.santa.length && (
+              <ChatRow
+                title="Votre Secret Santa vous écrit"
+                subtitle={threads.santa[threads.santa.length - 1].body}
+                gold
+                onPress={() => router.push({ pathname: '/santa/chat', params: { id: s.id, thread: 'santa' } })}
+              />
+            )}
+          </View>
         )}
 
         {/* Invitation */}
@@ -344,6 +392,37 @@ export default function SantaScreen() {
           )}
         </View>
 
+        {/* Exclusions */}
+        {s.isOrganizer && isOpen && joined.length >= 2 && (
+          <View style={{ gap: Space.md }}>
+            <View style={{ gap: 2 }}>
+              <Txt variant="headline">Exclusions</Txt>
+              <Txt variant="footnote" color="text3">
+                Ces personnes ne pourront pas se tirer au sort entre elles (couples, frères et sœurs…).
+              </Txt>
+            </View>
+            {s.exclusions.map(([a, b]) => (
+              <View key={`${a}-${b}`} style={styles.exclusion}>
+                <Txt variant="callout" style={{ flex: 1 }} numberOfLines={1}>
+                  {nameOf(a)}  ↮  {nameOf(b)}
+                </Txt>
+                <Pressable
+                  hitSlop={8}
+                  accessibilityLabel="Supprimer l’exclusion"
+                  onPress={() => void run(() => updateSanta(s.id, { exclusions: s.exclusions.filter(([x, y]) => !(x === a && y === b)) }))}>
+                  <Icon name={Icons.close} size={14} color={Colors.text2} />
+                </Pressable>
+              </View>
+            ))}
+            <Pressable onPress={addExclusion} hitSlop={6} style={styles.inlineAction}>
+              <Icon name={Icons.plus} size={15} color={Colors.text2} />
+              <Txt variant="callout" color="text2">
+                Ajouter une exclusion
+              </Txt>
+            </Pressable>
+          </View>
+        )}
+
         {/* Organizer */}
         {s.isOrganizer && isOpen && (
           <View style={{ gap: Space.sm }}>
@@ -363,6 +442,25 @@ export default function SantaScreen() {
         )}
       </ScrollView>
     </View>
+  );
+}
+
+function ChatRow({ title, subtitle, gold, onPress }: { title: string; subtitle: string; gold?: boolean; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.myList, gold && { borderColor: 'rgba(232,200,114,0.45)' }, pressed && { opacity: 0.85 }]}>
+      <View style={styles.emptyListIcon}>
+        <Icon name={Icons.bubble} size={18} color={GOLD} />
+      </View>
+      <View style={{ flex: 1, gap: 2 }}>
+        <Txt variant="bodyMedium" numberOfLines={1}>
+          {title}
+        </Txt>
+        <Txt variant="footnote" color="text2" numberOfLines={1}>
+          {subtitle}
+        </Txt>
+      </View>
+      <Icon name={Icons.chevronRight} size={13} color={Colors.text3} />
+    </Pressable>
   );
 }
 
@@ -425,6 +523,17 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(232,200,114,0.45)',
   },
   emptyListIcon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: GOLD_SOFT },
+  exclusion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Space.md,
+    paddingHorizontal: Space.lg,
+    paddingVertical: Space.md,
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   inlineAction: { flexDirection: 'row', alignItems: 'center', gap: Space.sm, alignSelf: 'flex-start' },
   people: { flexDirection: 'row', flexWrap: 'wrap', gap: Space.lg },
   person: { alignItems: 'center', gap: 6, width: 64 },

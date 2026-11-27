@@ -75,6 +75,7 @@ function App() {
             <Stack.Screen name="index" />
             <Stack.Screen name="collection/[id]" />
             <Stack.Screen name="friends" />
+            <Stack.Screen name="discover" />
             <Stack.Screen name="user/[id]" />
             <Stack.Screen name="friends-search" options={SHEET} />
             <Stack.Screen name="blocked" options={SHEET} />
@@ -84,11 +85,14 @@ function App() {
 
             <Stack.Screen name="santa/new" options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="santa/import" options={SHEET} />
+            <Stack.Screen name="santa/chat" />
             <Stack.Screen
               name="santa/invite"
               options={SHEET}
             />
             <Stack.Screen name="profile" />
+            <Stack.Screen name="birthday" options={SHEET} />
+            <Stack.Screen name="thanks" options={SHEET} />
             <Stack.Screen name="wish/[id]" options={{ headerShown: false, presentation: 'modal' }} />
             <Stack.Screen name="add" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen

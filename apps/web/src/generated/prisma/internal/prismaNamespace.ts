@@ -397,6 +397,7 @@ export const ModelName = {
   CollectionCollaborator: 'CollectionCollaborator',
   Notification: 'Notification',
   SecretSanta: 'SecretSanta',
+  SecretSantaMessage: 'SecretSantaMessage',
   SecretSantaMember: 'SecretSantaMember',
   PushToken: 'PushToken',
   UserBlock: 'UserBlock',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "passwordResetToken" | "user" | "collection" | "wish" | "reservation" | "userFollow" | "collectionFollow" | "collectionCollaborator" | "notification" | "secretSanta" | "secretSantaMember" | "pushToken" | "userBlock" | "report"
+    modelProps: "account" | "session" | "verificationToken" | "passwordResetToken" | "user" | "collection" | "wish" | "reservation" | "userFollow" | "collectionFollow" | "collectionCollaborator" | "notification" | "secretSanta" | "secretSantaMessage" | "secretSantaMember" | "pushToken" | "userBlock" | "report"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1382,6 +1383,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SecretSantaMessage: {
+      payload: Prisma.$SecretSantaMessagePayload<ExtArgs>
+      fields: Prisma.SecretSantaMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SecretSantaMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SecretSantaMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.SecretSantaMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SecretSantaMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        findMany: {
+          args: Prisma.SecretSantaMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>[]
+        }
+        create: {
+          args: Prisma.SecretSantaMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        createMany: {
+          args: Prisma.SecretSantaMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SecretSantaMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>[]
+        }
+        delete: {
+          args: Prisma.SecretSantaMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        update: {
+          args: Prisma.SecretSantaMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.SecretSantaMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SecretSantaMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SecretSantaMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>[]
+        }
+        upsert: {
+          args: Prisma.SecretSantaMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SecretSantaMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.SecretSantaMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSecretSantaMessage>
+        }
+        groupBy: {
+          args: Prisma.SecretSantaMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SecretSantaMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SecretSantaMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SecretSantaMessageCountAggregateOutputType> | number
+        }
+      }
+    }
     SecretSantaMember: {
       payload: Prisma.$SecretSantaMemberPayload<ExtArgs>
       fields: Prisma.SecretSantaMemberFieldRefs
@@ -1774,6 +1849,9 @@ export const UserScalarFieldEnum = {
   description: 'description',
   password: 'password',
   slug: 'slug',
+  birthdayDay: 'birthdayDay',
+  birthdayMonth: 'birthdayMonth',
+  birthdayAskedAt: 'birthdayAskedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -1786,6 +1864,7 @@ export const CollectionScalarFieldEnum = {
   description: 'description',
   slug: 'slug',
   isPublic: 'isPublic',
+  eventDate: 'eventDate',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1806,6 +1885,7 @@ export const WishScalarFieldEnum = {
   price: 'price',
   position: 'position',
   isPriority: 'isPriority',
+  receivedAt: 'receivedAt',
   collectionId: 'collectionId',
   creatorId: 'creatorId',
   createdAt: 'createdAt',
@@ -1820,6 +1900,9 @@ export const ReservationScalarFieldEnum = {
   wishId: 'wishId',
   reservedBy: 'reservedBy',
   token: 'token',
+  reserverId: 'reserverId',
+  thanks: 'thanks',
+  thankedAt: 'thankedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -1878,10 +1961,24 @@ export const SecretSantaScalarFieldEnum = {
   status: 'status',
   organizerId: 'organizerId',
   drawnAt: 'drawnAt',
+  exclusions: 'exclusions',
   createdAt: 'createdAt'
 } as const
 
 export type SecretSantaScalarFieldEnum = (typeof SecretSantaScalarFieldEnum)[keyof typeof SecretSantaScalarFieldEnum]
+
+
+export const SecretSantaMessageScalarFieldEnum = {
+  id: 'id',
+  santaId: 'santaId',
+  giverId: 'giverId',
+  recipientId: 'recipientId',
+  fromGiver: 'fromGiver',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type SecretSantaMessageScalarFieldEnum = (typeof SecretSantaMessageScalarFieldEnum)[keyof typeof SecretSantaMessageScalarFieldEnum]
 
 
 export const SecretSantaMemberScalarFieldEnum = {
@@ -2218,6 +2315,7 @@ export type GlobalOmitConfig = {
   collectionCollaborator?: Prisma.CollectionCollaboratorOmit
   notification?: Prisma.NotificationOmit
   secretSanta?: Prisma.SecretSantaOmit
+  secretSantaMessage?: Prisma.SecretSantaMessageOmit
   secretSantaMember?: Prisma.SecretSantaMemberOmit
   pushToken?: Prisma.PushTokenOmit
   userBlock?: Prisma.UserBlockOmit

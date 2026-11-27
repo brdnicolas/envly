@@ -8,7 +8,7 @@ export const GOLD = "#E8C872";
 const asset = (f: string) => readFile(join(process.cwd(), "assets/og", f));
 
 let cache: Promise<{ fonts: { name: string; data: Buffer; weight: 500 | 700 | 800; style: "normal" }[]; star: string }> | null = null;
-function load() {
+export function load() {
   cache ??= (async () => {
     const [m, b, x, star] = await Promise.all([asset("geist-500.woff"), asset("geist-700.woff"), asset("geist-800.woff"), asset("star.png")]);
     return {

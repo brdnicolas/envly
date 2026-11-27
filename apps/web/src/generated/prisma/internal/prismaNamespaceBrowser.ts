@@ -64,6 +64,7 @@ export const ModelName = {
   CollectionCollaborator: 'CollectionCollaborator',
   Notification: 'Notification',
   SecretSanta: 'SecretSanta',
+  SecretSantaMessage: 'SecretSantaMessage',
   SecretSantaMember: 'SecretSantaMember',
   PushToken: 'PushToken',
   UserBlock: 'UserBlock',
@@ -143,6 +144,9 @@ export const UserScalarFieldEnum = {
   description: 'description',
   password: 'password',
   slug: 'slug',
+  birthdayDay: 'birthdayDay',
+  birthdayMonth: 'birthdayMonth',
+  birthdayAskedAt: 'birthdayAskedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -155,6 +159,7 @@ export const CollectionScalarFieldEnum = {
   description: 'description',
   slug: 'slug',
   isPublic: 'isPublic',
+  eventDate: 'eventDate',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -175,6 +180,7 @@ export const WishScalarFieldEnum = {
   price: 'price',
   position: 'position',
   isPriority: 'isPriority',
+  receivedAt: 'receivedAt',
   collectionId: 'collectionId',
   creatorId: 'creatorId',
   createdAt: 'createdAt',
@@ -189,6 +195,9 @@ export const ReservationScalarFieldEnum = {
   wishId: 'wishId',
   reservedBy: 'reservedBy',
   token: 'token',
+  reserverId: 'reserverId',
+  thanks: 'thanks',
+  thankedAt: 'thankedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -247,10 +256,24 @@ export const SecretSantaScalarFieldEnum = {
   status: 'status',
   organizerId: 'organizerId',
   drawnAt: 'drawnAt',
+  exclusions: 'exclusions',
   createdAt: 'createdAt'
 } as const
 
 export type SecretSantaScalarFieldEnum = (typeof SecretSantaScalarFieldEnum)[keyof typeof SecretSantaScalarFieldEnum]
+
+
+export const SecretSantaMessageScalarFieldEnum = {
+  id: 'id',
+  santaId: 'santaId',
+  giverId: 'giverId',
+  recipientId: 'recipientId',
+  fromGiver: 'fromGiver',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type SecretSantaMessageScalarFieldEnum = (typeof SecretSantaMessageScalarFieldEnum)[keyof typeof SecretSantaMessageScalarFieldEnum]
 
 
 export const SecretSantaMemberScalarFieldEnum = {
