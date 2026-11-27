@@ -8,6 +8,7 @@ yarn check         # type-check + lint, web and mobile
 
 ## Conventions
 
+- **Web and mobile parity**: every user-facing feature ships on both the website and the app, in the same change. Platform-only exceptions (share extension, Chrome extension, SEO pages…) are stated explicitly.
 - **Commits**: [Conventional Commits](https://www.conventionalcommits.org): `feat(mobile): …`, `fix(web): …`, `chore(extension): …`. Scope = `web`, `mobile`, `extension`, `brand`, `docs`.
 - **Branches**: `main` is deployed. Work on `feat/…` or `fix/…` branches when something is risky.
 - **Language**: code and comments in English, UI copy in French.
