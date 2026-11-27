@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, LayoutGrid, Settings, LogOut, Puzzle, Users } from "lucide-react";
+import { Mail, LayoutGrid, Settings, LogOut, Puzzle, Users, Sparkles } from "lucide-react";
 import { NotificationBell } from "@/components/notification-bell";
 import { useExtension } from "@/lib/extension";
 
@@ -38,6 +38,11 @@ export function Header() {
                   </Link>
                 </Button>
               )}
+              <Button variant="ghost" size="icon" className="rounded-full" asChild>
+                <Link href="/idees-cadeaux" title="Idées cadeaux" aria-label="Idées cadeaux">
+                  <Sparkles className="h-4 w-4" />
+                </Link>
+              </Button>
               <Button variant="ghost" size="icon" className="rounded-full" asChild>
                 <Link href="/friends">
                   <Users className="h-4 w-4" />

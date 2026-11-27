@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CollectionCard, ImageMosaic } from "@/components/collection-card";
 import { BirthdayPrompt } from "@/components/birthday-prompt";
 import { CollectionForm } from "@/components/collection-form";
+import { FriendsFeed } from "@/components/friends-feed";
 import { Plus, Puzzle, X, Copy, Check, Settings, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -425,11 +426,17 @@ export function DashboardView() {
             </div>
           )
         ) : (
-          <FriendsTab
-            loading={friendsLoading}
-            collections={friendCollections ?? []}
-            followingCount={stats?.followingCount ?? 0}
-          />
+          <div className="space-y-12">
+            <FriendsFeed />
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold">Leurs listes</h2>
+              <FriendsTab
+                loading={friendsLoading}
+                collections={friendCollections ?? []}
+                followingCount={stats?.followingCount ?? 0}
+              />
+            </section>
+          </div>
         )}
 
         <BirthdayPrompt />

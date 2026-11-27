@@ -45,7 +45,7 @@ export async function GET() {
     }),
     prisma.collection.findMany({
       where: { ...publicOf, eventDate: { gte: new Date(today.getTime() - 12 * 3600_000), lte: horizon } },
-      select: { id: true, name: true, eventDate: true, user: { select: { id: true, name: true, image: true } } },
+      select: { id: true, name: true, slug: true, eventDate: true, user: { select: { id: true, name: true, image: true } } },
       orderBy: { eventDate: "asc" },
       take: 20,
     }),
@@ -54,6 +54,7 @@ export async function GET() {
       select: {
         id: true,
         name: true,
+        slug: true,
         createdAt: true,
         _count: { select: { wishes: true } },
         wishes: { where: { imageUrl: { not: null } }, select: { imageUrl: true }, take: 4 },
@@ -69,7 +70,7 @@ export async function GET() {
       const date = nextOccurrence(u.birthdayDay!, u.birthdayMonth!, today);
       return { kind: "birthday" as const, date, user: { id: u.id, name: u.name, image: u.image, slug: u.slug }, collection: null };
     }),
-    ...events.map((c) => ({ kind: "event" as const, date: c.eventDate!, user: c.user, collection: { id: c.id, name: c.name } })),
+    ...events.map((c) => ({ kind: "event" as const, date: c.eventDate!, user: c.user, collection: { id: c.id, name: c.name, slug: c.slug } })),
   ]
     .filter((e) => e.date.getTime() <= horizon.getTime())
     .map((e) => ({ ...e, days: Math.round((e.date.getTime() - today.getTime()) / 86_400_000) }))
@@ -97,7 +98,7 @@ export async function GET() {
         imageHeight: true,
         price: true,
         createdAt: true,
-        collection: { select: { id: true, name: true, user: { select: { id: true, name: true, image: true } } } },
+        collection: { select: { id: true, name: true, slug: true, user: { select: { id: true, name: true, image: true } } } },
       },
     }),
   ]);
@@ -136,7 +137,7 @@ export async function GET() {
     newLists: newLists.map(({ user, ...c }) => ({ ...c, owner: user })),
     feed: feed.map(({ collection, ...w }) => ({
       ...w,
-      collection: { id: collection.id, name: collection.name },
+      collection: { id: collection.id, name: collection.name, slug: collection.slug },
       owner: collection.user,
     })),
   });
